@@ -1,0 +1,15 @@
+/target/
+/docs/target/
+/impl/.classpath
+/impl/.project
+/impl/.settings/
+/docs/.project
+/docs/.settings/
+/dist/.project
+/dist/.settings/
+/combined/.project
+/combined/.settings/
+/api/.classpath
+/api/.project
+/api/.settings/
+/api/target/

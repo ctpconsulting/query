@@ -1,0 +1,244 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss.seam</groupId>
+        <artifactId>seam-parent</artifactId>
+        <version>9</version>
+    </parent>
+
+    <artifactId>cdi-query-parent</artifactId>
+    <groupId>com.ctp.cdi.query</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    <name>CDI Query Module</name>
+
+    <description>
+		The Parent for the CDI Query Module
+   </description>
+
+    <url>http://www.ctp-consulting.com</url>
+
+    <modules>
+        <module>api</module>
+        <module>impl</module>
+        <module>combined</module>
+    </modules>
+
+    <properties>
+        <seam.version>3.0.0-SNAPSHOT</seam.version>
+        <emma.version>2.0.5312</emma.version>
+        <arquillian.version>1.0.0.Alpha5</arquillian.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.jboss.seam</groupId>
+                <artifactId>seam-bom</artifactId>
+                <version>${seam.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core</artifactId>
+                <version>1.1.0.Final</version>
+            </dependency>
+            
+            <!-- *************************** TEST  *************************** -->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit-dep</artifactId>
+                <version>4.8.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-junit</artifactId>
+                <version>${arquillian.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-jbossas-managed-6</artifactId>
+                <version>${arquillian.version}</version>
+            </dependency>
+            <dependency>
+               <groupId>org.jboss.jbossas</groupId>
+               <artifactId>jboss-server-manager</artifactId>
+               <version>1.0.3.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.jbossas</groupId>
+                <artifactId>jboss-as-client</artifactId>
+                <version>6.0.0.Final</version>
+                <type>pom</type>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>distribution</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>dist</module>
+                <module>docs</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>jboss-public-repository</id>
+            <activation>
+                <property>
+                    <name>jboss-public-repository</name>
+                    <value>!false</value>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>jboss-public-repository-group</id>
+                    <name>JBoss Public Maven Repository Group</name>
+                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>jboss-public-repository-group</id>
+                    <name>JBoss Public Maven Repository Group</name>
+                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>code-coverage</id>
+            <dependencies>
+                <dependency>
+                    <groupId>emma</groupId>
+                    <artifactId>emma</artifactId>
+                    <version>${emma.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.sonatype.maven.plugin</groupId>
+                            <artifactId>emma4it-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>report</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>report</goal>
+                                    </goals>
+                                    <configuration>
+                                        <sourceSets>
+                                            <sourceSet>
+                                                <directory>${project.parent.build.directory}/../impl/src/main/java</directory>
+                                            </sourceSet>
+                                        </sourceSets>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-antrun-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>retrieve-coverage-files</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>run</goal>
+                                    </goals>
+                                    <configuration>
+                                        <tasks>
+                                            <copy
+                                                file="${project.parent.build.directory}/../impl/target/coverage.em"
+                                                todir="${basedir}" />
+                                        </tasks>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <artifactId>maven-clean-plugin</artifactId>
+                            <configuration>
+                                <filesets>
+                                    <fileset>
+                                        <directory>${basedir}/</directory>
+                                        <includes>
+                                            <include>**/*.ec</include>
+                                            <include>**/*.em</include>
+                                            <include>**/transaction.log</include>
+                                        </includes>
+                                        <followSymlinks>false</followSymlinks>
+                                    </fileset>
+                                </filesets>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+    <developers>
+        <developer>
+            <name>Thomas Hug</name>
+            <email>thomas.hug@ctp-consulting.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/ctpconsulting/query.git</connection>
+        <developerConnection>scm:git:git@github.com:ctpconsulting/query.git</developerConnection>
+        <url>http://github.com/ctpconsulting/query</url>
+    </scm>
+</project>
+

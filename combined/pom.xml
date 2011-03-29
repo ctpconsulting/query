@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ctp.cdi.query</groupId>
+        <artifactId>cdi-query-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>cdi-query</artifactId>
+
+    <packaging>jar</packaging>
+    <name>CDI Query</name>
+    <url>${project.parent.url}</url>
+
+    <build>
+        <plugins>
+            <!-- Skip test phase when building combined JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createSourcesJar>true</createSourcesJar>
+                            <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.ctp.cdi.query:*</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.ctp.cdi.query</groupId>
+            <artifactId>cdi-query-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ctp.cdi.query</groupId>
+            <artifactId>cdi-query-impl</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

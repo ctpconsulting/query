@@ -1,0 +1,38 @@
+package com.ctp.cdi.query.util;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import org.jboss.seam.solder.properties.Property;
+import org.jboss.seam.solder.properties.query.AnnotatedPropertyCriteria;
+import org.jboss.seam.solder.properties.query.PropertyQueries;
+import org.jboss.seam.solder.properties.query.PropertyQuery;
+
+public abstract class EntityUtils {
+
+    public static boolean isNew(Object entity) {
+	assertIsEntity(entity);
+	PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entity.getClass())
+	      .addCriteria(new AnnotatedPropertyCriteria(Id.class));
+	Property<Serializable> property = query.getFirstResult();
+	property.setAccessible();
+	Serializable value = property.getValue(entity);
+	return value == null;
+    }
+    
+    public static String entityName(Class<?> entityClass) {
+        Entity entity = entityClass.getAnnotation(Entity.class);
+        return !"".equals(entity.name()) ? entity.name() : entityClass.getSimpleName();
+    }
+    
+    private static void assertIsEntity(Object entity) {
+	if (entity == null) {
+	    throw new IllegalArgumentException("Provided object is null");
+	}
+	if (!entity.getClass().isAnnotationPresent(Entity.class)) {
+	    throw new IllegalArgumentException("Provided object is not an @Entity");
+	}
+    }
+}
