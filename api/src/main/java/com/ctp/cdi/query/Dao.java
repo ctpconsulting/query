@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface Dao {
+    Class<?> value() default Object.class;
 }

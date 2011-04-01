@@ -1,1 +1,1 @@
-org.jboss.seam.solder.serviceHandler.QueryExtension
+com.ctp.cdi.query.QueryExtension

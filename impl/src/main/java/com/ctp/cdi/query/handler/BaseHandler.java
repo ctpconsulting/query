@@ -1,15 +1,25 @@
 package com.ctp.cdi.query.handler;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.util.EntityUtils;
 
+/**
+ * Implement basic functionality from the {@link EntityDao}.
+ * @author thomashug
+ *
+ * @param <E>
+ * @param <PK>
+ */
 public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
     
     public static final String QUERY_ALL = "from {0}";
@@ -26,8 +36,16 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
 	this.entityClass = entityClass;
     }
     
-    public boolean contains(Method method) {
-	return false;
+    public static boolean contains(Method method) {
+        return extract(method) != null;
+    }
+    
+    public static <E, PK extends Serializable> BaseHandler<E, PK> create(EntityManager e, Class<E> entityClass) {
+        return new BaseHandler<E, PK>(e, entityClass);
+    }
+    
+    public Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException {
+        return extract(method).invoke(this, args);
     }
 
     @Override
@@ -55,6 +73,12 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     public E findBy(PK primaryKey) {
 	return entityManager.find(entityClass, primaryKey);
     }
+    
+    @Override
+    public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
+        // TODO implement
+        return Collections.emptyList();
+    }
 
     @Override
     public List<E> findAll() {
@@ -77,10 +101,14 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     public void flush() {
 	entityManager.flush();
     }
-
-    @Override
-    public boolean exists(PK primaryKey) {
-	return findBy(primaryKey) != null;
+    
+    public static Method extract(Method method) {
+        try {
+            String name = method.getName();
+            return BaseHandler.class.getMethod(name, method.getParameterTypes());
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
     }
     
     private String allQuery() {

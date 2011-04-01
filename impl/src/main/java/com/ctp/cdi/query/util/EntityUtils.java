@@ -27,11 +27,15 @@ public abstract class EntityUtils {
         return !"".equals(entity.name()) ? entity.name() : entityClass.getSimpleName();
     }
     
+    public static boolean isEntityClass(Class<?> entityClass) {
+        return entityClass.isAnnotationPresent(Entity.class);
+    }
+    
     private static void assertIsEntity(Object entity) {
 	if (entity == null) {
 	    throw new IllegalArgumentException("Provided object is null");
 	}
-	if (!entity.getClass().isAnnotationPresent(Entity.class)) {
+	if (!isEntityClass(entity.getClass())) {
 	    throw new IllegalArgumentException("Provided object is not an @Entity");
 	}
     }

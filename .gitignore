@@ -1,8 +1,12 @@
+/.project
+/.classpath
+/.settings/
 /target/
 /docs/target/
 /impl/.classpath
 /impl/.project
 /impl/.settings/
+/impl/derby.log
 /docs/.project
 /docs/.settings/
 /dist/.project

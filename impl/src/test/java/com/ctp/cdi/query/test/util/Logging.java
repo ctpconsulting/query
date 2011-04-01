@@ -5,7 +5,7 @@ import java.util.logging.LogManager;
 
 public class Logging {
 
-    public static void quiet() {
+    public static void reconfigure() {
 	try {
 	    LogManager.getLogManager().readConfiguration(
 		    Logging.class.getClassLoader().getResourceAsStream("logging.properties"));

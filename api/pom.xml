@@ -1,57 +1,58 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-   <parent>
-      <groupId>com.ctp.cdi.query</groupId>
-      <artifactId>cdi-query-parent</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-      <relativePath>../pom.xml</relativePath>
-   </parent>
+    <parent>
+        <groupId>com.ctp.cdi.query</groupId>
+        <artifactId>cdi-query-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-   <artifactId>cdi-query-api</artifactId>
-   <packaging>jar</packaging>
+    <artifactId>cdi-query-api</artifactId>
+    <packaging>jar</packaging>
 
-   <name>CDI Query API</name>
-   <url>${project.parent.url}</url> 
+    <name>CDI Query API</name>
+    <url>${project.parent.url}</url>
 
-   <prerequisites>
-      <maven>3.0</maven>
-   </prerequisites>
-   
-   <dependencies>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
 
-      <dependency>
-         <groupId>javax.enterprise</groupId>
-         <artifactId>cdi-api</artifactId>
-         <scope>provided</scope>
-      </dependency>  
+    <dependencies>
 
-      <dependency>
-         <groupId>org.jboss.spec.javax.ejb</groupId>
-         <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-         <scope>provided</scope>
-      </dependency>
- 
-      <dependency>
-         <groupId>org.hibernate</groupId>
-         <artifactId>hibernate-core</artifactId>
-         <optional>true</optional>
-         <scope>provided</scope>
-      </dependency>
-	  
-   </dependencies>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-   <build>
-      <plugins>
-         <!-- no test phase for API module -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-               <skip>true</skip>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- no test phase for API module -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -24,7 +24,6 @@ public class QueryExtensionTest {
     @Deployment
     public static Archive<?> deployment() {
 	return Deployments.initDeployment()
-		.addPackage(QueryExtensionTest.class.getPackage())
 		.addPackage(DaoInterface.class.getPackage())
 		.addPackage(Simple.class.getPackage());
     }

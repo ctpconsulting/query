@@ -16,8 +16,8 @@
     <name>CDI Query Module</name>
 
     <description>
-		The Parent for the CDI Query Module
-   </description>
+        The Parent for the CDI Query Module
+    </description>
 
     <url>http://www.ctp-consulting.com</url>
 
@@ -68,7 +68,13 @@
                 <version>1.1.0.Final</version>
             </dependency>
             
-            <!-- *************************** TEST  *************************** -->
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+
+            <!-- *************************** TEST *************************** -->
 
             <dependency>
                 <groupId>junit</groupId>
@@ -76,26 +82,61 @@
                 <version>4.8.1</version>
                 <scope>test</scope>
             </dependency>
+            
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-junit</artifactId>
                 <version>${arquillian.version}</version>
+                <scope>test</scope>
             </dependency>
+            
             <dependency>
                 <groupId>org.jboss.arquillian.container</groupId>
                 <artifactId>arquillian-jbossas-managed-6</artifactId>
                 <version>${arquillian.version}</version>
+                <scope>test</scope>
             </dependency>
+            
             <dependency>
-               <groupId>org.jboss.jbossas</groupId>
-               <artifactId>jboss-server-manager</artifactId>
-               <version>1.0.3.GA</version>
+                <groupId>org.jboss.jbossas</groupId>
+                <artifactId>jboss-server-manager</artifactId>
+                <version>1.0.3.GA</version>
+                <scope>test</scope>
             </dependency>
+            
             <dependency>
                 <groupId>org.jboss.jbossas</groupId>
                 <artifactId>jboss-as-client</artifactId>
                 <version>6.0.0.Final</version>
                 <type>pom</type>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
+                <version>${arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-glassfish-embedded-3</artifactId>
+                <version>${arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.glassfish.extras</groupId>
+                <artifactId>glassfish-embedded-all</artifactId>
+                <version>3.1</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+                <version>10.4.2.0</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
