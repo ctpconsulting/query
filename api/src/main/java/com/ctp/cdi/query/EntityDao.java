@@ -53,7 +53,9 @@ public interface EntityDao<E, PK> {
     public List<E> findAll();
     
     /**
+     * Query by example - for a given object and a specific set of properties.
      * TODO: Can we put something like that in a producer and have queries restricted by example?
+     * TODO: As far as I remember Hibernate does this by all non-null properties.
      * @param example           Sample entity. Query all like.
      * @param attributes        Which attributes to consider for the query.
      * @return                  List of entities matching the example, or empty if none found.

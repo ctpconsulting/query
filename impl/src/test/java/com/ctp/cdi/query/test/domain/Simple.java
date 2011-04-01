@@ -10,6 +10,15 @@ public class Simple {
     @Id
     @GeneratedValue
     private Long id;
+    
+    private String name;
+    
+    public Simple() {
+    }
+
+    public Simple(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -17,6 +26,14 @@ public class Simple {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
 }

@@ -4,11 +4,18 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.SingularAttribute;
+
+import org.jboss.logging.Logger;
+import org.jboss.seam.solder.properties.Property;
+import org.jboss.seam.solder.properties.query.NamedPropertyCriteria;
+import org.jboss.seam.solder.properties.query.PropertyQueries;
 
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.util.EntityUtils;
@@ -22,7 +29,9 @@ import com.ctp.cdi.query.util.EntityUtils;
  */
 public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
     
-    public static final String QUERY_ALL = "from {0}";
+    private static final Logger log = Logger.getLogger(BaseHandler.class);
+    
+    public static final String QUERY_ALL = "select e from {0} e";
     public static final String QUERY_COUNT = "select count(e) from {0} e";
     
     private final EntityManager entityManager;
@@ -76,8 +85,15 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
-        // TODO implement
-        return Collections.emptyList();
+        String jpqlQuery = allQuery() + " where ";
+        List<String> names = extractPropertyNames(attributes);
+        List<Property<Object>> properties = PropertyQueries.createQuery(entityClass).addCriteria(
+                new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
+        jpqlQuery += prepareWhere(properties);
+        log.debugv("findBy: Created query {0}", jpqlQuery);
+        TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+        addParameters(query, example, properties);
+        return query.getResultList();
     }
 
     @Override
@@ -102,7 +118,7 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
 	entityManager.flush();
     }
     
-    public static Method extract(Method method) {
+    private static Method extract(Method method) {
         try {
             String name = method.getName();
             return BaseHandler.class.getMethod(name, method.getParameterTypes());
@@ -117,6 +133,32 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     
     private String countQuery() {
         return MessageFormat.format(QUERY_COUNT, EntityUtils.entityName(entityClass));
+    }
+    
+    private void addParameters(TypedQuery<E> query, E example, List<Property<Object>> properties) {
+        for (Property<Object> property : properties) {
+            property.setAccessible();
+            query.setParameter(property.getName(), property.getValue(example));
+        }
+    }
+
+    private String prepareWhere(List<Property<Object>> properties) {
+        String result = "";
+        Iterator<Property<Object>> iterator = properties.iterator();
+        while (iterator.hasNext()) {
+            String name = iterator.next().getName();
+            result += "e." + name + " = :" + name + (iterator.hasNext() ? " and " : "");
+            
+        }
+        return result;
+    }
+
+    private List<String> extractPropertyNames(SingularAttribute<E, ?>... attributes) {
+        List<String> result = new ArrayList<String>(attributes.length);
+        for (SingularAttribute<E, ?> attribute : attributes) {
+            result.add(attribute.getName());
+        }
+        return result;
     }
 
 }
