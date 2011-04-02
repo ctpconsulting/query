@@ -47,6 +47,49 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Assert.assertEquals(1, result.size());
     }
     
+    @Test
+    public void shouldCreateNamedQueryIndex() {
+        // given
+        final String name = "testCreateNamedQueryIndex";
+        Simple simple = createSimple(name);
+        
+        // when
+        List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(name, result.get(0).getName());
+    }
+    
+    @Test
+    public void shouldCreateNamedQueryNamed() {
+        // given
+        final String name = "testCreateNamedQueryNamed";
+        Simple simple = createSimple(name);
+        
+        // when
+        Simple result = dao.findByNamedQueryNamed(simple.getId(), Boolean.TRUE);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(name, result.getName());
+    }
+    
+    @Test
+    public void shouldRunAnnotatedQuery() {
+        // given
+        final String name = "testRunAnnotatedQuery";
+        Simple simple = createSimple(name);
+        
+        // when
+        Simple result = dao.findByQuery(name);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(name, result.getName());
+    }
+    
     private Simple createSimple(String name) {
         Simple result = new Simple(name);
         entityManager.persist(result);

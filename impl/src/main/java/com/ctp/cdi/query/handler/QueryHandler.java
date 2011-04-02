@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.handler;
 
+import com.ctp.cdi.query.builder.QueryBuilder;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -31,7 +32,7 @@ public class QueryHandler {
         if (BaseHandler.contains(ctx.getMethod())) {
             return callBaseHandler(ctx);
         }
-	return null;
+        return QueryBuilder.create(ctx).execute(entityManager.get());
     }
 
     private Object callBaseHandler(InvocationContext ctx) throws Exception {

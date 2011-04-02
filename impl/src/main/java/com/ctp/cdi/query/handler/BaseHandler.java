@@ -24,8 +24,8 @@ import com.ctp.cdi.query.util.EntityUtils;
  * Implement basic functionality from the {@link EntityDao}.
  * @author thomashug
  *
- * @param <E>
- * @param <PK>
+ * @param <E>       Entity type.
+ * @param <PK>      Primary key type, must be a serializable.
  */
 public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
     
@@ -36,6 +36,7 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     
     private final EntityManager entityManager;
     private final Class<E> entityClass;
+    private final String entityName;
     
     public BaseHandler(EntityManager entityManager, Class<E> entityClass) {
 	if (null == entityManager) {
@@ -43,6 +44,7 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
         }
 	this.entityManager = entityManager;
 	this.entityClass = entityClass;
+        this.entityName = EntityUtils.entityName(entityClass);
     }
     
     public static boolean contains(Method method) {
@@ -87,8 +89,9 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
         String jpqlQuery = allQuery() + " where ";
         List<String> names = extractPropertyNames(attributes);
-        List<Property<Object>> properties = PropertyQueries.createQuery(entityClass).addCriteria(
-                new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
+        List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
+                .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {})))
+                .getResultList();
         jpqlQuery += prepareWhere(properties);
         log.debugv("findBy: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
@@ -132,11 +135,11 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     }
     
     private String allQuery() {
-        return MessageFormat.format(QUERY_ALL, EntityUtils.entityName(entityClass));
+        return MessageFormat.format(QUERY_ALL, entityName);
     }
     
     private String countQuery() {
-        return MessageFormat.format(QUERY_COUNT, EntityUtils.entityName(entityClass));
+        return MessageFormat.format(QUERY_COUNT, entityName);
     }
     
     private void addParameters(TypedQuery<E> query, E example, List<Property<Object>> properties) {
