@@ -19,3 +19,7 @@
 /api/target/
 /combined/target/
 /impl/target/
+
+/combined/.classpath
+/docs/.classpath
+/api/nb-configuration.xml

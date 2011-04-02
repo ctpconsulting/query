@@ -120,7 +120,7 @@ public class BaseHandlerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldFindByAll() throws Exception {
+    public void shouldFindByAll() {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -133,7 +133,7 @@ public class BaseHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCountAll() throws Exception {
+    public void shouldCountAll() {
         // given
         createSimple("testCountAll");
         
@@ -145,7 +145,7 @@ public class BaseHandlerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldRemove() throws Exception {
+    public void shouldRemove() {
         // given
         Simple simple = createSimple("testRemove");
         
@@ -158,7 +158,7 @@ public class BaseHandlerTest extends TransactionalTestCase {
         Assert.assertNull(lookup);
     }
     
-    private Simple createSimple(String name) throws Exception {
+    private Simple createSimple(String name) {
         Simple result = new Simple(name);
         entityManager.persist(result);
         entityManager.flush();

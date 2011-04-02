@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import org.jboss.logging.Logger;
 
 import com.ctp.cdi.query.util.DaoUtils;
+import java.lang.reflect.Modifier;
 
 /**
  * Entry point for query processing.
@@ -24,6 +25,9 @@ public class QueryHandler {
     
     @AroundInvoke
     public Object handle(InvocationContext ctx) throws Exception {
+        if (!Modifier.isAbstract(ctx.getMethod().getModifiers())) {
+            return ctx.proceed();
+        }
         if (BaseHandler.contains(ctx.getMethod())) {
             return callBaseHandler(ctx);
         }
@@ -31,13 +35,8 @@ public class QueryHandler {
     }
 
     private Object callBaseHandler(InvocationContext ctx) throws Exception {
-        try {
-            Class<?> entityClass = DaoUtils.extractEntityMetaData(ctx.getTarget().getClass()).getEntityClass();
-            return BaseHandler.create(entityManager.get(), entityClass).invoke(ctx.getMethod(), ctx.getParameters());
-        } catch (Exception e) {
-            log.error("callBaseHandler: Could not invoke base handler", e);
-            return null;
-        }
+        Class<?> entityClass = DaoUtils.extractEntityMetaData(ctx.getTarget().getClass()).getEntityClass();
+        return BaseHandler.create(entityManager.get(), entityClass).invoke(ctx.getMethod(), ctx.getParameters());
     }
 
 }

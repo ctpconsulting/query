@@ -118,6 +118,10 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
 	entityManager.flush();
     }
     
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
     private static Method extract(Method method) {
         try {
             String name = method.getName();
