@@ -2,7 +2,7 @@ package com.ctp.cdi.query.handler;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.service.ExtendedAbstractEntityDao;
+import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 import java.util.List;
 import javax.enterprise.inject.Produces;
@@ -22,12 +22,12 @@ public class QueryHandlerTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return Deployments.initDeployment()
-                .addClasses(ExtendedAbstractEntityDao.class)
+                .addClasses(SimpleDao.class)
                 .addPackage(Simple.class.getPackage());
     }
     
     @Inject
-    private ExtendedAbstractEntityDao dao;
+    private SimpleDao dao;
     
     @Produces
     @PersistenceContext

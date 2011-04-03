@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
-import com.ctp.cdi.query.test.service.ExtendedAbstractEntityDao;
+import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.util.Deployments;
 
@@ -35,7 +35,7 @@ public class QueryExtensionTest {
     Instance<ExtendedDaoInterface> extendedDao;
     
     @Inject
-    Instance<ExtendedAbstractEntityDao> extendedClassDao;
+    Instance<SimpleDao> extendedClassDao;
 
     @Test
     public void shouldInject() {

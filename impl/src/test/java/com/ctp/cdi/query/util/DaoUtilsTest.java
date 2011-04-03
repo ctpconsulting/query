@@ -14,7 +14,7 @@ import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.handler.DaoMetaData;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
-import com.ctp.cdi.query.test.service.ExtendedAbstractEntityDao;
+import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.util.Deployments;
 
@@ -36,7 +36,7 @@ public class DaoUtilsTest {
     private ExtendedDaoInterface interFace;
     
     @Inject
-    private ExtendedAbstractEntityDao abstractClass;
+    private SimpleDao abstractClass;
 
     @Test
     public void shouldExtractFromInterface() {

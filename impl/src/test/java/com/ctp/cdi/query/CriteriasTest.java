@@ -6,7 +6,7 @@ package com.ctp.cdi.query;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.service.ExtendedAbstractEntityDao;
+import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 import java.util.List;
 import javax.enterprise.inject.Produces;
@@ -27,12 +27,12 @@ public class CriteriasTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
 	return Deployments.initDeployment()
-		.addPackage(ExtendedAbstractEntityDao.class.getPackage())
+		.addPackage(SimpleDao.class.getPackage())
 		.addPackage(Simple.class.getPackage());
     }
 
     @Inject
-    ExtendedAbstractEntityDao dao;
+    SimpleDao dao;
     
     @Produces
     @PersistenceContext

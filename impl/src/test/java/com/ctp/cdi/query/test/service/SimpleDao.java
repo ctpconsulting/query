@@ -7,7 +7,7 @@ import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple_;
 import java.util.List;
 
-public abstract class ExtendedAbstractEntityDao extends AbstractEntityDao<Simple, Long> {
+public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
     public List<Simple> implementedQueryByName(String name) {
         String query = "select s from Simple s where s.name = :name";
