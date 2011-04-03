@@ -4,6 +4,7 @@ import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.QueryParam;
 import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.domain.Simple_;
 import java.util.List;
 
 public abstract class ExtendedAbstractEntityDao extends AbstractEntityDao<Simple, Long> {
@@ -12,6 +13,15 @@ public abstract class ExtendedAbstractEntityDao extends AbstractEntityDao<Simple
         String query = "select s from Simple s where s.name = :name";
         return getEntityManager().createQuery(query)
                 .setParameter("name", name)
+                .getResultList();
+    }
+    
+    public List<Simple> queryByCriteria(String name, Boolean enabled, Integer from, Integer to) {
+        return criteria()
+                .eq(Simple_.name, name)
+                .eq(Simple_.enabled, enabled)
+                .between(Simple_.counter, from, to)
+                .createQuery()
                 .getResultList();
     }
     

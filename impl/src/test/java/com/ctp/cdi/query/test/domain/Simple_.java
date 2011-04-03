@@ -9,5 +9,6 @@ public abstract class Simple_ {
     public static volatile SingularAttribute<Simple, Long> id;
     public static volatile SingularAttribute<Simple, String> name;
     public static volatile SingularAttribute<Simple, Boolean> enabled;
+    public static volatile SingularAttribute<Simple, Integer> counter;
 
 }

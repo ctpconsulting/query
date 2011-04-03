@@ -24,6 +24,7 @@ public class Simple {
     
     private String name;
     private Boolean enabled = Boolean.TRUE;
+    private Integer counter = Integer.valueOf(0);
     
     public Simple() {
     }
@@ -55,4 +56,13 @@ public class Simple {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    public Integer getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Integer counter) {
+        this.counter = counter;
+    }
+
 }
