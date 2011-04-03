@@ -18,6 +18,7 @@ import org.jboss.seam.solder.properties.query.NamedPropertyCriteria;
 import org.jboss.seam.solder.properties.query.PropertyQueries;
 
 import com.ctp.cdi.query.EntityDao;
+import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.util.EntityUtils;
 
 /**
@@ -30,9 +31,6 @@ import com.ctp.cdi.query.util.EntityUtils;
 public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
     
     private static final Logger log = Logger.getLogger(BaseHandler.class);
-    
-    public static final String QUERY_ALL = "select e from {0} e";
-    public static final String QUERY_COUNT = "select count(e) from {0} e";
     
     private final EntityManager entityManager;
     private final Class<E> entityClass;
@@ -135,11 +133,11 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     }
     
     private String allQuery() {
-        return MessageFormat.format(QUERY_ALL, entityName);
+        return QueryBuilder.selectQuery(entityName);
     }
     
     private String countQuery() {
-        return MessageFormat.format(QUERY_COUNT, entityName);
+        return QueryBuilder.countQuery(entityName);
     }
     
     private void addParameters(TypedQuery<E> query, E example, List<Property<Object>> properties) {

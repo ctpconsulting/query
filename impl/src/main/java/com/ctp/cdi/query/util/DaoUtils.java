@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.util;
 
+import com.ctp.cdi.query.Dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -18,6 +19,9 @@ public abstract class DaoUtils {
      * @return                  Meta data containing entity and primary key classes.
      */
     public static DaoMetaData extractEntityMetaData(Class<?> daoClass) {
+        DaoMetaData fromAnnotation = extractFromAnnotation(daoClass);
+        if (fromAnnotation != null)
+            return fromAnnotation;
         DaoMetaData fromType = extractFrom(daoClass.getGenericSuperclass());
         if (fromType != null)
             return fromType;
@@ -50,6 +54,18 @@ public abstract class DaoUtils {
                 if (result != null && genericType instanceof Class) {
                     result.setPrimaryClass((Class<? extends Serializable>) genericType);
                     return result;
+                }
+            }
+        }
+        return null;
+    }
+    
+    private static DaoMetaData extractFromAnnotation(Class<?> inspect) {
+        for (Class<?> daoClass : inspect.getInterfaces()) {
+            if (daoClass.isAnnotationPresent(Dao.class)) {
+                Dao dao = daoClass.getAnnotation(Dao.class);
+                if (!Object.class.equals(dao.value())) {
+                    return new DaoMetaData(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
                 }
             }
         }

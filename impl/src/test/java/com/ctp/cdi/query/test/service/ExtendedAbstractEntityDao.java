@@ -24,5 +24,7 @@ public abstract class ExtendedAbstractEntityDao extends AbstractEntityDao<Simple
     
     @Query("select s from Simple s where s.name = ?1")
     public abstract Simple findByQuery(String name);
+    
+    public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
 
 }

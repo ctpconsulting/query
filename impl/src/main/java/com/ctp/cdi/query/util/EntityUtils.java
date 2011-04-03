@@ -16,10 +16,15 @@ public abstract class EntityUtils {
 	assertIsEntity(entity);
 	PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entity.getClass())
 	      .addCriteria(new AnnotatedPropertyCriteria(Id.class));
-	Property<Serializable> property = query.getFirstResult();
+	Property<Serializable> property = primaryKey(entity.getClass());
 	property.setAccessible();
 	Serializable value = property.getValue(entity);
 	return value == null;
+    }
+    
+    public static Class<? extends Serializable> primaryKeyClass(Class<?> entityClass) {
+        Property<Serializable> property = primaryKey(entityClass);
+        return property.getJavaClass();
     }
     
     public static String entityName(Class<?> entityClass) {
@@ -29,6 +34,12 @@ public abstract class EntityUtils {
     
     public static boolean isEntityClass(Class<?> entityClass) {
         return entityClass.isAnnotationPresent(Entity.class);
+    }
+    
+    private static Property<Serializable> primaryKey(Class<?> entityClass) {
+        PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entityClass)
+	      .addCriteria(new AnnotatedPropertyCriteria(Id.class));
+	return query.getFirstResult();
     }
     
     private static void assertIsEntity(Object entity) {

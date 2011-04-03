@@ -80,10 +80,24 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldRunAnnotatedQuery() {
         // given
         final String name = "testRunAnnotatedQuery";
-        Simple simple = createSimple(name);
+        createSimple(name);
         
         // when
         Simple result = dao.findByQuery(name);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(name, result.getName());
+    }
+    
+    @Test
+    public void shouldCreateQueryByMethodName() {
+        // given
+        final String name = "testCreateQueryByMethodName";
+        createSimple(name);
+        
+        // when
+        Simple result = dao.findByNameAndEnabled(name, Boolean.TRUE);
         
         // then
         Assert.assertNotNull(result);

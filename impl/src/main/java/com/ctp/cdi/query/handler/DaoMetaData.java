@@ -5,7 +5,6 @@ import java.io.Serializable;
 /**
  * Data structure to store information about a DAO.
  * @author thomashug
- *
  */
 public class DaoMetaData {
 
