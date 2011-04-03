@@ -3,11 +3,11 @@ package com.ctp.cdi.query;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.jboss.logging.Logger;
-import org.jboss.seam.solder.serviceHandler.QueryExtensionBridge;
 
 import com.ctp.cdi.query.handler.QueryHandler;
+import org.jboss.seam.solder.serviceHandler.ServiceHandlerExtension;
 
-public class QueryExtension extends QueryExtensionBridge {
+public class QueryExtension extends ServiceHandlerExtension {
 
     private static final Logger log = Logger.getLogger(QueryExtension.class);
 
