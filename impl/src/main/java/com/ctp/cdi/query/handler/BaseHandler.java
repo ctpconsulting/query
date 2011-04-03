@@ -3,7 +3,6 @@ package com.ctp.cdi.query.handler;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +19,7 @@ import org.jboss.seam.solder.properties.query.PropertyQueries;
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.util.EntityUtils;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  * Implement basic functionality from the {@link EntityDao}.
@@ -121,6 +121,14 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+    
+    public CriteriaQuery<E> criteriaQuery() {
+        return entityManager.getCriteriaBuilder().createQuery(entityClass);
+    }
+    
+    public Class<E> entityClass() {
+        return entityClass;
     }
     
     private static Method extract(Method method) {
