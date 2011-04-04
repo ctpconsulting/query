@@ -5,6 +5,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;
 
+/**
+ * Base DAO interface. All methods are implemented by the query extension.
+ * @author thomashug
+ *
+ * @param <E>   Entity type.
+ * @param <PK>  Primary key type.
+ */
 @Dao
 public interface EntityDao<E, PK> {
 

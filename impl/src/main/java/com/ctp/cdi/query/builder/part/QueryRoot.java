@@ -1,9 +1,12 @@
 package com.ctp.cdi.query.builder.part;
 
+import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
+
 import org.jboss.logging.Logger;
+
 import com.ctp.cdi.query.builder.BuilderContext;
 import com.ctp.cdi.query.builder.QueryBuilder;
-import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
+import com.ctp.cdi.query.param.Parameters;
 
 /**
  * Root of the query tree. Also the only exposed class in the package.
@@ -17,23 +20,25 @@ public class QueryRoot extends QueryPart {
     
     private final StringBuilder result = new StringBuilder();
     private final String entityName;
+    private final Parameters parameters;
     
-    public static QueryRoot create(String method, String entityName) {
-        QueryRoot root = new QueryRoot(entityName);
+    public static QueryRoot create(String method, String entityName, Parameters parameters) {
+        QueryRoot root = new QueryRoot(entityName, parameters);
         root.build(method);
         return root;
     }
     
     public String createJpql() {
-        BuilderContext ctx = new BuilderContext();
+        BuilderContext ctx = new BuilderContext(parameters);
         buildQuery(result, ctx);
         String jpql = result.toString();
         log.debugv("createJpql: Query is {0}", jpql);
         return jpql;
     }
     
-    protected QueryRoot(String entityName) {
+    protected QueryRoot(String entityName, Parameters parameters) {
         this.entityName = entityName;
+        this.parameters = parameters;
     }
 
     @Override

@@ -4,13 +4,13 @@
  */
 package com.ctp.cdi.query.builder;
 
-import com.ctp.cdi.query.builder.part.QueryRoot;
-import com.ctp.cdi.query.param.Parameters;
-import com.ctp.cdi.query.util.DaoUtils;
-import com.ctp.cdi.query.util.EntityUtils;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import com.ctp.cdi.query.builder.part.QueryRoot;
+import com.ctp.cdi.query.param.Parameters;
+import com.ctp.cdi.query.util.EntityUtils;
 
 /**
  *
@@ -39,8 +39,9 @@ public class MethodQueryBuilder extends QueryBuilder {
     
     private Query createJpaQuery(EntityManager entityManager) {
         QueryRoot root = QueryRoot.create(ctx.getMethod().getName(), 
-                EntityUtils.entityName(entityClass));
-        return params.applyTo(entityManager.createQuery(root.createJpql()));
+                EntityUtils.entityName(entityClass), params);
+        Query result = params.applyTo(entityManager.createQuery(root.createJpql()));
+        return applyRestrictions(result);
     }
     
 }

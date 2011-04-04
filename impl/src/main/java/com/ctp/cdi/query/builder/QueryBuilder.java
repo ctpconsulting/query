@@ -1,12 +1,16 @@
 package com.ctp.cdi.query.builder;
 
-import com.ctp.cdi.query.param.Parameters;
-import com.ctp.cdi.query.util.DaoUtils;
 import java.text.MessageFormat;
 import java.util.List;
+
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.jboss.logging.Logger;
+
+import com.ctp.cdi.query.param.Parameters;
+import com.ctp.cdi.query.util.DaoUtils;
 
 /**
  * Query builder factory. Delegates to concrete implementations.
@@ -58,6 +62,16 @@ public abstract class QueryBuilder {
     
     protected boolean returnsList() {
         return ctx.getMethod().getReturnType().isAssignableFrom(List.class);
+    }
+    
+    protected Query applyRestrictions(Query query) {
+        if (params.hasSizeRestriction()) {
+            query.setMaxResults(params.getSizeRestriciton());
+        }
+        if (params.hasFirstResult()) {
+            query.setFirstResult(params.getFirstResult());
+        }
+        return query;
     }
     
 }

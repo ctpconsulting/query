@@ -1,20 +1,24 @@
 package com.ctp.cdi.query.handler;
 
-import com.ctp.cdi.query.test.TransactionalTestCase;
-import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.service.SimpleDao;
-import com.ctp.cdi.query.test.util.Deployments;
 import java.util.List;
+
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import junit.framework.Assert;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.ctp.cdi.query.test.TransactionalTestCase;
+import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.service.SimpleDao;
+import com.ctp.cdi.query.test.util.Deployments;
 
 @RunWith(Arquillian.class)
 public class QueryHandlerTest extends TransactionalTestCase {
@@ -37,7 +41,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldDelegateToImplementation() {
         // given
         final String name = "testDelegateToImplementation";
-        Simple simple = createSimple(name);
+        createSimple(name);
         
         // when
         List<Simple> result = dao.implementedQueryByName(name);
@@ -51,7 +55,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldCreateNamedQueryIndex() {
         // given
         final String name = "testCreateNamedQueryIndex";
-        Simple simple = createSimple(name);
+        createSimple(name);
         
         // when
         List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
@@ -102,6 +106,37 @@ public class QueryHandlerTest extends TransactionalTestCase {
         // then
         Assert.assertNotNull(result);
         Assert.assertEquals(name, result.getName());
+    }
+    
+    @Test
+    public void shouldRestrictResultSizeByAnnotation() {
+        // given
+        final String name = "testRestrictResultSizeByAnnotation";
+        createSimple(name);
+        createSimple(name);
+        
+        // when
+        List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+    }
+    
+    @Test
+    public void shouldRestrictResultSizeByParameters() {
+        // given
+        final String name = "testRestrictResultSizeByParameters";
+        createSimple(name);
+        Simple second = createSimple(name);
+        
+        // when
+        List<Simple> result = dao.findByNamedQueryRestricted(name, Boolean.TRUE, 1, 1);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(second.getId(), result.get(0).getId());
     }
     
     private Simple createSimple(String name) {

@@ -3,6 +3,7 @@ package com.ctp.cdi.query;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,6 +13,14 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
 
+/**
+ * Base DAO class to be extended by concrete implementations. Required to extend when
+ * using the criteria utility API.
+ * @author thomashug
+ *
+ * @param <E>   Entity type.
+ * @param <PK>  Primary key type.
+ */
 @Dao
 public abstract class AbstractEntityDao<E, PK> implements EntityDao<E, PK> {
 

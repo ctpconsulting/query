@@ -1,11 +1,18 @@
 package com.ctp.cdi.query.param;
 
-import com.ctp.cdi.query.QueryParam;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 import javax.persistence.Query;
+
+import org.jboss.logging.Logger;
+
+import com.ctp.cdi.query.FirstResult;
+import com.ctp.cdi.query.MaxResults;
+import com.ctp.cdi.query.QueryParam;
 
 /**
  * Convenience class to manage method and query parameters.
@@ -13,26 +20,48 @@ import javax.persistence.Query;
  */
 public class Parameters {
     
-    private final List<Parameter> parameters;
+    private static final Logger log = Logger.getLogger(Parameters.class);
     
-    private Parameters(List<Parameter> parameters) {
+    private static final int DEFAULT_MAX = 0;
+    private static final int DEFAULT_FIRST = -1;
+    
+    private final List<Parameter> parameters;
+    private int max = DEFAULT_MAX;
+    private int firstResult = DEFAULT_FIRST;
+    
+    private Parameters(List<Parameter> parameters, int max, int firstResult) {
         this.parameters = parameters;
+        this.max = max;
+        this.firstResult = firstResult;
+    }
+    
+    public static Parameters createEmpty() {
+        List<Parameter> empty = Collections.emptyList();
+        return new Parameters(empty, DEFAULT_MAX, DEFAULT_FIRST);
     }
     
     public static Parameters create(Method method, Object[] parameters) {
+        int max = extractSizeRestriction(method);
+        int first = DEFAULT_FIRST;
         List<Parameter> result = new ArrayList<Parameter>(parameters.length);
         int paramIndex = 1;
+        Annotation[][] annotations = method.getParameterAnnotations();
         for (int i = 0; i < parameters.length; i++) {
-            QueryParam qpAnnotation = extractFrom(method.getParameterAnnotations()[i]);
-            if (qpAnnotation != null) {
-                result.add(new NamedParameter(qpAnnotation.value(), parameters[i], i));
+            if (isParameter(method.getParameterAnnotations()[i])) {
+                QueryParam qpAnnotation = extractFrom(annotations[i], QueryParam.class);
+                if (qpAnnotation != null) {
+                    result.add(new NamedParameter(qpAnnotation.value(), parameters[i], i));
+                } else {
+                    result.add(new IndexedParameter(paramIndex++, parameters[i], i));
+                }
             } else {
-                result.add(new IndexedParameter(paramIndex++, parameters[i], i));
+                max = extractInt(parameters[i], annotations[i], MaxResults.class, max);
+                first = extractInt(parameters[i], annotations[i], FirstResult.class, first);
             }
         }
-        return new Parameters(result);
+        return new Parameters(result, max, first);
     }
-    
+
     public Query applyTo(Query query) {
         for (Parameter param : parameters) {
             param.apply(query);
@@ -40,13 +69,58 @@ public class Parameters {
         return query;
     }
     
-    private static QueryParam extractFrom(Annotation[] annotations) {
+    public boolean hasSizeRestriction() {
+        return max > DEFAULT_MAX;
+    }
+    
+    public int getSizeRestriciton() {
+        return max;
+    }
+    
+    public boolean hasFirstResult() {
+        return firstResult > DEFAULT_FIRST;
+    }
+    
+    public int getFirstResult() {
+        return firstResult;
+    }
+    
+    private static int extractSizeRestriction(Method method) {
+        if (method.isAnnotationPresent(com.ctp.cdi.query.Query.class)) {
+            return method.getAnnotation(com.ctp.cdi.query.Query.class).max();
+        }
+        return 0;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <A extends Annotation> A extractFrom(Annotation[] annotations, Class<A> target) {
         for (Annotation annotation : annotations) {
-            if (annotation.annotationType().isAssignableFrom(QueryParam.class)) {
-                return (QueryParam) annotation;
+            if (annotation.annotationType().isAssignableFrom(target)) {
+                return (A) annotation;
             }
         }
         return null;
+    }
+    
+    private static <A extends Annotation> int extractInt(Object parameter, Annotation[] annotations, 
+            Class<A> target, int defaultVal) {
+        if (parameter != null) {
+            A result = extractFrom(annotations, target);
+            if (result != null) {
+                if (parameter instanceof Integer) {
+                    return (Integer) parameter;
+                } else {
+                    log.warnv("Method parameter extraction: Param type must be int: {0}->is:{1}",
+                            target, parameter.getClass());
+                }
+            }
+        }
+        return defaultVal;
+    }
+
+    private static boolean isParameter(Annotation[] annotations) {
+        return extractFrom(annotations, MaxResults.class) == null && 
+               extractFrom(annotations, FirstResult.class) == null;
     }
     
 }

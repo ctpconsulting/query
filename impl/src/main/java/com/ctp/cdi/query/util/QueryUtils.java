@@ -22,4 +22,12 @@ public abstract class QueryUtils {
         return value.substring(0, 1).toLowerCase() + value.substring(1);
     }
     
+    public static boolean isEmpty(String text) {
+        return text == null || "".equals(text);
+    }
+    
+    public static boolean isNotEmpty(String text) {
+        return !isEmpty(text);
+    }
+    
 }

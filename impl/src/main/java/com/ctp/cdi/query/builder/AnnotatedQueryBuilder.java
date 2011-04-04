@@ -1,10 +1,14 @@
 package com.ctp.cdi.query.builder;
 
-import com.ctp.cdi.query.Query;
-import com.ctp.cdi.query.param.Parameters;
+import static com.ctp.cdi.query.util.QueryUtils.isNotEmpty;
+
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+
 import org.jboss.logging.Logger;
+
+import com.ctp.cdi.query.Query;
+import com.ctp.cdi.query.param.Parameters;
 
 /**
  * Create the query based on method annotations.
@@ -19,7 +23,11 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
     }
     
     public static boolean handles(InvocationContext ctx) {
-        return ctx.getMethod().isAnnotationPresent(Query.class);
+        if (ctx.getMethod().isAnnotationPresent(Query.class)) {
+            Query query = ctx.getMethod().getAnnotation(Query.class);
+            return isNotEmpty(query.value()) || isNotEmpty(query.named());
+        }
+        return false;
     }
 
     @Override
@@ -34,11 +42,13 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
     }
     
     private javax.persistence.Query createJpaQuery(Query query, EntityManager entityManager) {
+        javax.persistence.Query result = null;
         if (!"".equals(query.named())) {
-            return params.applyTo(entityManager.createNamedQuery(query.named()));
+            result = params.applyTo(entityManager.createNamedQuery(query.named()));
         } else {
-            return params.applyTo(entityManager.createQuery(query.value()));
+            result = params.applyTo(entityManager.createQuery(query.value()));
         }
+        return applyRestrictions(result);
     }
 
 }

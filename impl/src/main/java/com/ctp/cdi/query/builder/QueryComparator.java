@@ -5,7 +5,7 @@
 package com.ctp.cdi.query.builder;
 
 /**
- * 
+ * Comparison options for queries.
  * @author thomashug
  */
 public enum QueryComparator {

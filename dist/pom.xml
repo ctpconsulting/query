@@ -34,7 +34,7 @@
 
       <dependency>
          <groupId>com.ctp.cdi.query</groupId>
-         <artifactId>seam-persistence</artifactId>
+         <artifactId>cdi-query</artifactId>
          <optional>true</optional>
       </dependency>
 

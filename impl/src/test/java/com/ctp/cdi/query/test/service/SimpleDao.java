@@ -1,17 +1,20 @@
 package com.ctp.cdi.query.test.service;
 
+import java.util.List;
+
 import com.ctp.cdi.query.AbstractEntityDao;
+import com.ctp.cdi.query.FirstResult;
+import com.ctp.cdi.query.MaxResults;
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.QueryParam;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple_;
-import java.util.List;
 
 public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
     public List<Simple> implementedQueryByName(String name) {
         String query = "select s from Simple s where s.name = :name";
-        return getEntityManager().createQuery(query)
+        return getEntityManager().createQuery(query, Simple.class)
                 .setParameter("name", name)
                 .getResultList();
     }
@@ -25,8 +28,12 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
                 .getResultList();
     }
     
-    @Query(named=Simple.BY_NAME)
+    @Query(named=Simple.BY_NAME, max=1)
     public abstract List<Simple> findByNamedQueryIndexed(String name, Boolean enabled);
+    
+    @Query(named=Simple.BY_NAME)
+    public abstract List<Simple> findByNamedQueryRestricted(String name, Boolean enabled, 
+            @MaxResults int max, @FirstResult Integer first);
     
     @Query(named=Simple.BY_ID)
     public abstract Simple findByNamedQueryNamed(
