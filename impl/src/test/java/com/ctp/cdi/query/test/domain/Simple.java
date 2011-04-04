@@ -1,10 +1,13 @@
 package com.ctp.cdi.query.test.domain;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({
@@ -23,8 +26,11 @@ public class Simple {
     private Long id;
     
     private String name;
+    private String camelCase;
     private Boolean enabled = Boolean.TRUE;
     private Integer counter = Integer.valueOf(0);
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date temporal;
     
     public Simple() {
     }
@@ -63,6 +69,22 @@ public class Simple {
 
     public void setCounter(Integer counter) {
         this.counter = counter;
+    }
+
+    public String getCamelCase() {
+        return camelCase;
+    }
+
+    public void setCamelCase(String camelCase) {
+        this.camelCase = camelCase;
+    }
+
+    public Date getTemporal() {
+        return temporal;
+    }
+
+    public void setTemporal(Date temporal) {
+        this.temporal = temporal;
     }
 
 }

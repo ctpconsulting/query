@@ -10,20 +10,35 @@ import org.junit.Test;
 public class QueryRootTest {
     
     @Test
-    public void shouldCreateQuery() {
+    public void shouldCreateSimpleQuery() {
         // given
-        final String name = "findByNameAndCreatedBetweenOrNullableIsNull";
+        final String name = "findByName";
+        final String expected = 
+                "select e from Simple e " +
+                "where e.name = ?1";
+        
+        // when
+        String result = QueryRoot.create(name, "Simple").createJpql().trim();
+        
+        // then
+        Assert.assertEquals(expected, result);
+    }
+    
+    @Test
+    public void shouldCreateComplexQuery() {
+        // given
+        final String name = "findByNameAndCreatedBetweenOrNullableIsNullAndCamelCase";
         final String expected = 
                 "select e from Simple e " +
                 "where e.name = ?1 " +
                 "and e.created between ?2 and ?3 " +
-                "or e.nullable IS NULL";
+                "or e.nullable IS NULL " +
+                "and e.camelCase = ?4";
         
         // when
-        String result = QueryRoot.create(name, "Simple").createJpql();
+        String result = QueryRoot.create(name, "Simple").createJpql().trim();
         
         // then
-        System.out.println(result);
         Assert.assertEquals(expected, result);
     }
     

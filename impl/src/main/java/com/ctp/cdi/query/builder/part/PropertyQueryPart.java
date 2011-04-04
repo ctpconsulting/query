@@ -1,8 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ctp.cdi.query.builder.part;
+
+import static com.ctp.cdi.query.util.QueryUtils.uncapitalize;
 
 import com.ctp.cdi.query.builder.BuilderContext;
 import com.ctp.cdi.query.builder.QueryBuilder;
@@ -21,11 +19,11 @@ public class PropertyQueryPart extends QueryPart {
     @Override
     protected QueryPart build(String queryPart) {
         comparator = QueryComparator.Equal;
-        name = queryPart.toLowerCase();
+        name = uncapitalize(queryPart);
         for (QueryComparator comp : QueryComparator.values()) {
             if (queryPart.endsWith(comp.getExpression())) {
                 comparator = comp;
-                name = queryPart.substring(0, queryPart.indexOf(comp.getExpression())).toLowerCase();
+                name = uncapitalize(queryPart.substring(0, queryPart.indexOf(comp.getExpression())));
                 break;
             }
         }
