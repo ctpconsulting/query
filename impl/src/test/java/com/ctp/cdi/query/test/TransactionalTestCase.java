@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 public abstract class TransactionalTestCase {
 
     @Resource
-    private UserTransaction ut;
+    protected UserTransaction ut;
     
     @Before
     public void startTransaction() throws Exception {

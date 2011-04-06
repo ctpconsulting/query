@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
@@ -64,12 +65,28 @@ public abstract class QueryBuilder {
         return ctx.getMethod().getReturnType().isAssignableFrom(List.class);
     }
     
+    protected LockModeType extractLockMode() {
+        Class<com.ctp.cdi.query.Query> query = com.ctp.cdi.query.Query.class;
+        if (ctx.getMethod().isAnnotationPresent(query) &&
+                ctx.getMethod().getAnnotation(query).lock() != LockModeType.NONE) {
+            return ctx.getMethod().getAnnotation(query).lock();
+        }
+        return null;
+    }
+    
+    protected boolean hasLockMode() {
+        return extractLockMode() != null;
+    }
+    
     protected Query applyRestrictions(Query query) {
         if (params.hasSizeRestriction()) {
             query.setMaxResults(params.getSizeRestriciton());
         }
         if (params.hasFirstResult()) {
             query.setFirstResult(params.getFirstResult());
+        }
+        if (hasLockMode()) {
+            query.setLockMode(extractLockMode());
         }
         return query;
     }

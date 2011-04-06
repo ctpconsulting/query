@@ -2,6 +2,8 @@ package com.ctp.cdi.query.test.service;
 
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
 import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.FirstResult;
 import com.ctp.cdi.query.MaxResults;
@@ -35,7 +37,7 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
     public abstract List<Simple> findByNamedQueryRestricted(String name, Boolean enabled, 
             @MaxResults int max, @FirstResult Integer first);
     
-    @Query(named=Simple.BY_ID)
+    @Query(named=Simple.BY_ID, lock=LockModeType.PESSIMISTIC_WRITE)
     public abstract Simple findByNamedQueryNamed(
             @QueryParam("id") Long id, @QueryParam("enabled") Boolean enabled);
     

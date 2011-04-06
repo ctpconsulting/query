@@ -3,9 +3,9 @@ package com.ctp.cdi.query;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.jboss.logging.Logger;
+import org.jboss.seam.solder.serviceHandler.ServiceHandlerExtension;
 
 import com.ctp.cdi.query.handler.QueryHandler;
-import org.jboss.seam.solder.serviceHandler.ServiceHandlerExtension;
 
 public class QueryExtension extends ServiceHandlerExtension {
 
@@ -14,13 +14,13 @@ public class QueryExtension extends ServiceHandlerExtension {
     @Override
     protected <X> Class<?> getHandlerClass(ProcessAnnotatedType<X> event) {
         if (event.getAnnotatedType().isAnnotationPresent(Dao.class)) {
-	    log.debugv("getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
-	    // TODO:
-	    // - Validate the annotated type
-	    // - Preprocess. We can build up all the metadata before.
-	    return QueryHandler.class;
-	}
-	return null;
+            log.debugv("getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
+            // TODO:
+            // - Validate the annotated type
+            // - Preprocess. We can build up all the metadata before.
+            return QueryHandler.class;
+        }
+        return null;
     }
 
 }

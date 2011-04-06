@@ -138,7 +138,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Assert.assertEquals(1, result.size());
         Assert.assertEquals(second.getId(), result.get(0).getId());
     }
-    
+
     private Simple createSimple(String name) {
         Simple result = new Simple(name);
         entityManager.persist(result);
