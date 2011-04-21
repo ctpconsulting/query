@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 import org.jboss.seam.solder.serviceHandler.ServiceHandlerExtension;
 
 import com.ctp.cdi.query.handler.QueryHandler;
+import com.ctp.cdi.query.meta.DaoComponentsFactory;
 
 public class QueryExtension extends ServiceHandlerExtension {
 
@@ -15,10 +16,8 @@ public class QueryExtension extends ServiceHandlerExtension {
     protected <X> Class<?> getHandlerClass(ProcessAnnotatedType<X> event) {
         if (event.getAnnotatedType().isAnnotationPresent(Dao.class)) {
             log.debugv("getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
-            // TODO:
-            // - Validate the annotated type
-            // - Preprocess. We can build up all the metadata before.
-            return QueryHandler.class;
+            boolean added = DaoComponentsFactory.instance().add(event.getAnnotatedType().getJavaClass());
+            return added ? QueryHandler.class : null;
         }
         return null;
     }

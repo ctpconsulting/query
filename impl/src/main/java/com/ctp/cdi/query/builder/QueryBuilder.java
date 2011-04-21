@@ -3,15 +3,11 @@ package com.ctp.cdi.query.builder;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.interceptor.InvocationContext;
-import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
-import org.jboss.logging.Logger;
-
+import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
-import com.ctp.cdi.query.util.DaoUtils;
 
 /**
  * Query builder factory. Delegates to concrete implementations.
@@ -24,33 +20,6 @@ public abstract class QueryBuilder {
     public static final String QUERY_COUNT = "select count(e) from {0} e";
     public static final String ENTITY_NAME = "e";
     
-    private static final Logger log = Logger.getLogger(QueryBuilder.class);
-    
-    protected final Parameters params;
-    protected final InvocationContext ctx;
-    protected final Class<?> entityClass;
-    
-    protected QueryBuilder(Parameters params, InvocationContext ctx) {
-        this.params = params;
-        this.ctx = ctx;
-        this.entityClass = DaoUtils.extractEntityMetaData(
-                ctx.getTarget().getClass()).getEntityClass();
-    }
-    
-    public static QueryBuilder create(InvocationContext ctx) {
-        Parameters params = Parameters.create(ctx.getMethod(), ctx.getParameters());
-        if (AnnotatedQueryBuilder.handles(ctx)) {
-            log.debug("create: Using annotation based query builder.");
-            return new AnnotatedQueryBuilder(params, ctx);
-        }
-        if (MethodQueryBuilder.handles(ctx)) {
-            log.debug("create: Using method based query builder.");
-            return new MethodQueryBuilder(params, ctx);
-        }
-        log.warn("create: No query builder found.");
-        return null;
-    }
-    
     public static String selectQuery(String entityName) {
         return MessageFormat.format(QUERY_SELECT, entityName);
     }
@@ -59,13 +28,13 @@ public abstract class QueryBuilder {
         return MessageFormat.format(QUERY_COUNT, entityName);
     }
     
-    public abstract Object execute(EntityManager entityManager);
+    public abstract Object execute(QueryInvocationContext ctx);
     
-    protected boolean returnsList() {
+    protected boolean returnsList(QueryInvocationContext ctx) {
         return ctx.getMethod().getReturnType().isAssignableFrom(List.class);
     }
     
-    protected LockModeType extractLockMode() {
+    protected LockModeType extractLockMode(QueryInvocationContext ctx) {
         Class<com.ctp.cdi.query.Query> query = com.ctp.cdi.query.Query.class;
         if (ctx.getMethod().isAnnotationPresent(query) &&
                 ctx.getMethod().getAnnotation(query).lock() != LockModeType.NONE) {
@@ -74,19 +43,20 @@ public abstract class QueryBuilder {
         return null;
     }
     
-    protected boolean hasLockMode() {
-        return extractLockMode() != null;
+    protected boolean hasLockMode(QueryInvocationContext ctx) {
+        return extractLockMode(ctx) != null;
     }
     
-    protected Query applyRestrictions(Query query) {
+    protected Query applyRestrictions(QueryInvocationContext ctx, Query query) {
+        Parameters params = ctx.getParams();
         if (params.hasSizeRestriction()) {
             query.setMaxResults(params.getSizeRestriciton());
         }
         if (params.hasFirstResult()) {
             query.setFirstResult(params.getFirstResult());
         }
-        if (hasLockMode()) {
-            query.setLockMode(extractLockMode());
+        if (hasLockMode(ctx)) {
+            query.setLockMode(extractLockMode(ctx));
         }
         return query;
     }

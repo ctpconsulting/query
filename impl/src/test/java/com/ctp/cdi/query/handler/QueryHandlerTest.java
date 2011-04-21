@@ -17,6 +17,8 @@ import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.domain.Simple2;
+import com.ctp.cdi.query.test.service.Simple2Dao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
@@ -26,12 +28,15 @@ public class QueryHandlerTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return Deployments.initDeployment()
-                .addClasses(SimpleDao.class)
+                .addClasses(SimpleDao.class, Simple2Dao.class)
                 .addPackage(Simple.class.getPackage());
     }
     
     @Inject
     private SimpleDao dao;
+    
+    @Inject
+    private Simple2Dao dao2;
     
     @Produces
     @PersistenceContext
@@ -138,9 +143,31 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Assert.assertEquals(1, result.size());
         Assert.assertEquals(second.getId(), result.get(0).getId());
     }
+    
+    @Test
+    public void shouldWorkWith2ndDao() {
+        // given
+        final String name = "testWorkWith2ndDao";
+        Simple2 simple = createSimple2(name);
+        
+        // when
+        Simple2 result = dao2.findByName(name);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(simple.getId(), result.getId());
+        Assert.assertEquals(name, result.getName());
+    }
 
     private Simple createSimple(String name) {
         Simple result = new Simple(name);
+        entityManager.persist(result);
+        entityManager.flush();
+        return result;
+    }
+    
+    private Simple2 createSimple2(String name) {
+        Simple2 result = new Simple2(name);
         entityManager.persist(result);
         entityManager.flush();
         return result;

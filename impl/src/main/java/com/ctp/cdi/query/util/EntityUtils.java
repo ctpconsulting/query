@@ -14,8 +14,6 @@ public abstract class EntityUtils {
 
     public static boolean isNew(Object entity) {
 	assertIsEntity(entity);
-	PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entity.getClass())
-	      .addCriteria(new AnnotatedPropertyCriteria(Id.class));
 	Property<Serializable> property = primaryKey(entity.getClass());
 	property.setAccessible();
 	Serializable value = property.getValue(entity);

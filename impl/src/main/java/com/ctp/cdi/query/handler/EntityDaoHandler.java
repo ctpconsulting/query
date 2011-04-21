@@ -28,15 +28,15 @@ import javax.persistence.criteria.CriteriaQuery;
  * @param <E>       Entity type.
  * @param <PK>      Primary key type, must be a serializable.
  */
-public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
+public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
     
-    private static final Logger log = Logger.getLogger(BaseHandler.class);
+    private static final Logger log = Logger.getLogger(EntityDaoHandler.class);
     
     private final EntityManager entityManager;
     private final Class<E> entityClass;
     private final String entityName;
     
-    public BaseHandler(EntityManager entityManager, Class<E> entityClass) {
+    public EntityDaoHandler(EntityManager entityManager, Class<E> entityClass) {
 	if (null == entityManager) {
             throw new IllegalStateException("EntityManager cannot be null.");
         }
@@ -49,8 +49,8 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
         return extract(method) != null;
     }
     
-    public static <E, PK extends Serializable> BaseHandler<E, PK> create(EntityManager e, Class<E> entityClass) {
-        return new BaseHandler<E, PK>(e, entityClass);
+    public static <E, PK extends Serializable> EntityDaoHandler<E, PK> create(EntityManager e, Class<E> entityClass) {
+        return new EntityDaoHandler<E, PK>(e, entityClass);
     }
     
     public Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException {
@@ -134,7 +134,7 @@ public class BaseHandler<E, PK extends Serializable> implements EntityDao<E, PK>
     private static Method extract(Method method) {
         try {
             String name = method.getName();
-            return BaseHandler.class.getMethod(name, method.getParameterTypes());
+            return EntityDaoHandler.class.getMethod(name, method.getParameterTypes());
         } catch (NoSuchMethodException e) {
             return null;
         }

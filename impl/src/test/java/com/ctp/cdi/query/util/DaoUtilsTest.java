@@ -1,47 +1,21 @@
 package com.ctp.cdi.query.util;
 
-import javax.inject.Inject;
-
 import junit.framework.Assert;
 
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.handler.DaoMetaData;
+import com.ctp.cdi.query.meta.DaoEntity;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
-import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
-import com.ctp.cdi.query.test.util.Deployments;
+import com.ctp.cdi.query.test.service.SimpleDao;
 
-@RunWith(Arquillian.class)
 public class DaoUtilsTest {
-    
-    @Deployment
-    public static Archive<?> deployment() {
-        return Deployments.initDeployment()
-                .addPackage(DaoInterface.class.getPackage())
-                .addPackage(EntityDao.class.getPackage())
-                .addPackage(Simple.class.getPackage());
-    }
-    
-    @Inject
-    private DaoInterface daoInterFace;
-    
-    @Inject
-    private ExtendedDaoInterface interFace;
-    
-    @Inject
-    private SimpleDao abstractClass;
 
     @Test
     public void shouldExtractFromInterface() {
         // when
-        DaoMetaData result = DaoUtils.extractEntityMetaData(interFace.getClass());
+        DaoEntity result = DaoUtils.extractEntityMetaData(ExtendedDaoInterface.class);
         
         // then
         Assert.assertNotNull(result);
@@ -52,7 +26,7 @@ public class DaoUtilsTest {
     @Test
     public void shouldExtractFromClass() {
         // when
-        DaoMetaData result = DaoUtils.extractEntityMetaData(abstractClass.getClass());
+        DaoEntity result = DaoUtils.extractEntityMetaData(SimpleDao.class);
         
         // then
         Assert.assertNotNull(result);
@@ -63,7 +37,7 @@ public class DaoUtilsTest {
     @Test
     public void shouldExtractFromAnnotation() {
         // when
-        DaoMetaData result = DaoUtils.extractEntityMetaData(daoInterFace.getClass());
+        DaoEntity result = DaoUtils.extractEntityMetaData(DaoInterface.class);
         
         // then
         Assert.assertNotNull(result);

@@ -4,7 +4,7 @@ import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
 
 import org.jboss.logging.Logger;
 
-import com.ctp.cdi.query.builder.BuilderContext;
+import com.ctp.cdi.query.builder.ParameterContext;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.param.Parameters;
 
@@ -29,7 +29,7 @@ public class QueryRoot extends QueryPart {
     }
     
     public String createJpql() {
-        BuilderContext ctx = new BuilderContext(parameters);
+        ParameterContext ctx = new ParameterContext(parameters);
         buildQuery(result, ctx);
         String jpql = result.toString();
         log.debugv("createJpql: Query is {0}", jpql);
@@ -55,7 +55,7 @@ public class QueryRoot extends QueryPart {
     }
     
     @Override
-    protected QueryPart buildQuery(StringBuilder builder, BuilderContext ctx) {
+    protected QueryPart buildQuery(StringBuilder builder, ParameterContext ctx) {
         builder.append(QueryBuilder.selectQuery(entityName));
         if (hasChildren()) {
             builder.append(" where ");

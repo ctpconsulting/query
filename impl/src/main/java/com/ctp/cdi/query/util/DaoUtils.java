@@ -1,13 +1,13 @@
 package com.ctp.cdi.query.util;
 
-import com.ctp.cdi.query.Dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.jboss.logging.Logger;
 
-import com.ctp.cdi.query.handler.DaoMetaData;
+import com.ctp.cdi.query.Dao;
+import com.ctp.cdi.query.meta.DaoEntity;
 
 public abstract class DaoUtils {
     
@@ -18,37 +18,36 @@ public abstract class DaoUtils {
      * @param daoClass          DAO class to analyze.
      * @return                  Meta data containing entity and primary key classes.
      */
-    public static DaoMetaData extractEntityMetaData(Class<?> daoClass) {
-        DaoMetaData fromAnnotation = extractFromAnnotation(daoClass);
+    public static DaoEntity extractEntityMetaData(Class<?> daoClass) {
+        log.debugv("extractEntityMetaData: class = {0}", daoClass);
+        DaoEntity fromAnnotation = extractFromAnnotation(daoClass);
         if (fromAnnotation != null)
             return fromAnnotation;
-        DaoMetaData fromType = extractFrom(daoClass.getGenericSuperclass());
-        if (fromType != null)
-            return fromType;
-        Class<?>[] interfaces = daoClass.getInterfaces();
-        for (Class<?> interFace : interfaces) {
-            for (Type type : interFace.getGenericInterfaces()) {
-                DaoMetaData fromGenericInterface = extractFrom(type);
-                if (fromGenericInterface != null)
-                    return fromGenericInterface;
+        if (daoClass.isInterface()) {
+            for (Type inf : daoClass.getGenericInterfaces()) {
+                DaoEntity result = extractFrom(inf);
+                if (result != null)
+                    return result;
             }
+        } else {
+            DaoEntity result = extractFrom(daoClass.getGenericSuperclass());
+            if (result != null)
+                return result;
         }
-        Class<?> superClass = daoClass.getSuperclass();
-        if (superClass != null && !superClass.equals(Object.class)) {
-            return extractEntityMetaData(superClass);
-        }
+        if (daoClass.getSuperclass() != null)
+            return extractEntityMetaData(daoClass.getSuperclass());
         return null;
     }
     
     @SuppressWarnings("unchecked")
-    private static DaoMetaData extractFrom(Type type) {
+    private static DaoEntity extractFrom(Type type) {
         log.debugv("extractFrom: type = {0}", type);
         if (type  instanceof ParameterizedType) {
             Type[] genericTypes = ((ParameterizedType) type).getActualTypeArguments();
-            DaoMetaData result = null;
+            DaoEntity result = null;
             for (Type genericType : genericTypes) {
                 if (genericType instanceof Class && EntityUtils.isEntityClass((Class<?>) genericType)) {
-                    result = new DaoMetaData((Class<?>) genericType);
+                    result = new DaoEntity((Class<?>) genericType);
                     continue;
                 }
                 if (result != null && genericType instanceof Class) {
@@ -60,13 +59,11 @@ public abstract class DaoUtils {
         return null;
     }
     
-    private static DaoMetaData extractFromAnnotation(Class<?> inspect) {
-        for (Class<?> daoClass : inspect.getInterfaces()) {
-            if (daoClass.isAnnotationPresent(Dao.class)) {
-                Dao dao = daoClass.getAnnotation(Dao.class);
-                if (!Object.class.equals(dao.value())) {
-                    return new DaoMetaData(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
-                }
+    private static DaoEntity extractFromAnnotation(Class<?> daoClass) {
+        if (daoClass.isAnnotationPresent(Dao.class)) {
+            Dao dao = daoClass.getAnnotation(Dao.class);
+            if (!Object.class.equals(dao.value())) {
+                return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
             }
         }
         return null;

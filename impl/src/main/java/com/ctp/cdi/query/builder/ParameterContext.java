@@ -10,12 +10,12 @@ import com.ctp.cdi.query.param.Parameters;
  *
  * @author thomashug
  */
-public class BuilderContext {
+public class ParameterContext {
 
     private final Parameters parameters;
     private int counter = 1;
     
-    public BuilderContext(Parameters parameters) {
+    public ParameterContext(Parameters parameters) {
         this.parameters = parameters;
     }
     

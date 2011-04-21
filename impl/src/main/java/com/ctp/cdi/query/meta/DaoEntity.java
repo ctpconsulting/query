@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.handler;
+package com.ctp.cdi.query.meta;
 
 import java.io.Serializable;
 
@@ -6,16 +6,16 @@ import java.io.Serializable;
  * Data structure to store information about a DAO.
  * @author thomashug
  */
-public class DaoMetaData {
+public class DaoEntity {
 
     private Class<?> entityClass;
     private Class<? extends Serializable> primaryClass;
     
-    public DaoMetaData(Class<?> entityClass) {
+    public DaoEntity(Class<?> entityClass) {
         this(entityClass, null);
     }
     
-    public DaoMetaData(Class<?> entityClass, Class<? extends Serializable> primaryClass) {
+    public DaoEntity(Class<?> entityClass, Class<? extends Serializable> primaryClass) {
         this.entityClass = entityClass;
         this.primaryClass = primaryClass;
     }

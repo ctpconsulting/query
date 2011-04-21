@@ -6,6 +6,8 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import com.ctp.cdi.query.QueryExtension;
+import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.meta.DaoComponents;
 
 public abstract class Deployments {
 
@@ -18,6 +20,8 @@ public abstract class Deployments {
 	Logging.reconfigure();
 	return ShrinkWrap.create(WebArchive.class, "test.war")
                 .addClasses(QueryExtension.class)
+                .addPackage(DaoComponents.class.getPackage())
+                .addPackage(QueryBuilder.class.getPackage())
                 .addAsWebInfResource("test-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsWebInfResource("glassfish-resources.xml");

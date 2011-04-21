@@ -1,16 +1,20 @@
 package com.ctp.cdi.query.handler;
 
-import com.ctp.cdi.query.builder.QueryBuilder;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
+import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 
-import org.jboss.logging.Logger;
-
-import com.ctp.cdi.query.util.DaoUtils;
-import java.lang.reflect.Modifier;
+import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.meta.DaoComponents;
+import com.ctp.cdi.query.meta.DaoMethod;
+import com.ctp.cdi.query.meta.Initialized;
+import com.ctp.cdi.query.meta.QueryInvocationLiteral;
 
 /**
  * Entry point for query processing.
@@ -19,25 +23,46 @@ import java.lang.reflect.Modifier;
  */
 public class QueryHandler {
     
-    private static final Logger log = Logger.getLogger(QueryHandler.class);
-    
-    @Inject
+    @Inject @Any
     private Instance<EntityManager> entityManager;
     
+    @Inject @Any
+    private Instance<QueryBuilder> queryBuilder;
+    
+    @Inject @Initialized
+    private DaoComponents components;
+    
     @AroundInvoke
-    public Object handle(InvocationContext ctx) throws Exception {
-        if (!Modifier.isAbstract(ctx.getMethod().getModifiers())) {
-            return ctx.proceed();
-        }
-        if (BaseHandler.contains(ctx.getMethod())) {
-            return callBaseHandler(ctx);
-        }
-        return QueryBuilder.create(ctx).execute(entityManager.get());
+    public Object handle(InvocationContext context) throws Exception {
+        DaoMethod method = components.lookupMethod(extractFromProxy(context), context.getMethod());
+        QueryBuilder builder = queryBuilder.select(new QueryInvocationLiteral(method.getMethodType())).get();
+        return builder.execute(new QueryInvocationContext(context, method, entityManager.get()));
     }
-
-    private Object callBaseHandler(InvocationContext ctx) throws Exception {
-        Class<?> entityClass = DaoUtils.extractEntityMetaData(ctx.getTarget().getClass()).getEntityClass();
-        return BaseHandler.create(entityManager.get(), entityClass).invoke(ctx.getMethod(), ctx.getParameters());
+    
+    protected Class<?> extractFromProxy(InvocationContext ctx) {
+        Class<?> proxyClass = ctx.getTarget().getClass();
+        if (ProxyFactory.isProxyClass(proxyClass)) {
+            if (isInterfaceProxy(proxyClass)) {
+                return extractFromInterface(proxyClass);
+            } else {
+                return proxyClass.getSuperclass();
+            }
+        }
+        return proxyClass;
+    }
+    
+    private boolean isInterfaceProxy(Class<?> proxyClass) {
+        Class<?>[] interfaces = proxyClass.getInterfaces();
+        return Object.class.equals(proxyClass.getSuperclass()) && 
+                interfaces != null && interfaces.length > 0;
+    }
+    
+    private Class<?> extractFromInterface(Class<?> proxyClass) {
+        for (Class<?> interFace : proxyClass.getInterfaces()) {
+            if (!ProxyObject.class.equals(interFace))
+                return interFace;
+        }
+        return null;
     }
 
 }

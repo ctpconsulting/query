@@ -19,7 +19,7 @@ import com.ctp.cdi.query.test.domain.Simple_;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.util.Deployments;
 
-public class BaseHandlerTest extends TransactionalTestCase {
+public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Deployment
     public static Archive<?> deployment() {

@@ -2,7 +2,7 @@ package com.ctp.cdi.query.builder.part;
 
 import static com.ctp.cdi.query.util.QueryUtils.uncapitalize;
 
-import com.ctp.cdi.query.builder.BuilderContext;
+import com.ctp.cdi.query.builder.ParameterContext;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.builder.QueryComparator;
 import java.text.MessageFormat;
@@ -31,7 +31,7 @@ public class PropertyQueryPart extends QueryPart {
     }
 
     @Override
-    protected QueryPart buildQuery(StringBuilder builder, BuilderContext ctx) {
+    protected QueryPart buildQuery(StringBuilder builder, ParameterContext ctx) {
         String[] args = new String[comparator.getParamNum() + 1];
         args[0] = QueryBuilder.ENTITY_NAME + "." + name;
         for (int i = 1; i < args.length; i++) {
