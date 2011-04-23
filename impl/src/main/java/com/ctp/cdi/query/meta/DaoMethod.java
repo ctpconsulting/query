@@ -6,18 +6,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import com.ctp.cdi.query.Query;
+import com.ctp.cdi.query.builder.part.QueryRoot;
 import com.ctp.cdi.query.handler.EntityDaoHandler;
+import com.ctp.cdi.query.util.EntityUtils;
 
 public class DaoMethod {
 
     private Method method;
     private MethodType methodType;
     private DaoComponent dao;
+    private QueryRoot queryRoot;
     
     public DaoMethod(Method method, DaoComponent dao) {
         this.method = method;
         this.dao = dao;
         extractMethodType();
+        initQueryRoot();
     }
     
     private void extractMethodType() {
@@ -27,6 +31,13 @@ public class DaoMethod {
             methodType = MethodType.ANNOTATED;
         } else {
             methodType = MethodType.PARSE;
+        }
+    }
+    
+    private void initQueryRoot() {
+        if (methodType == MethodType.PARSE) {
+            queryRoot = QueryRoot.create(method.getName(), 
+                    EntityUtils.entityName(dao.getEntityClass()));
         }
     }
     
@@ -48,6 +59,10 @@ public class DaoMethod {
 
     public DaoComponent getDao() {
         return dao;
+    }
+
+    public QueryRoot getQueryRoot() {
+        return queryRoot;
     }
 
 }

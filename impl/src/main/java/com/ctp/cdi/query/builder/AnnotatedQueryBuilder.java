@@ -8,6 +8,7 @@ import com.ctp.cdi.query.meta.MethodType;
 import com.ctp.cdi.query.meta.QueryInvocation;
 import com.ctp.cdi.query.param.Parameters;
 import com.ctp.cdi.query.util.QueryUtils;
+import java.lang.reflect.Method;
 
 /**
  * Create the query based on method annotations.
@@ -17,10 +18,11 @@ import com.ctp.cdi.query.util.QueryUtils;
 public class AnnotatedQueryBuilder extends QueryBuilder {
     
     @Override
-    public Object execute(QueryInvocationContext queryContext) {
-        Query query = queryContext.getMethod().getAnnotation(Query.class);
-        javax.persistence.Query jpaQuery = createJpaQuery(query, queryContext);
-        if (returnsList(queryContext)) {
+    public Object execute(QueryInvocationContext context) {
+        Method method = context.getMethod();
+        Query query = method.getAnnotation(Query.class);
+        javax.persistence.Query jpaQuery = createJpaQuery(query, context);
+        if (returnsList(method)) {
             return jpaQuery.getResultList();
         } else {
             return jpaQuery.getSingleResult();

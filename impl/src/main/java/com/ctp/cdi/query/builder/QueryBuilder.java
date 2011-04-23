@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
+import java.lang.reflect.Method;
 
 /**
  * Query builder factory. Delegates to concrete implementations.
@@ -28,35 +29,36 @@ public abstract class QueryBuilder {
         return MessageFormat.format(QUERY_COUNT, entityName);
     }
     
-    public abstract Object execute(QueryInvocationContext ctx);
+    public abstract Object execute(QueryInvocationContext ctx) throws Exception;
     
-    protected boolean returnsList(QueryInvocationContext ctx) {
-        return ctx.getMethod().getReturnType().isAssignableFrom(List.class);
+    protected boolean returnsList(Method method) {
+        return method.getReturnType().isAssignableFrom(List.class);
     }
     
-    protected LockModeType extractLockMode(QueryInvocationContext ctx) {
+    protected LockModeType extractLockMode(Method method) {
         Class<com.ctp.cdi.query.Query> query = com.ctp.cdi.query.Query.class;
-        if (ctx.getMethod().isAnnotationPresent(query) &&
-                ctx.getMethod().getAnnotation(query).lock() != LockModeType.NONE) {
-            return ctx.getMethod().getAnnotation(query).lock();
+        if (method.isAnnotationPresent(query) &&
+                method.getAnnotation(query).lock() != LockModeType.NONE) {
+            return method.getAnnotation(query).lock();
         }
         return null;
     }
     
-    protected boolean hasLockMode(QueryInvocationContext ctx) {
-        return extractLockMode(ctx) != null;
+    protected boolean hasLockMode(Method method) {
+        return extractLockMode(method) != null;
     }
     
-    protected Query applyRestrictions(QueryInvocationContext ctx, Query query) {
-        Parameters params = ctx.getParams();
+    protected Query applyRestrictions(QueryInvocationContext context, Query query) {
+        Parameters params = context.getParams();
+        Method method = context.getMethod();
         if (params.hasSizeRestriction()) {
             query.setMaxResults(params.getSizeRestriciton());
         }
         if (params.hasFirstResult()) {
             query.setFirstResult(params.getFirstResult());
         }
-        if (hasLockMode(ctx)) {
-            query.setLockMode(extractLockMode(ctx));
+        if (hasLockMode(method)) {
+            query.setLockMode(extractLockMode(method));
         }
         return query;
     }

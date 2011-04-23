@@ -17,6 +17,10 @@ public class QueryExtension extends ServiceHandlerExtension {
         if (event.getAnnotatedType().isAnnotationPresent(Dao.class)) {
             log.debugv("getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
             boolean added = DaoComponentsFactory.instance().add(event.getAnnotatedType().getJavaClass());
+            if (!added) {
+                log.infov("getHandlerClass: Type {0} ignored as it's not related to an entity", 
+                        event.getAnnotatedType());
+            }
             return added ? QueryHandler.class : null;
         }
         return null;

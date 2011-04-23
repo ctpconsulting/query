@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.builder.part;
 
-import com.ctp.cdi.query.builder.ParameterContext;
+import com.ctp.cdi.query.builder.QueryBuilderContext;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,17 +8,17 @@ import java.util.List;
  *
  * @author thomashug
  */
-abstract class QueryPart  {
+public abstract class QueryPart  {
     
     protected List<QueryPart> children = new LinkedList<QueryPart>();
     
     protected abstract QueryPart build(String queryPart);
     
-    protected abstract QueryPart buildQuery(StringBuilder builder, ParameterContext ctx);
+    protected abstract QueryPart buildQuery(QueryBuilderContext ctx);
     
-    protected void buildQueryForChildren(StringBuilder builder, ParameterContext ctx) {
+    protected void buildQueryForChildren(QueryBuilderContext ctx) {
         for (QueryPart child : children) {
-            child.buildQuery(builder, ctx);
+            child.buildQuery(ctx);
         }
     }
     

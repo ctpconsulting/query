@@ -4,9 +4,8 @@ import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
 
 import org.jboss.logging.Logger;
 
-import com.ctp.cdi.query.builder.ParameterContext;
+import com.ctp.cdi.query.builder.QueryBuilderContext;
 import com.ctp.cdi.query.builder.QueryBuilder;
-import com.ctp.cdi.query.param.Parameters;
 
 /**
  * Root of the query tree. Also the only exposed class in the package.
@@ -18,27 +17,22 @@ public class QueryRoot extends QueryPart {
     
     private static final Logger log = Logger.getLogger(QueryRoot.class);
     
-    private final StringBuilder result = new StringBuilder();
     private final String entityName;
-    private final Parameters parameters;
+    private String jpqlQuery;
     
-    public static QueryRoot create(String method, String entityName, Parameters parameters) {
-        QueryRoot root = new QueryRoot(entityName, parameters);
+    protected QueryRoot(String entityName) {
+        this.entityName = entityName;
+    }
+    
+    public static QueryRoot create(String method, String entityName) {
+        QueryRoot root = new QueryRoot(entityName);
         root.build(method);
+        root.createJpql();
         return root;
     }
     
-    public String createJpql() {
-        ParameterContext ctx = new ParameterContext(parameters);
-        buildQuery(result, ctx);
-        String jpql = result.toString();
-        log.debugv("createJpql: Query is {0}", jpql);
-        return jpql;
-    }
-    
-    protected QueryRoot(String entityName, Parameters parameters) {
-        this.entityName = entityName;
-        this.parameters = parameters;
+    public String getJpqlQuery() {
+        return jpqlQuery;
     }
 
     @Override
@@ -55,13 +49,21 @@ public class QueryRoot extends QueryPart {
     }
     
     @Override
-    protected QueryPart buildQuery(StringBuilder builder, ParameterContext ctx) {
-        builder.append(QueryBuilder.selectQuery(entityName));
+    protected QueryPart buildQuery(QueryBuilderContext ctx) {
+        ctx.append(QueryBuilder.selectQuery(entityName));
         if (hasChildren()) {
-            builder.append(" where ");
+            ctx.append(" where ");
         }
-        buildQueryForChildren(builder, ctx);
+        buildQueryForChildren(ctx);
         return this;
+    }
+    
+    protected String createJpql() {
+        QueryBuilderContext ctx = new QueryBuilderContext();
+        buildQuery(ctx);
+        jpqlQuery = ctx.resultString();
+        log.debugv("createJpql: Query is {0}", jpqlQuery);
+        return jpqlQuery;
     }
     
     private String removePrefix(String queryPart) {

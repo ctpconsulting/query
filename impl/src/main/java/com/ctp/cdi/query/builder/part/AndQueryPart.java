@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.builder.part;
 
-import com.ctp.cdi.query.builder.ParameterContext;
+import com.ctp.cdi.query.builder.QueryBuilderContext;
 
 /**
  *
@@ -15,11 +15,11 @@ class AndQueryPart extends ConnectingQueryPart {
     }
 
     @Override
-    protected QueryPart buildQuery(StringBuilder builder, ParameterContext ctx) {
+    protected QueryPart buildQuery(QueryBuilderContext ctx) {
         if (!isFirst) {
-            builder.append(" and ");
+            ctx.append(" and ");
         }
-        buildQueryForChildren(builder, ctx);
+        buildQueryForChildren(ctx);
         return this;
     }
     

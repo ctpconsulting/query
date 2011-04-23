@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.builder.part;
 
-import com.ctp.cdi.query.builder.ParameterContext;
+import com.ctp.cdi.query.builder.QueryBuilderContext;
 import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
 
 /**
@@ -23,11 +23,11 @@ class OrQueryPart extends ConnectingQueryPart {
     }
 
     @Override
-    protected QueryPart buildQuery(StringBuilder builder, ParameterContext ctx) {
+    protected QueryPart buildQuery(QueryBuilderContext ctx) {
         if (!isFirst) {
-            builder.append(" or ");
+            ctx.append(" or ");
         }
-        buildQueryForChildren(builder, ctx);
+        buildQueryForChildren(ctx);
         return this;
     }
     

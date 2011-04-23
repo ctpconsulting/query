@@ -34,7 +34,8 @@ public class QueryHandler {
     
     @AroundInvoke
     public Object handle(InvocationContext context) throws Exception {
-        DaoMethod method = components.lookupMethod(extractFromProxy(context), context.getMethod());
+        Class<?> daoClass = extractFromProxy(context);
+        DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
         QueryBuilder builder = queryBuilder.select(new QueryInvocationLiteral(method.getMethodType())).get();
         return builder.execute(new QueryInvocationContext(context, method, entityManager.get()));
     }

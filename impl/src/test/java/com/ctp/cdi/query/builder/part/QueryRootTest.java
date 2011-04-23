@@ -4,7 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ctp.cdi.query.param.Parameters;
 
 /**
  *
@@ -21,7 +20,7 @@ public class QueryRootTest {
                 "where e.name = ?1";
         
         // when
-        String result = QueryRoot.create(name, "Simple", Parameters.createEmpty()).createJpql().trim();
+        String result = QueryRoot.create(name, "Simple").getJpqlQuery().trim();
         
         // then
         Assert.assertEquals(expected, result);
@@ -39,7 +38,7 @@ public class QueryRootTest {
                 "and e.camelCase = ?4";
         
         // when
-        String result = QueryRoot.create(name, "Simple", Parameters.createEmpty()).createJpql().trim();
+        String result = QueryRoot.create(name, "Simple").getJpqlQuery().trim();
         
         // then
         Assert.assertEquals(expected, result);

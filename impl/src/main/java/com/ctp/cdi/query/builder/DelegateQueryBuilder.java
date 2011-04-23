@@ -12,19 +12,16 @@ import com.ctp.cdi.query.meta.QueryInvocation;
 public class DelegateQueryBuilder extends QueryBuilder {
 
     @Override
-    public Object execute(QueryInvocationContext queryContext) {
-        try {
-            InvocationContext context = queryContext.getInvocation();
-            if (EntityDaoHandler.contains(context.getMethod())) {
-                return callEntityHandler(context, queryContext.getEntityClass(), queryContext.getEntityManager());
-            }
-            return context.proceed();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delegate call", e);
+    public Object execute(QueryInvocationContext context) throws Exception {
+        InvocationContext invocation = context.getInvocation();
+        if (EntityDaoHandler.contains(invocation.getMethod())) {
+            return callEntityHandler(invocation, context.getEntityClass(), context.getEntityManager());
         }
+        return invocation.proceed();
     }
     
-    private Object callEntityHandler(InvocationContext ctx, Class<?> entityClass, EntityManager entityManager) throws Exception {
+    private Object callEntityHandler(InvocationContext ctx, Class<?> entityClass, EntityManager entityManager)
+            throws Exception {
         return EntityDaoHandler.create(entityManager, entityClass).invoke(ctx.getMethod(), ctx.getParameters());
     }
 
