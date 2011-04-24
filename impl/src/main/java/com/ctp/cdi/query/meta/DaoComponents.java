@@ -1,33 +1,47 @@
 package com.ctp.cdi.query.meta;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.jboss.logging.Logger;
 
 import com.ctp.cdi.query.util.DaoUtils;
 
+/**
+ * Convenience class to access DAO and DAO method meta data. Acts as 
+ * repository for DAO related meta data.
+ * 
+ * @author thomashug
+ */
 public class DaoComponents {
     
     private static final Logger log = Logger.getLogger(DaoComponents.class);
 
     private Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
     
+    /**
+     * Add a DAO class to the meta data repository.
+     * @param daoClass      The dao class.
+     * @return              {@code true} if DAO class has been added,
+     *                      {@code false} otherwise.
+     */
     public boolean add(Class<?> daoClass) {
         DaoEntity entityClass = DaoUtils.extractEntityMetaData(daoClass);
         if (entityClass != null) {
-            Set<Class<?>> collected = collectClasses(daoClass);
-            DaoComponent dao = new DaoComponent(daoClass, collected, entityClass);
+            DaoComponent dao = new DaoComponent(daoClass, entityClass);
             daos.put(daoClass, dao);
             return true;
         }
         return false;
     }
     
+    /**
+     * Repository access - lookup method information for a specific DAO class.
+     * @param daoClass      The DAO class to lookup the method for
+     * @param method        The Method object to get DAO meta data for.
+     * @return              A {@link DaoMethod} corresponding to the method parameter.
+     */
     public DaoMethod lookupMethod(Class<?> daoClass, Method method) {
         log.debugv("lookupMethod(): {0} for declaring class {1}", method.getName(), daoClass.getName());
         if (daos.containsKey(daoClass)) {
@@ -35,20 +49,6 @@ public class DaoComponents {
             return component.lookupMethod(method);
         }
         throw new RuntimeException("Unknown DAO class " + daoClass.getName() + " with method " + method.getName());
-    }
-    
-    private Set<Class<?>> collectClasses(Class<?> daoClass) {
-        Set<Class<?>> result = new HashSet<Class<?>>();
-        Class<?> current = daoClass;
-        while (!Object.class.equals(current) && current != null) {
-            result.add(current);
-            Class<?>[] interfaces = current.getInterfaces();
-            if (interfaces != null)
-                result.addAll(Arrays.asList(interfaces));
-            current = current.getSuperclass();
-        }
-        log.debugv("collectClasses(): Found {0} for {1}", result, daoClass);
-        return result;
     }
 
 }

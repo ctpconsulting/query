@@ -8,6 +8,12 @@ import org.jboss.seam.solder.serviceHandler.ServiceHandlerExtension;
 import com.ctp.cdi.query.handler.QueryHandler;
 import com.ctp.cdi.query.meta.DaoComponentsFactory;
 
+/**
+ * The main extension class for CDI queries, based on Seam Solder service handlers.
+ * Overrides the behavior for looking up handler classes.
+ * 
+ * @author thomashug
+ */
 public class QueryExtension extends ServiceHandlerExtension {
 
     private static final Logger log = Logger.getLogger(QueryExtension.class);

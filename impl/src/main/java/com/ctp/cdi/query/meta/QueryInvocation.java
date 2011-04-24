@@ -12,6 +12,12 @@ import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
+/**
+ * CDI qualifier - defines the kind of query invocation. Mainly used
+ * to resolve the correct query builder by method type.
+ * 
+ * @author thomashug
+ */
 @Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)

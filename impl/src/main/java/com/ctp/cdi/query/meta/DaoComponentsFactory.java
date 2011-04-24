@@ -2,6 +2,12 @@ package com.ctp.cdi.query.meta;
 
 import javax.enterprise.inject.Produces;
 
+/**
+ * DAO components producer. Exposes a singleton both programmatically
+ * as well as over a CDI producer.
+ * 
+ * @author thomashug
+ */
 public class DaoComponentsFactory {
 
     private static DaoComponents components = new DaoComponents();

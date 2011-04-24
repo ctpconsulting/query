@@ -10,6 +10,17 @@ import com.ctp.cdi.query.builder.part.QueryRoot;
 import com.ctp.cdi.query.handler.EntityDaoHandler;
 import com.ctp.cdi.query.util.EntityUtils;
 
+/**
+ * Stores information about a specific method of a DAO:
+ * <ul>
+ *     <li>The reference to the Method reflection object</li>
+ *     <li>Whether this method delegates, is annotated or is parsed</li>
+ *     <li>A reference to the parent DAO</li>
+ *     <li>For parsed DAO methods, also the JPQL string is cached</li>
+ * </ul>
+ * 
+ * @author thomashug
+ */
 public class DaoMethod {
 
     private Method method;

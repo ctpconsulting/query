@@ -3,7 +3,12 @@ package com.ctp.cdi.query.meta;
 import java.io.Serializable;
 
 /**
- * Data structure to store information about an entity.
+ * Data structure to store information about an entity:
+ * <ul>
+ *     <li>Stores the class of the entity</li>
+ *     <li>Stores the primary key class</li>
+ * </ul>
+ * 
  * @author thomashug
  */
 public class DaoEntity {

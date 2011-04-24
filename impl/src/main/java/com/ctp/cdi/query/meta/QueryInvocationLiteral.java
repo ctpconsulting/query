@@ -2,6 +2,11 @@ package com.ctp.cdi.query.meta;
 
 import javax.enterprise.util.AnnotationLiteral;
 
+/**
+ * Utility class to construct a qualifier and resolve a dependency programmatically.
+ * 
+ * @author thomashug
+ */
 public class QueryInvocationLiteral extends AnnotationLiteral<QueryInvocation>
         implements QueryInvocation {
 
