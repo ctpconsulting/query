@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE bookinfo PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 
-<chapter id="query">
-  <title>CDI Query Reference</title>
-</chapter>
+<bookinfo>
+    <title>CDI Query Module</title>
+    <subtitle>Reference Guide</subtitle>
+    <releaseinfo>1.0.0.Alpha1</releaseinfo>
+
+    <authorgroup>
+        <author>
+            <firstname>Thomas</firstname>
+            <surname>Hug</surname>
+        </author>
+    </authorgroup>
+
+</bookinfo>

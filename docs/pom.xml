@@ -27,6 +27,28 @@
             <plugin>
                 <groupId>org.jboss.maven.plugins</groupId>
                 <artifactId>maven-jdocbook-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <cssResource>
+                        <directory>${basedir}/src/main/style/</directory>
+                        <includes>
+                            <include>css/*.css</include>
+                         </includes>
+                    </cssResource>
+                    <imageResource>
+                        <directory>${basedir}/src/main/style/</directory>
+                        <includes>
+                            <include>images/*.png</include>
+                         </includes>
+                    </imageResource>
+                    <formats>
+                        <format>
+                            <formatName>html</formatName>
+                            <stylesheetResource>file:${basedir}/src/main/xslt/xhtml.xsl</stylesheetResource>
+                            <finalName>index.html</finalName>
+                        </format>
+                    </formats>
+                </configuration>
             </plugin>
 
             <!-- Attach docs as a war so dist can retrieve them -->

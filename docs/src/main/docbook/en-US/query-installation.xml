@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="installation">
+    <title>Installation</title>
+    <para>
+        To use the CDI Query module, you need to put the API and implementation JARs on the classpath of your enterprise
+        application.
+    </para>
+
+    <section id="maven-dependencies">
+        <title>Maven dependency configuration</title>
+        <para>
+            If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool, you can add the
+            following dependencies to your pom.xml file to include the CDI Query module:
+        </para>
+        <programlisting role="XML"><![CDATA[<dependency>
+    <groupId>com.ctp.cdi.query</groupId>
+    <artifactId>query-api</artifactId>
+    <version>${cdi.query.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+<dependency>
+    <groupId>com.ctp.cdi.query</groupId>
+    <artifactId>query-impl</artifactId>
+    <version>${cdi.query.version}</version>
+    <scope>runtime</scope>
+</dependency>]]>
+        </programlisting>
+        <tip>
+            <para>
+                Substitute the expression ${cdi.query.version} with the most recent or appropriate version of the CDI Query module.
+                Alternatively, you can create a
+                <ulink
+                    href="http://www.sonatype.com/books/mvnref-book/reference/resource-filtering-sect-properties.html#resource-filtering-sect-user-defined">Maven
+                    user-defined property
+                </ulink>
+                to satisfy this substitution so you can centrally manage the version.
+            </para>
+        </tip>
+        <para>
+            Including the API at compile time and only include the implementation at runtime protects
+            you from inadvertantly depending on an implementation class. Alternatively you can add the
+            following single dependency to your pom.xml file to include the CDI Query module:
+        </para>
+        <programlisting role="XML"><![CDATA[<dependency>
+    <groupId>com.ctp.cdi.query</groupId>
+    <artifactId>query</artifactId>
+    <version>${cdi.query.version}</version>
+</dependency>]]>
+        </programlisting>
+    </section>
+
+    <para>
+        You're now ready to use the CDI Query module in your DAOs.
+    </para>
+
+</chapter>
