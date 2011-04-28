@@ -23,14 +23,16 @@ public abstract class DaoUtils {
         DaoEntity fromAnnotation = extractFromAnnotation(daoClass);
         if (fromAnnotation != null)
             return fromAnnotation;
-        if (daoClass.isInterface()) {
-            for (Type inf : daoClass.getGenericInterfaces()) {
-                DaoEntity result = extractFrom(inf);
-                if (result != null)
-                    return result;
-            }
-        } else {
-            DaoEntity result = extractFrom(daoClass.getGenericSuperclass());
+        for (Type inf : daoClass.getGenericInterfaces()) {
+            DaoEntity result = extractFrom(inf);
+            if (result != null)
+                return result;
+        }
+        DaoEntity result = extractFrom(daoClass.getGenericSuperclass());
+        if (result != null)
+            return result;
+        for (Type intf : daoClass.getGenericInterfaces()) {
+            result = extractFrom(intf);
             if (result != null)
                 return result;
         }

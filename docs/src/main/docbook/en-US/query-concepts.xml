@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="coreconcepts">
+    <title>Core Concepts</title>
+    
+    <section id="daos">
+        <title>DAOs</title>
+        <para>
+            With the CDI Query Module, it is possible to make a DAO out of basically any abstract class or interface (using
+            a concrete class will work too, but you won't be able to use most of the CDI Query features).
+            All that is required is to mark the type as such with a simple annotation:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Dao(Person.class)
+public abstract class PersonDao {
+    ...
+}
+
+@Dao(Person.class)
+public interface PersonDao {
+    ...
+}]]>    </programlisting>
+        <para>
+            The @Dao annotation tells CDI Query that this is a DAO for the Person entity. Any method defined on the DAO
+            will be processed by the framework. The annotation does not require to set the entity class (we'll see later why)
+            but if there are just plain classes or interfaces this is the only way to tell the framework what entity
+            the DAO relates to. In order to simplify this, CDI Query provides several base types.
+        </para>
+        <section id="daos-entity-dao">
+            <title>The EntityDao interface</title>
+            <para>
+                Although mainly intended to hold complex query logic, working with both a DAO and an entity manager in
+                the service layer might unnecessarily clutter code. In order to avoid this for the most common cases, 
+                CDI Query provides base types which can be used to replace the entity manager.
+            </para>
+            <para>
+                The top base type is the EntityDao interface, providing common methods used with an entity manager. 
+                The following code shows the most important methods of the interface:
+            </para>
+            <programlisting role="JAVA"><![CDATA[public interface EntityDao<E, PK> {
+    E save(E entity);
+    E saveAndFlush(E entity);
+    void remove(E entity);
+    E findBy(PK primaryKey);
+    List<E> findAll();
+    Long count();
+}]]>        </programlisting>
+            <para>
+                Your concrete DAO can then either implement or extend this basic interface. For our basic person DAO,
+                this might look like the following:
+            </para>
+            <programlisting role="JAVA"><![CDATA[@Dao
+public interface PersonDao extends EntityDao<Person, Long> {
+    Person findBySsn(String ssn);
+}]]>        </programlisting>
+            <tip>
+                <para>
+                    Annotations on interfaces do not inherit. If the EntityDao interface is extended by another interface adding
+                    some more common methods, it is not possible to simply add the annotation there. It needs to go on each
+                    concrete DAO. The same is not true if a base class is introduced, as we see in the next chapter.
+                </para>
+            </tip>
+        </section>
+    </section>
+
+</chapter>
