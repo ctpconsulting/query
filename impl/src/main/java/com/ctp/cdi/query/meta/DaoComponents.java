@@ -37,6 +37,19 @@ public class DaoComponents {
     }
     
     /**
+     * Repository access - lookup the DAO component meta data for a specific DAO class.
+     * @param daoClass      The DAO class to lookup the method for
+     * @return              A {@link DaoComponent} corresponding to the daoClass parameter.
+     */
+    public DaoComponent lookupComponent(Class<?> daoClass) {
+        if (daos.containsKey(daoClass)) {
+            DaoComponent component = daos.get(daoClass);
+            return component;
+        }
+        throw new RuntimeException("Unknown DAO class " + daoClass.getName());
+    }
+    
+    /**
      * Repository access - lookup method information for a specific DAO class.
      * @param daoClass      The DAO class to lookup the method for
      * @param method        The Method object to get DAO meta data for.
@@ -44,11 +57,7 @@ public class DaoComponents {
      */
     public DaoMethod lookupMethod(Class<?> daoClass, Method method) {
         log.debugv("lookupMethod(): {0} for declaring class {1}", method.getName(), daoClass.getName());
-        if (daos.containsKey(daoClass)) {
-            DaoComponent component = daos.get(daoClass);
-            return component.lookupMethod(method);
-        }
-        throw new RuntimeException("Unknown DAO class " + daoClass.getName() + " with method " + method.getName());
+        return lookupComponent(daoClass).lookupMethod(method);
     }
 
 }

@@ -21,23 +21,23 @@ public interface PersonDao {
     ...
 }]]>    </programlisting>
         <para>
-            The @Dao annotation tells CDI Query that this is a DAO for the Person entity. Any method defined on the DAO
+            The <literal>@Dao</literal> annotation tells CDI Query that this is a DAO for the Person entity. Any method defined on the DAO
             will be processed by the framework. The annotation does not require to set the entity class (we'll see later why)
             but if there are just plain classes or interfaces this is the only way to tell the framework what entity
             the DAO relates to. In order to simplify this, CDI Query provides several base types.
         </para>
         <section id="daos-entity-dao">
-            <title>The EntityDao interface</title>
+            <title>The <literal>EntityDao</literal> interface</title>
             <para>
                 Although mainly intended to hold complex query logic, working with both a DAO and an entity manager in
                 the service layer might unnecessarily clutter code. In order to avoid this for the most common cases, 
                 CDI Query provides base types which can be used to replace the entity manager.
             </para>
             <para>
-                The top base type is the EntityDao interface, providing common methods used with an entity manager. 
+                The top base type is the <literal>EntityDao</literal> interface, providing common methods used with an entity manager. 
                 The following code shows the most important methods of the interface:
             </para>
-            <programlisting role="JAVA"><![CDATA[public interface EntityDao<E, PK> {
+            <programlisting role="JAVA"><![CDATA[public interface EntityDao<E, PK extends Serializable> {
     E save(E entity);
     E saveAndFlush(E entity);
     void remove(E entity);
@@ -46,8 +46,7 @@ public interface PersonDao {
     Long count();
 }]]>        </programlisting>
             <para>
-                Your concrete DAO can then either implement or extend this basic interface. For our basic person DAO,
-                this might look like the following:
+                The concrete DAO can then extend this basic interface. For our person DAO, this might look like the following:
             </para>
             <programlisting role="JAVA"><![CDATA[@Dao
 public interface PersonDao extends EntityDao<Person, Long> {
@@ -55,12 +54,95 @@ public interface PersonDao extends EntityDao<Person, Long> {
 }]]>        </programlisting>
             <tip>
                 <para>
-                    Annotations on interfaces do not inherit. If the EntityDao interface is extended by another interface adding
-                    some more common methods, it is not possible to simply add the annotation there. It needs to go on each
-                    concrete DAO. The same is not true if a base class is introduced, as we see in the next chapter.
+                    Annotations on interfaces do not inherit. If the <literal>EntityDao</literal> interface is extended by 
+                    another interface adding some more common methods, it is not possible to simply add the annotation there. 
+                    It needs to go on each concrete DAO. The same is not true if a base class is introduced, as we see in the 
+                    next chapter.
                 </para>
             </tip>
         </section>
+        <section id="daos-abstract-entity-dao">
+            <title>The AbstractEntityDao class</title>
+            <para>
+                This class is an implementation of the <literal>EntityDao</literal> interface and provides additional
+                functionality when custom query logic needs also to be implemented in the DAO (note that your DAOs do not
+                support injection).  The class also provides additional support with regards to the JPA 2 criteria API.
+            </para>
+            <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
+    public Person findBySSN(String ssn) {
+        return getEntityManager()
+                .createQuery("select p from Person p where p.ssn = ?1", Person.class)
+                .setParameter(1, ssn)
+                .getResultList();
+    }
+
+    public List<Person> findByCriteria(String name, Integer ageFrom, Integer ageTo) {
+        return criteria()
+                .eq(Person_.name, name)
+                .between(Person_.age, ageFrom, ageTo)
+                .createQuery()
+                .getResultList();
+    }
+}]]>        </programlisting>
+            <para>
+                More details on using the JPA criteria support API are outlined in <xref linkend="criteria"/>.
+            </para>
+        </section>
+    </section>
+    
+    <section id="multiple-entitymanagers">
+        <title>Using Multiple <literal>EntityManager</literal></title>
+        <para>
+            While most applications will run just fine with a single <literal>EntityManager</literal>, there might be setups
+            where multiple data sources are used. Similar to the default case, CDI Query requires to have producers for
+            each <literal>EntityManager</literal> to be used, and to distinguish them over a CDI qualifier.
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Qualifier
+@Target({ TYPE, METHOD, PARAMETER, FIELD })
+@Retention(RUNTIME)
+public @interface Customer {
+}
+        
+public class CustomerDatasourceProducer {
+    ...
+    @Produces @Customer
+    public EntityManager create(){
+        return emf.createEntityManager();
+    }
+}]]>    </programlisting>
+        <para>
+            The <literal>@Customer</literal> is a CDI qualifier - all available <literal>EntityManager</literal> have to
+            be exposed similar with a different qualifier. The link to the Query DAO happens then over a custom annotation
+            on the DAO:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Dao
+@WithEntityManager(Customer.class)
+public interface CustomerDao extends EntityDao<Customer, Long> {
+    ...
+}]]>    </programlisting>
+        <tip>
+            Qualifiers in CDI can also use attributes. This is not supported with the @WithEntityManager annotation,
+            it can only be qualified over a plain annotation.
+        </tip>
+        <para>
+            If a more granular qualifier support is required, the <literal>AbstractEntityDao</literal> class can be extended.
+            The class provides a <literal>getEntityManager</literal> method, which can be overridden and annotated with
+            the appropriate qualifiers:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Qualifier
+@Target({ TYPE, METHOD, PARAMETER, FIELD })
+@Retention(RUNTIME)
+public @interface Customer {
+    CustomerType value();
+}
+        
+public abstract class CustomerDao extends AbstractEntityDao<Customer, Long> {
+    @Override @Customer(CRM)
+    protected abstract EntityManager getEntityManager();
+    
+    ...
+
+}]]>    </programlisting>
     </section>
 
 </chapter>

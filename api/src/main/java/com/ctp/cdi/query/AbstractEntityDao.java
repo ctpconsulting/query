@@ -1,5 +1,6 @@
 package com.ctp.cdi.query;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ import javax.persistence.metamodel.SingularAttribute;
  * @param <PK>  Primary key type.
  */
 @Dao
-public abstract class AbstractEntityDao<E, PK> implements EntityDao<E, PK> {
+public abstract class AbstractEntityDao<E, PK extends Serializable> implements EntityDao<E, PK> {
 
     protected abstract EntityManager getEntityManager();
 

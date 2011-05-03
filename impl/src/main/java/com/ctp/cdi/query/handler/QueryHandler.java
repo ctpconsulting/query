@@ -1,5 +1,8 @@
 package com.ctp.cdi.query.handler;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
@@ -11,6 +14,7 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 
 import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.meta.DaoComponent;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.meta.DaoMethod;
 import com.ctp.cdi.query.meta.Initialized;
@@ -35,9 +39,10 @@ public class QueryHandler {
     @AroundInvoke
     public Object handle(InvocationContext context) throws Exception {
         Class<?> daoClass = extractFromProxy(context);
+        DaoComponent dao = components.lookupComponent(daoClass);
         DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
         QueryBuilder builder = queryBuilder.select(new QueryInvocationLiteral(method.getMethodType())).get();
-        return builder.execute(new QueryInvocationContext(context, method, entityManager.get()));
+        return builder.execute(new QueryInvocationContext(context, method, resolveEntityManager(dao)));
     }
     
     protected Class<?> extractFromProxy(InvocationContext ctx) {
@@ -64,6 +69,26 @@ public class QueryHandler {
                 return interFace;
         }
         return null;
+    }
+    
+    private EntityManager resolveEntityManager(DaoComponent dao) {
+        Annotation[] qualifiers = extractFromTarget(dao.getDaoClass());
+        if (qualifiers == null || qualifiers.length == 0) {
+            qualifiers = dao.getEntityManagerQualifiers(); 
+        }
+        if (qualifiers == null || qualifiers.length == 0) {
+            return entityManager.get();
+        }
+        return entityManager.select(qualifiers).get();
+    }
+
+    private Annotation[] extractFromTarget(Class<?> target) {
+        try {
+            Method method = target.getDeclaredMethod("getEntityManager");
+            return method.getAnnotations();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

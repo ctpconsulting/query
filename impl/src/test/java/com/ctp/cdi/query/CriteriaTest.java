@@ -1,28 +1,28 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ctp.cdi.query;
+
+import java.util.List;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import junit.framework.Assert;
+
+import org.jboss.arquillian.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
-import java.util.List;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import junit.framework.Assert;
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
 
 /**
  *
  * @author thomashug
  */
-public class CriteriasTest extends TransactionalTestCase {
+public class CriteriaTest extends TransactionalTestCase {
     
     @Deployment
     public static Archive<?> deployment() {

@@ -10,5 +10,8 @@
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-preface.xml" />
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-installation.xml" />
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-concepts.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-methodexpressions.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-annotations.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="query-jpacriteria.xml" />
 
 </book>

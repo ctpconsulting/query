@@ -1,6 +1,7 @@
 package com.ctp.cdi.query.meta;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,7 +9,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.jboss.logging.Logger;
+import org.jboss.seam.solder.reflection.AnnotationInstanceProvider;
+
+import com.ctp.cdi.query.WithEntityManager;
 
 /**
  * Stores information about a specific DAO. Extracts information about:
@@ -27,6 +32,7 @@ public class DaoComponent {
 
     private Class<?> daoClass;
     private DaoEntity entityClass;
+    private Annotation[] qualifiers;
     
     private Map<Method, DaoMethod> methods = new HashMap<Method, DaoMethod>();
     
@@ -74,10 +80,18 @@ public class DaoComponent {
     
     /**
      * Returns the original DAO class this meta data is related to.
-     * @return 
+     * @return          The class of the DAO.
      */
     public Class<?> getDaoClass() {
         return daoClass;
+    }
+
+    /**
+     * Returns qualifiers for selecting an entity manager for the DAO component.
+     * @return          A list of annotations, empty when using the default entity manager.
+     */
+    public Annotation[] getEntityManagerQualifiers() {
+        return qualifiers;
     }
 
     private void initialize() {
@@ -88,6 +102,17 @@ public class DaoComponent {
                 DaoMethod daoMethod = new DaoMethod(daoClassMethod, this);
                 methods.put(daoClassMethod, daoMethod);
             }
+        }
+        if (daoClass.isAnnotationPresent(WithEntityManager.class)) {
+            Class<? extends Annotation>[] annotations = daoClass.getAnnotation(WithEntityManager.class).value();
+            qualifiers = new Annotation[annotations.length];
+            AnnotationInstanceProvider provider = new AnnotationInstanceProvider();
+            for (int i = 0; i < annotations.length; i++) {
+                Class<? extends Annotation> clazz = annotations[i];
+                qualifiers[i] = provider.get(clazz, new HashMap<String, Object>());
+            }
+        } else {
+            qualifiers = new Annotation[] {};
         }
     }
     

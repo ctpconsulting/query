@@ -1,5 +1,6 @@
 package com.ctp.cdi.query;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,7 @@ import javax.persistence.metamodel.SingularAttribute;
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
  */
-public interface EntityDao<E, PK> {
+public interface EntityDao<E, PK extends Serializable> {
 
     /**
      * Persist (new entity) or merge the given entity.

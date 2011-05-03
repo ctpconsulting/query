@@ -2,6 +2,7 @@ package com.ctp.cdi.query.test.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
 import com.ctp.cdi.query.AbstractEntityDao;
@@ -45,5 +46,8 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
     public abstract Simple findByQuery(String name);
     
     public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
+    
+    @Override
+    protected abstract EntityManager getEntityManager();
 
 }

@@ -82,7 +82,7 @@
 }]]>    </programlisting>
         <para>
             This allows the EntityManager to be injected over CDI instead of only being used with a @PersistenceContext
-            annotation. Using multiple EntityManagers will be supported in the final version of CDI Query.
+            annotation. Using multiple EntityManagers is explored in more detail in <xref linkend="multiple-entitymanagers"/>
         </para>
     </section>
 
