@@ -25,7 +25,6 @@ public abstract class ParentDao extends AbstractEntityDao<Parent, Long> {
                         where(OneToMany.class)
                             .eq(OneToMany_.name, manyName)
                 )
-                .distinct()
                 .createQuery()
                 .getResultList();
     }
@@ -34,15 +33,14 @@ public abstract class ParentDao extends AbstractEntityDao<Parent, Long> {
         return criteria()
                 .or(
                     criteria()
-                        .eq(Parent_.name, name1)
-                        .between(Parent_.value, 0L, 50L)
-                )
-                .or(
-                    criteria()
                         .eq(Parent_.name, name2)
-                        .between(Parent_.value, 50L, 100L)
+                        .between(Parent_.value, 50L, 100L),
+                    criteria()
+                        .eq(Parent_.name, name1)
+                        .between(Parent_.value, 0L, 50L),
+                    criteria()
+                        .eq(Parent_.name, "does not exist!")
                 )
-                .distinct()
                 .createQuery()
                 .getResultList();
     }

@@ -90,7 +90,7 @@ public class CriteriaTest extends TransactionalTestCase {
         Assert.assertEquals(nameMany, queried.getMany().get(0).getName());
     }
     
-    //@Test
+    @Test
     public void shouldCreateOrQuery() {
         // given
         final String name = "testCreateOrQuery";

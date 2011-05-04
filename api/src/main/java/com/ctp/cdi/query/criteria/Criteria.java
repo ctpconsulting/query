@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.criteria;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,8 +52,14 @@ public class Criteria<C> {
         return entityManager.createQuery(query);
     }
     
-    public Criteria<C> or(Criteria<C> criteria) {
-        add(new OrBuilder<C>(criteria));
+    public Criteria<C> or(Criteria<C> first, Criteria<C> second, Criteria<C>... other) {
+        if (other == null) {
+            add(new OrBuilder<C>(first, second));
+        } else {
+            List<Criteria<C>> list = new LinkedList<Criteria<C>>(Arrays.asList(first, second));
+            list.addAll(Arrays.asList(other));
+            add(new OrBuilder<C>(list.toArray(new Criteria[0])));
+        }
         return this;
     }
     
