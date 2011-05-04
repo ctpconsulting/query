@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.logging.Logger;
-
 import com.ctp.cdi.query.util.DaoUtils;
 
 /**
@@ -16,8 +14,6 @@ import com.ctp.cdi.query.util.DaoUtils;
  */
 public class DaoComponents {
     
-    private static final Logger log = Logger.getLogger(DaoComponents.class);
-
     private Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
     
     /**
@@ -56,7 +52,6 @@ public class DaoComponents {
      * @return              A {@link DaoMethod} corresponding to the method parameter.
      */
     public DaoMethod lookupMethod(Class<?> daoClass, Method method) {
-        log.debugv("lookupMethod(): {0} for declaring class {1}", method.getName(), daoClass.getName());
         return lookupComponent(daoClass).lookupMethod(method);
     }
 

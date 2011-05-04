@@ -14,7 +14,11 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
+import com.ctp.cdi.query.test.domain.OneToMany;
+import com.ctp.cdi.query.test.domain.OneToOne;
+import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.service.ParentDao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
@@ -32,7 +36,10 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Inject
-    SimpleDao dao;
+    private SimpleDao dao;
+    
+    @Inject
+    private ParentDao parentDao;
     
     @Produces
     @PersistenceContext
@@ -53,6 +60,60 @@ public class CriteriaTest extends TransactionalTestCase {
         Assert.assertEquals(0, result1.size());
         Assert.assertEquals(1, result2.size());
         Assert.assertEquals(0, result3.size());
+    }
+    
+    @Test
+    public void shouldCreateJoinCriteriaQuery() {
+        // given
+        final String name = "testCreateJoinCriteriaQuery";
+        final String nameOne = name + "-one";
+        final String nameMany = name + "-many";
+        Parent parent = new Parent(name);
+        parent.setOne(new OneToOne(nameOne));
+        parent.add(new OneToMany(nameMany));
+        
+        entityManager.persist(parent);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.joinQuery(name, nameOne, nameMany);
+        
+        // then
+        Assert.assertEquals(1, result.size());
+        Assert.assertNotNull(result.get(0));
+        
+        Parent queried = result.get(0);
+        Assert.assertEquals(name, queried.getName());
+        Assert.assertNotNull(queried.getOne());
+        Assert.assertEquals(nameOne, queried.getOne().getName());
+        Assert.assertEquals(1, queried.getMany().size());
+        Assert.assertEquals(nameMany, queried.getMany().get(0).getName());
+    }
+    
+    //@Test
+    public void shouldCreateOrQuery() {
+        // given
+        final String name = "testCreateOrQuery";
+        Parent parent1 = new Parent(name + "1");
+        parent1.setValue(25L);
+        Parent parent2 = new Parent(name + "2");
+        parent2.setValue(75L);
+        Parent parent3 = new Parent(name + "3");
+        parent3.setValue(25L);
+        Parent parent4 = new Parent(name + "1");
+        parent4.setValue(75L);
+        
+        entityManager.persist(parent1);
+        entityManager.persist(parent2);
+        entityManager.persist(parent3);
+        entityManager.persist(parent4);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.orQuery(name + "1", name + "2");
+        
+        // then
+        Assert.assertEquals(2, result.size());
     }
     
     private Simple createSimple(String name, Integer counter) {
