@@ -1,0 +1,13 @@
+package com.ctp.cdi.query.criteria;
+
+import javax.persistence.metamodel.SingularAttribute;
+
+abstract class NoValueBuilder<E, V> implements PredicateBuilder<E> {
+
+    final SingularAttribute<? super E, V> att;
+    
+    NoValueBuilder(SingularAttribute<? super E, V> att) {
+        this.att = att;
+    }
+
+}
