@@ -1,4 +1,4 @@
-package com.ctp.cdi.query;
+package com.ctp.cdi.query.criteria;
 
 import java.util.List;
 
@@ -114,6 +114,32 @@ public class CriteriaTest extends TransactionalTestCase {
         
         // then
         Assert.assertEquals(2, result.size());
+    }
+    
+    @Test
+    public void shouldCreateOrderedQuery() {
+        // given
+        final String name = "testCreateOrderedQuery";
+        Parent parent1 = new Parent(name + "99");
+        Parent parent2 = new Parent(name + "12");
+        Parent parent3 = new Parent(name + "19");
+        Parent parent4 = new Parent(name + "02");
+        
+        entityManager.persist(parent1);
+        entityManager.persist(parent2);
+        entityManager.persist(parent3);
+        entityManager.persist(parent4);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.orderedQuery();
+        
+        // then
+        Assert.assertEquals(4, result.size());
+        Assert.assertEquals(name + "02", result.get(0).getName());
+        Assert.assertEquals(name + "12", result.get(1).getName());
+        Assert.assertEquals(name + "19", result.get(2).getName());
+        Assert.assertEquals(name + "99", result.get(3).getName());
     }
     
     private Simple createSimple(String name, Integer counter) {

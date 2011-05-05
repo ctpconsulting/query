@@ -19,6 +19,8 @@ import javax.persistence.metamodel.MapAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
+import com.ctp.cdi.query.criteria.OrderBy.OrderDirection;
+
 public class Criteria<C> {
 
     private EntityManager entityManager;
@@ -27,6 +29,7 @@ public class Criteria<C> {
     private boolean distinct = false;
     
     private List<PredicateBuilder<C>> builders = new LinkedList<PredicateBuilder<C>>();
+    private List<QueryProcessor<C>> processors = new LinkedList<QueryProcessor<C>>();
     
     public Criteria(Class<C> entityClass, EntityManager entityManager) {
         this(entityClass, entityManager, null);
@@ -49,17 +52,23 @@ public class Criteria<C> {
         List<Predicate> predicates = collectPredicates(builder, root);
         query.distinct(distinct);
         query.where(predicates.toArray(new Predicate[0]));
+        applyProcessors(query, builder, root);
         return entityManager.createQuery(query);
     }
     
-    public Criteria<C> or(Criteria<C> first, Criteria<C> second, Criteria<C>... other) {
-        if (other == null) {
-            add(new OrBuilder<C>(first, second));
-        } else {
-            List<Criteria<C>> list = new LinkedList<Criteria<C>>(Arrays.asList(first, second));
-            list.addAll(Arrays.asList(other));
-            add(new OrBuilder<C>(list.toArray(new Criteria[0])));
-        }
+    public Criteria<C> or(Criteria<C> first, Criteria<C> second) {
+        return or(first, second);
+    }
+    
+    public Criteria<C> or(Criteria<C> first, Criteria<C> second, Criteria<C> third) {
+        return or(first, second, third);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Criteria<C> or(Criteria<C>... other) {
+        List<Criteria<C>> list = new LinkedList<Criteria<C>>();
+        list.addAll(Arrays.asList(other));
+        add(new OrBuilder<C>(list.toArray(new Criteria[0])));
         return this;
     }
     
@@ -87,6 +96,16 @@ public class Criteria<C> {
         add(new JoinBuilder<C, P>(criteria, joinType, att));
         return this;
     }
+    
+    public <P> Criteria<C> asc(SingularAttribute<? super C, P> att) {
+        add(new OrderBy<C, P>(att, OrderDirection.ASC));
+        return this;
+    }
+    
+    public <P> Criteria<C> desc(SingularAttribute<? super C, P> att) {
+        add(new OrderBy<C, P>(att, OrderDirection.DESC));
+        return this;
+    }
 
     public Criteria<C> distinct() {
         distinct = true;
@@ -106,12 +125,22 @@ public class Criteria<C> {
         return predicates;
     }
     
+    void applyProcessors(CriteriaQuery<C> query, CriteriaBuilder builder, From<C, C> from) {
+        for (QueryProcessor<C> proc : processors) {
+            proc.process(query, builder, from);
+        }
+    }
+    
     // --------------------------------------------------------------------
     // Private criteria methods
     // --------------------------------------------------------------------
     
     private void add(PredicateBuilder<C> pred) {
         builders.add(pred);
+    }
+    
+    private void add(QueryProcessor<C> proc) {
+        processors.add(proc);
     }
     
     // --------------------------------------------------------------------
