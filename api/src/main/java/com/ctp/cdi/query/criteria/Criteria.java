@@ -56,20 +56,14 @@ public class Criteria<C> {
         return entityManager.createQuery(query);
     }
     
+    @SuppressWarnings("unchecked")
     public Criteria<C> or(Criteria<C> first, Criteria<C> second) {
-        return or(first, second);
+        return internalOr(first, second);
     }
     
-    public Criteria<C> or(Criteria<C> first, Criteria<C> second, Criteria<C> third) {
-        return or(first, second, third);
-    }
-
     @SuppressWarnings("unchecked")
-    public Criteria<C> or(Criteria<C>... other) {
-        List<Criteria<C>> list = new LinkedList<Criteria<C>>();
-        list.addAll(Arrays.asList(other));
-        add(new OrBuilder<C>(list.toArray(new Criteria[0])));
-        return this;
+    public Criteria<C> or(Criteria<C> first, Criteria<C> second, Criteria<C> third) {
+        return internalOr(first, second, third);
     }
     
     public <P> Criteria<C> join(SingularAttribute<? super C, P> att, Criteria<P> criteria) {
@@ -129,6 +123,14 @@ public class Criteria<C> {
         for (QueryProcessor<C> proc : processors) {
             proc.process(query, builder, from);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    Criteria<C> internalOr(Criteria<C>... other) {
+        List<Criteria<C>> list = new LinkedList<Criteria<C>>();
+        list.addAll(Arrays.asList(other));
+        add(new OrBuilder<C>(list.toArray(new Criteria[0])));
+        return this;
     }
     
     // --------------------------------------------------------------------
