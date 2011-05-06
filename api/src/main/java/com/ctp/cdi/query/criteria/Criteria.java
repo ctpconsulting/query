@@ -26,6 +26,7 @@ public class Criteria<C> {
     private EntityManager entityManager;
     private Class<C> entityClass;
     private JoinType joinType;
+    private boolean ignoreNull = true;
     private boolean distinct = false;
     
     private List<PredicateBuilder<C>> builders = new LinkedList<PredicateBuilder<C>>();
@@ -141,6 +142,14 @@ public class Criteria<C> {
         builders.add(pred);
     }
     
+    private <P> void add(PredicateBuilder<C> pred, P value) {
+        if (ignoreNull && value != null) {
+            builders.add(pred);
+        } else if (!ignoreNull) {
+            builders.add(pred);
+        }
+    }
+    
     private void add(QueryProcessor<C> proc) {
         processors.add(proc);
     }
@@ -150,42 +159,42 @@ public class Criteria<C> {
     // --------------------------------------------------------------------
     
     public <P> Criteria<C> eq(SingularAttribute<? super C, P> att, P value) {
-        add(new Eq<C, P>(att, value));
+        add(new Eq<C, P>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> notEq(SingularAttribute<? super C, P> att, P value) {
-        add(new NotEq<C, P>(att, value));
+        add(new NotEq<C, P>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> like(SingularAttribute<? super C, String> att, String value) {
-        add(new Like<C>(att, value));
+        add(new Like<C>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> notLike(SingularAttribute<? super C, String> att, String value) {
-        add(new NotLike<C>(att, value));
+        add(new NotLike<C>(att, value), value);
         return this;
     }
     
     public <P extends Number> Criteria<C> lt(SingularAttribute<? super C, P> att, P value) {
-        add(new LessThan<C, P>(att, value));
+        add(new LessThan<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Comparable<? super P>> Criteria<C> ltOrEq(SingularAttribute<? super C, P> att, P value) {
-        add(new LessThanOrEqual<C, P>(att, value));
+        add(new LessThanOrEqual<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Number> Criteria<C> gt(SingularAttribute<? super C, P> att, P value) {
-        add(new GreaterThan<C, P>(att, value));
+        add(new GreaterThan<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Comparable<? super P>> Criteria<C> gtOrEq(SingularAttribute<? super C, P> att, P value) {
-        add(new GreaterThanOrEqual<C, P>(att, value));
+        add(new GreaterThanOrEqual<C, P>(att, value), value);
         return this;
     }
     

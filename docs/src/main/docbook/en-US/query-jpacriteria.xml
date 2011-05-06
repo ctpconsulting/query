@@ -4,7 +4,69 @@
 <chapter id="criteria">
     <title>JPA Criteria API Support</title>
     <para>
-        TODO
+        Beside automatic query generation, the CDI Query module also provides a DSL-like API to create JPA 2 Criteria
+        queries. It takes advantage of the JPA 2 meta model, which helps creating type safe queries.
     </para>
+    <tip>
+        The JPA meta model can easily be generated with an annotation processor. Hibernate or Eclipse link provide
+        such a processor, which can be integrated into your compile and build cycle.
+    </tip>
+    
+    <section id="criteria-basic">
+        <title>Basic Structure</title>
+        <para>
+            The API is centered around the <literal>Criteria</literal> class and is targeted to provide a fluent interface
+            to write criteria queries:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findAdultFamilyMembers(String name, Integer minAge) {
+        return criteria()
+                    .like(Person_.name, name)
+                    .gtOrEq(Person_.age, minAge)
+                    .eq(Person_.validated, Boolean.TRUE)
+                    .desc(Person_.age)
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+    </section>
+    
+    <section id="criteria-join">
+        <title>Joins</title>
+        <para>
+            
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findByCompanyName(String companyName) {
+        return criteria()
+                    .join(Person_.company
+                        where(Company.class)
+                            .eq(Company_.name, companyName)
+                    )
+                    .eq(Person_.validated, Boolean.TRUE)
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+    </section>
+    
+    <section id="criteria-boolean">
+        <title>Joins</title>
+        <para>
+            
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findByCompanyName(String companyName) {
+        return criteria()
+                    .join(Person_.company
+                        where(Company.class)
+                            .eq(Company_.name, companyName)
+                    )
+                    .eq(Person_.validated, Boolean.TRUE)
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+    </section>
 
 </chapter>

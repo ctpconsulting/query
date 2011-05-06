@@ -142,6 +142,23 @@ public class CriteriaTest extends TransactionalTestCase {
         Assert.assertEquals(name + "99", result.get(3).getName());
     }
     
+    @Test
+    public void shouldCreateQueryWihtoutNulls() {
+        // given
+        final String name = "testCreateQueryWihtoutNulls";
+        Parent parent = new Parent(name);
+        
+        entityManager.persist(parent);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.nullAwareQuery(name, null, null);
+        
+        // then
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(name, result.get(0).getName());
+    }
+    
     private Simple createSimple(String name, Integer counter) {
         Simple result = new Simple(name);
         result.setCounter(counter);
