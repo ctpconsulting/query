@@ -142,6 +142,65 @@ public class CriteriaTest extends TransactionalTestCase {
         Assert.assertEquals(name + "99", result.get(3).getName());
     }
     
+    @Test
+    public void shouldCreateQueryWihtoutNulls() {
+        // given
+        final String name = "testCreateQueryWihtoutNulls";
+        Parent parent = new Parent(name);
+        
+        entityManager.persist(parent);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.nullAwareQuery(name, null, null);
+        
+        // then
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(name, result.get(0).getName());
+    }
+    
+    @Test
+    public void shouldCreateFetchQuery() {
+        // given
+        final String name = "testCreateFetchQuery";
+        Parent parent = new Parent(name);
+        parent.add(new OneToMany(name + "-1"));
+        parent.add(new OneToMany(name + "-2"));
+        
+        entityManager.persist(parent);
+        entityManager.flush();
+        
+        // when
+        Parent result = parentDao.fetchQuery(name);
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(name, result.getName());
+        Assert.assertNotNull(result.getMany());
+        Assert.assertEquals(2, result.getMany().size());
+    }
+    
+    @Test
+    public void shouldCreateInQuery() {
+        // given
+        final String name = "testCreateInQuery";
+        Parent parent1 = new Parent(name + "-1");
+        Parent parent2 = new Parent(name + "-2");
+        Parent parent3 = new Parent(name + "-3");
+        
+        entityManager.persist(parent1);
+        entityManager.persist(parent2);
+        entityManager.persist(parent3);
+        entityManager.flush();
+        
+        // when
+        List<Parent> result = parentDao.fetchByName(name + "-1", name + "-2", name + "-3");
+        
+        // then
+        Assert.assertNotNull(result);
+        Assert.assertEquals(3, result.size());
+    }
+    
     private Simple createSimple(String name, Integer counter) {
         Simple result = new Simple(name);
         result.setCounter(counter);

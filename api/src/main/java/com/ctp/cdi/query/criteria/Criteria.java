@@ -16,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.MapAttribute;
+import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -26,6 +27,7 @@ public class Criteria<C> {
     private EntityManager entityManager;
     private Class<C> entityClass;
     private JoinType joinType;
+    private boolean ignoreNull = true;
     private boolean distinct = false;
     
     private List<PredicateBuilder<C>> builders = new LinkedList<PredicateBuilder<C>>();
@@ -66,28 +68,53 @@ public class Criteria<C> {
         return internalOr(first, second, third);
     }
     
-    public <P> Criteria<C> join(SingularAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    @SuppressWarnings("unchecked")
+    public Criteria<C> or(Collection<Criteria<C>> criteria) {
+        return internalOr(criteria.toArray(new Criteria[0]));
+    }
+    
+    public <P, E> Criteria<C> join(SingularAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(ListAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(ListAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(CollectionAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(CollectionAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(SetAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(SetAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(MapAttribute<? super C, Object, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(MapAttribute<? super C, E, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(SingularAttribute<? super C, P> att) {
+        add(new FetchBuilder<C, P, E>(att, null));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(SingularAttribute<? super C, P> att, JoinType joinType) {
+        add(new FetchBuilder<C, P, E>(att, joinType));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(PluralAttribute<? super C, P, E> att) {
+        add(new FetchBuilder<C, P, E>(att, null));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(PluralAttribute<? super C, P, E> att, JoinType joinType) {
+        add(new FetchBuilder<C, P, E>(att, joinType));
         return this;
     }
     
@@ -141,6 +168,14 @@ public class Criteria<C> {
         builders.add(pred);
     }
     
+    private <P> void add(PredicateBuilder<C> pred, P value) {
+        if (ignoreNull && value != null) {
+            builders.add(pred);
+        } else if (!ignoreNull) {
+            builders.add(pred);
+        }
+    }
+    
     private void add(QueryProcessor<C> proc) {
         processors.add(proc);
     }
@@ -150,42 +185,42 @@ public class Criteria<C> {
     // --------------------------------------------------------------------
     
     public <P> Criteria<C> eq(SingularAttribute<? super C, P> att, P value) {
-        add(new Eq<C, P>(att, value));
+        add(new Eq<C, P>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> notEq(SingularAttribute<? super C, P> att, P value) {
-        add(new NotEq<C, P>(att, value));
+        add(new NotEq<C, P>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> like(SingularAttribute<? super C, String> att, String value) {
-        add(new Like<C>(att, value));
+        add(new Like<C>(att, value), value);
         return this;
     }
     
     public <P> Criteria<C> notLike(SingularAttribute<? super C, String> att, String value) {
-        add(new NotLike<C>(att, value));
+        add(new NotLike<C>(att, value), value);
         return this;
     }
     
     public <P extends Number> Criteria<C> lt(SingularAttribute<? super C, P> att, P value) {
-        add(new LessThan<C, P>(att, value));
+        add(new LessThan<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Comparable<? super P>> Criteria<C> ltOrEq(SingularAttribute<? super C, P> att, P value) {
-        add(new LessThanOrEqual<C, P>(att, value));
+        add(new LessThanOrEqual<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Number> Criteria<C> gt(SingularAttribute<? super C, P> att, P value) {
-        add(new GreaterThan<C, P>(att, value));
+        add(new GreaterThan<C, P>(att, value), value);
         return this;
     }
     
     public <P extends Comparable<? super P>> Criteria<C> gtOrEq(SingularAttribute<? super C, P> att, P value) {
-        add(new GreaterThanOrEqual<C, P>(att, value));
+        add(new GreaterThanOrEqual<C, P>(att, value), value);
         return this;
     }
     
@@ -211,6 +246,11 @@ public class Criteria<C> {
     
     public <P extends Collection<?>> Criteria<C> notEmpty(SingularAttribute<? super C, P> att) {
         add(new IsNotEmpty<C, P>(att));
+        return this;
+    }
+    
+    public <P> Criteria<C> in(SingularAttribute<? super C, P> att, P... values) {
+        add(new In<C, P>(att, values), values);
         return this;
     }
 

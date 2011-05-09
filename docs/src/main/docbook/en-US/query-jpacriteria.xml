@@ -4,7 +4,208 @@
 <chapter id="criteria">
     <title>JPA Criteria API Support</title>
     <para>
-        TODO
+        Beside automatic query generation, the CDI Query module also provides a DSL-like API to create JPA 2 Criteria
+        queries. It takes advantage of the JPA 2 meta model, which helps creating type safe queries.
     </para>
+    <tip>
+        The JPA meta model can easily be generated with an annotation processor. Hibernate or Eclipse link provide
+        such a processor, which can be integrated into your compile and build cycle.
+    </tip>
+    <para>
+        Note that this criteria API is not intended to replace the standard criteria API - it's rather a utility API that
+        should make life easier on the most common cases for a custom query. The JPA criteria API's strongest point is
+        certainly its type safety - which comes at the cost of readability. We're trying to provide a middle way here.
+        A less powerful API, but still typesafe and readable.
+    </para>
+    
+    <section id="criteria-basic">
+        <title>API Usage</title>
+        <para>
+            The API is centered around the <literal>Criteria</literal> class and is targeted to provide a fluent interface
+            to write criteria queries:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findAdultFamilyMembers(String name, Integer minAge) {
+        return criteria()
+                    .like(Person_.name, "%" + name + "%")
+                    .gtOrEq(Person_.age, minAge)
+                    .eq(Person_.validated, Boolean.TRUE)
+                    .desc(Person_.age)
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+        <para>
+            Following predicates are supported by the API:
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>.eq(..., ...)</literal></entry>
+                            <entry>Property value must be equal to the given value</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.in(..., ..., ..., ...)</literal></entry>
+                            <entry>Property value must be in one of the given values.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.notEq(..., ...)</literal></entry>
+                            <entry>Negates equality</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.like(..., ...)</literal></entry>
+                            <entry>A SQL 'like' equivalent predicate. Use % on the value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.notLike(..., ...)</literal></entry>
+                            <entry>Negates the like value</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.lt(..., ...)</literal></entry>
+                            <entry>Property value must be less than the given value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.ltOrEq(..., ...)</literal></entry>
+                            <entry>Property value must be less than or equal to the given value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.gt(..., ...)</literal></entry>
+                            <entry>Property value must be greater than the given value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.gtOrEq(..., ...)</literal></entry>
+                            <entry>Property value must be greater than or equal to the given value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.between(..., ..., ...)</literal></entry>
+                            <entry>Property value must be between the two given values.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.isNull(...)</literal></entry>
+                            <entry>Property must be null</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.isNotNull(...)</literal></entry>
+                            <entry>Property must be non-null</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.isEmpty(...)</literal></entry>
+                            <entry>Collection property must be empty</entry>
+                        </row>
+                        <row>
+                            <entry><literal>.isNotEmpty(...)</literal></entry>
+                            <entry>Collection property must be non-empty</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+        </para>
+        <para>
+            The query result can be modified with the following settings:
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>.asc(...)</literal></entry>
+                            <entry>
+                                Sorts the result ascending by the given property. Note that this can be applied to
+                                several properties
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>.desc(...)</literal></entry>
+                            <entry>
+                                Sorts the result descending by the given property. Note that this can be applied to
+                                several properties
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>.distinct()</literal></entry>
+                            <entry>
+                                Sets distinct to <literal>true</literal> on the query.
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+        </para>
+        <para>
+            Once all predicates and query options are applied, the <literal>createQuery()</literal> method is called.
+            This creates a JPA TypedQuery object for the DAO entity. If required, further processing can be applied here.
+        </para>
+    </section>
+    
+    <section id="criteria-join">
+        <title>Joins</title>
+        <para>
+            For simple cases, restricting on the DAO entity only works out fine, but once the data model gets more complicate,
+            the query will have to consider relations to other entities. The CDI Module's criteria API supports therefore
+            joins as shown in the sample below:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findByCompanyName(String companyName) {
+        return criteria()
+                    .join(Person_.company
+                        where(Company.class)
+                            .eq(Company_.name, companyName)
+                    )
+                    .eq(Person_.validated, Boolean.TRUE)
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+        <para>
+            Beside the inner and outer joins, also fetch joins are supported. Those are slighly simpler as seen in the next
+            sample:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public Person findBySSN(String ssn) {
+        return criteria()
+                    .fetch(Person_.familyMembers)
+                    .eq(Person_.ssn, ssn)
+                    .distinct()
+                    .createQuery()
+                    .getSingleResult();
+    }
+}]]>    </programlisting>
+    </section>
+    
+    <section id="criteria-boolean">
+        <title>Boolean Operators</title>
+        <para>
+            By default, all query predicates are concatenated as an <literal>and</literal> conjunction to the query.
+            The CDI Query criteria API also allows to add groups of disjunctions. The current API restricts the number
+            of groups to three. This is due to the restriction that the java compiler generates warnings for varargs with
+            generics (and of course we try to keep your code warning-free). To provide more groups, the groups have to
+            be wrapped in a collection.
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    public List<Person> findAdults() {
+        return criteria()
+                    .or(
+                        criteria().
+                            .gtOrEq(Person_.age, 18)
+                            .eq(Person_.origin, Country.SWITZERLAND),
+                        criteria().
+                            .gtOrEq(Person_.age, 21)
+                            .eq(Person_.origin, Country.USA)
+                    )
+                    .createQuery()
+                    .getResultList();
+    }
+}]]>    </programlisting>
+    </section>
 
 </chapter>

@@ -13,15 +13,15 @@ import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
-import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
+import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
 
 @RunWith(Arquillian.class)
 public class QueryExtensionTest {
     
-    @Deployment
+    @Deployment(order = 2)
     public static Archive<?> deployment() {
 	return Deployments.initDeployment()
 		.addPackage(DaoInterface.class.getPackage())

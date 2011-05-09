@@ -29,6 +29,31 @@ public abstract class ParentDao extends AbstractEntityDao<Parent, Long> {
                 .getResultList();
     }
     
+    public List<Parent> nullAwareQuery(String name1, String name2, Long counter) {
+        return criteria()
+                .eq(Parent_.name, name1)
+                .eq(Parent_.name, name2)
+                .eq(Parent_.value, counter)
+                .createQuery()
+                .getResultList();
+    }
+    
+    public Parent fetchQuery(String name) {
+        return criteria()
+                .eq(Parent_.name, name)
+                .fetch(Parent_.many)
+                .distinct()
+                .createQuery()
+                .getSingleResult();
+    }
+    
+    public List<Parent> fetchByName(String name1, String name2, String name3) {
+        return criteria()
+                .in(Parent_.name, name1, name2, name3)
+                .createQuery()
+                .getResultList();
+    }
+    
     public List<Parent> orQuery(String name1, String name2) {
         return criteria()
                 .or(
