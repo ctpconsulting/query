@@ -14,7 +14,7 @@ import javax.persistence.metamodel.MapAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
-class JoinBuilder<P, R> implements PredicateBuilder<P> {
+class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     
     final Criteria<R> criteria;
     final JoinType joinType;
@@ -23,7 +23,7 @@ class JoinBuilder<P, R> implements PredicateBuilder<P> {
     ListAttribute<? super P, R> list;
     CollectionAttribute<? super P, R> collection;
     SetAttribute<? super P, R> set;
-    MapAttribute<? super P, Object, R> map;
+    MapAttribute<? super P, E, R> map;
     
     JoinBuilder(Criteria<R> criteria, JoinType joinType) {
         this.criteria = criteria;
@@ -50,7 +50,7 @@ class JoinBuilder<P, R> implements PredicateBuilder<P> {
         this.set = set;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, MapAttribute<? super P, Object, R> map) {
+    JoinBuilder(Criteria<R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
         this(criteria, joinType);
         this.map = map;
     }

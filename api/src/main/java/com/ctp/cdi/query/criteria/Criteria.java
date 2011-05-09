@@ -16,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.MapAttribute;
+import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -67,28 +68,53 @@ public class Criteria<C> {
         return internalOr(first, second, third);
     }
     
-    public <P> Criteria<C> join(SingularAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    @SuppressWarnings("unchecked")
+    public Criteria<C> or(Collection<Criteria<C>> criteria) {
+        return internalOr(criteria.toArray(new Criteria[0]));
+    }
+    
+    public <P, E> Criteria<C> join(SingularAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(ListAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(ListAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(CollectionAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(CollectionAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(SetAttribute<? super C, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(SetAttribute<? super C, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
-    public <P> Criteria<C> join(MapAttribute<? super C, Object, P> att, Criteria<P> criteria) {
-        add(new JoinBuilder<C, P>(criteria, joinType, att));
+    public <P, E> Criteria<C> join(MapAttribute<? super C, E, P> att, Criteria<P> criteria) {
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(SingularAttribute<? super C, P> att) {
+        add(new FetchBuilder<C, P, E>(att, null));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(SingularAttribute<? super C, P> att, JoinType joinType) {
+        add(new FetchBuilder<C, P, E>(att, joinType));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(PluralAttribute<? super C, P, E> att) {
+        add(new FetchBuilder<C, P, E>(att, null));
+        return this;
+    }
+    
+    public <P, E> Criteria<C> fetch(PluralAttribute<? super C, P, E> att, JoinType joinType) {
+        add(new FetchBuilder<C, P, E>(att, joinType));
         return this;
     }
     
@@ -220,6 +246,11 @@ public class Criteria<C> {
     
     public <P extends Collection<?>> Criteria<C> notEmpty(SingularAttribute<? super C, P> att) {
         add(new IsNotEmpty<C, P>(att));
+        return this;
+    }
+    
+    public <P> Criteria<C> in(SingularAttribute<? super C, P> att, P... values) {
+        add(new In<C, P>(att, values), values);
         return this;
     }
 
