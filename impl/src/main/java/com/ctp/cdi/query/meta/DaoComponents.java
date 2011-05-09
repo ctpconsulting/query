@@ -23,12 +23,17 @@ public class DaoComponents {
      *                      {@code false} otherwise.
      */
     public boolean add(Class<?> daoClass) {
+        // TODO dispatch based if we are dealing with @Dao or implements/extends
+        // TODO use AnnotationMetadataExtractor
         DaoEntity entityClass = DaoUtils.extractEntityMetaData(daoClass);
         if (entityClass != null) {
             DaoComponent dao = new DaoComponent(daoClass, entityClass);
             daos.put(daoClass, dao);
             return true;
         }
+        /*
+         * validate first and then dispatch based on metadata.
+         */
         return false;
     }
     

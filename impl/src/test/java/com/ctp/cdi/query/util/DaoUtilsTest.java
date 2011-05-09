@@ -12,6 +12,8 @@ import com.ctp.cdi.query.test.service.SimpleDao;
 
 public class DaoUtilsTest {
 
+	
+	
     @Test
     public void shouldExtractFromInterface() {
         // when

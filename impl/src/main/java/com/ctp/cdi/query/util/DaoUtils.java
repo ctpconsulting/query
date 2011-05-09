@@ -7,11 +7,15 @@ import java.lang.reflect.Type;
 import org.jboss.logging.Logger;
 
 import com.ctp.cdi.query.Dao;
+import com.ctp.cdi.query.NonEntity;
 import com.ctp.cdi.query.meta.DaoEntity;
 
-public abstract class DaoUtils {
+// TODO daoutils should be replaced by proper metadata extractor class
+public final class DaoUtils {
     
     private static final Logger log = Logger.getLogger(DaoUtils.class);
+    
+    private DaoUtils() {}
     
     /**
      * Extract the generic type information from the DAO class or interface definition.
@@ -20,13 +24,18 @@ public abstract class DaoUtils {
      */
     public static DaoEntity extractEntityMetaData(Class<?> daoClass) {
         log.debugv("extractEntityMetaData: class = {0}", daoClass);
+        // TODO in AnnotationMetadataExtractor
         DaoEntity fromAnnotation = extractFromAnnotation(daoClass);
-        if (fromAnnotation != null)
+        if (fromAnnotation != null) {
             return fromAnnotation;
+        }
+        
+        // TODO in TypeMetadataExtractor
         for (Type inf : daoClass.getGenericInterfaces()) {
             DaoEntity result = extractFrom(inf);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
         }
         DaoEntity result = extractFrom(daoClass.getGenericSuperclass());
         if (result != null)
@@ -44,30 +53,32 @@ public abstract class DaoUtils {
     @SuppressWarnings("unchecked")
     private static DaoEntity extractFrom(Type type) {
         log.debugv("extractFrom: type = {0}", type);
-        if (type  instanceof ParameterizedType) {
-            Type[] genericTypes = ((ParameterizedType) type).getActualTypeArguments();
-            DaoEntity result = null;
-            for (Type genericType : genericTypes) {
-                if (genericType instanceof Class && EntityUtils.isEntityClass((Class<?>) genericType)) {
-                    result = new DaoEntity((Class<?>) genericType);
-                    continue;
-                }
-                if (result != null && genericType instanceof Class) {
-                    result.setPrimaryClass((Class<? extends Serializable>) genericType);
-                    return result;
-                }
+        if (!(type  instanceof ParameterizedType)) {
+            return null;
+        }
+        ParameterizedType parametrizedType = (ParameterizedType) type;
+        Type[] genericTypes = parametrizedType.getActualTypeArguments();
+        DaoEntity result = null;
+        for (Type genericType : genericTypes) {
+            if (genericType instanceof Class && EntityUtils.isEntityClass((Class<?>) genericType)) {
+                result = new DaoEntity((Class<?>) genericType);
+                continue;
+            }
+            if (result != null && genericType instanceof Class) {
+                result.setPrimaryClass((Class<? extends Serializable>) genericType);
+                return result;
             }
         }
-        return null;
+        
+        return result;
     }
     
     private static DaoEntity extractFromAnnotation(Class<?> daoClass) {
-        if (daoClass.isAnnotationPresent(Dao.class)) {
-            Dao dao = daoClass.getAnnotation(Dao.class);
-            if (!Object.class.equals(dao.value())) {
-                return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
-            }
-        }
+    	Dao dao = daoClass.getAnnotation(Dao.class);
+    	if (!NonEntity.class.equals(dao.value())) {
+    		return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
+    	}
+
         return null;
     }
 
