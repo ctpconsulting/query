@@ -17,7 +17,7 @@
         on the though things. The code sample below will give you a quick overview on the common usage scenarios of the
         CDI Query module:
     </para>
-    <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+    <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
 
     @Query("select p from Person p where p.ssn = ?1")
     public abstract Person findBySSN(String ssn);

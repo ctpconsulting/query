@@ -4,7 +4,7 @@ package com.ctp.cdi.query.builder;
  * Comparison options for queries.
  * @author thomashug
  */
-public enum QueryComparator {
+public enum QueryOperator {
     
     LessThan("LessThan", "{0} < {1}"),
     LessThanEquals("LessThanEquals", "{0} <= {1}"),
@@ -21,11 +21,11 @@ public enum QueryComparator {
     private final String jpql;
     private final int paramNum;
     
-    private QueryComparator(String expression, String jpql) {
+    private QueryOperator(String expression, String jpql) {
         this(expression, jpql, 1);
     }
 
-    private QueryComparator(String expression, String jpql, int paramNum) {
+    private QueryOperator(String expression, String jpql, int paramNum) {
         this.expression = expression;
         this.jpql = jpql;
         this.paramNum = paramNum;

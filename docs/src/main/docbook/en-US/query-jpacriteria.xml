@@ -24,7 +24,7 @@
             The API is centered around the <literal>Criteria</literal> class and is targeted to provide a fluent interface
             to write criteria queries:
         </para>
-        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+        <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
     public List<Person> findAdultFamilyMembers(String name, Integer minAge) {
         return criteria()
                     .like(Person_.name, "%" + name + "%")
@@ -154,7 +154,7 @@
             the query will have to consider relations to other entities. The CDI Module's criteria API supports therefore
             joins as shown in the sample below:
         </para>
-        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+        <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
     public List<Person> findByCompanyName(String companyName) {
         return criteria()
                     .join(Person_.company
@@ -170,7 +170,7 @@
             Beside the inner and outer joins, also fetch joins are supported. Those are slighly simpler as seen in the next
             sample:
         </para>
-        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+        <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
     public Person findBySSN(String ssn) {
         return criteria()
                     .fetch(Person_.familyMembers)
@@ -191,7 +191,7 @@
             generics (and of course we try to keep your code warning-free). To provide more groups, the groups have to
             be wrapped in a collection.
         </para>
-        <programlisting role="JAVA"><![CDATA[public abstract PersonDao extends AbstractEntityDao<Person, Long> {
+        <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
     public List<Person> findAdults() {
         return criteria()
                     .or(

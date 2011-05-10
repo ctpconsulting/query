@@ -4,7 +4,136 @@
 <chapter id="methodexperssions">
     <title>Query Method Expressions</title>
     <para>
-        TODO
+        Good naming is a difficult aspects in software engineering. A good method name usually makes comments unnecessary
+        and states exactly what the method does. And with method expressions, the method name is actually the implementation!
     </para>
+    
+    <section>
+        <title>Using method expressions</title>
+        <para>
+            Let's start by looking at an example:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Entity
+public class Person {
+    @Id @GeneratedValue
+    private Long id;
+    private String name;
+    private Integer age;
+    private Gender gender;
+}
+    
+public interface PersonDao extends EntityDao<Person, Long> {
+    List<Person> findByNameLikeAndAgeBetweenAndGender(String name, 
+                                  int minAge, int maxAge, Gender gender);
+}]]>    </programlisting>
+        <para>
+            Looking at the method name, this can easily be read as query all Persons which have a name like the
+            given name parameter, their age is between a min and a max age and having a specific gender. The CDI Query
+            module can translate method names following a given format and directly generate the query implementation
+            out of it (in EBNF-like form):
+        </para>
+        <programlisting><![CDATA[(Entity|List<Entity>) findBy(Property[Comparator]){Operator Property [Comparator]}]]></programlisting>
+        <para>
+            Or in more concrete words:
+            <itemizedlist>
+                <listitem>The query method must either return an entity or a list of entities</listitem>
+                <listitem>It must start with the findBy keyword</listitem>
+                <listitem>
+                    Followed by a property of the DAO entity and an optional comparator (we'll define this later). The property
+                    will be used in the query together with the comparator. Note that the number of arguments passed to the 
+                    method depend on the comparator.
+                </listitem>
+                <listitem>
+                    You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This
+                    is either an <literal>And</literal> or <literal>Or</literal>
+                </listitem>
+            </itemizedlist>
+            Other assumptions taken by the expression evaluator:
+            <itemizedlist>
+                <listitem>
+                    The property name is lower cased while the property in the expression has an upper cases first character.
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            Following operators are currently supported to be used in method expressions:
+            <informaltable>
+                <tgroup cols="3">
+                    <thead>
+                        <row>
+                            <entry>Name</entry>
+                            <entry># of arguments</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>Equal</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be equal to argument value. If the operator is omitted in the expression, this is assumed as default.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>NotEqual</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be not equal to argument value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>Like</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be like the argument value. Use the %-wildcard in the argument.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>GreaterThan</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be greater than argument value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>GreaterThanEquals</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be greater than or equal to argument value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>LessThan</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be less than argument value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>LessThanEquals</literal></entry>
+                            <entry><literal>1</literal></entry>
+                            <entry>Property must be less than or equal to argument value.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>Between</literal></entry>
+                            <entry><literal>2</literal></entry>
+                            <entry>Property must be between the two argument values.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>IsNull</literal></entry>
+                            <entry><literal>0</literal></entry>
+                            <entry>Property must be null.</entry>
+                        </row>
+                        <row>
+                            <entry><literal>IsNotNull</literal></entry>
+                            <entry><literal>0</literal></entry>
+                            <entry>Property must be non-null.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+        </para>
+    </section>
+    
+    <section>
+        <title>Query Options</title>
+        <para>
+            CDI Query supports query options on method expressions. If you want to page a query, you can change the first
+            result as well as the maximum number of results returned:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+
+    List<Person> findByNameLike(String name, @FirstResult int start, @MaxResults int pageSize);
+
+}]]>    </programlisting>
+    </section>
 
 </chapter>

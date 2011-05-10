@@ -29,11 +29,11 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.persistence:seam-persistence</include>
+            <include>com.ctp.cdi.query:cdi-query</include>
          </includes>
          <excludes>
-            <exclude>org.jboss.seam.persistence:*:*:javadoc</exclude>
-            <exclude>org.jboss.seam.persistence:*:*:sources</exclude>
+            <exclude>com.ctp.cdi.query:*:*:javadoc</exclude>
+            <exclude>com.ctp.cdi.query:*:*:sources</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -44,7 +44,7 @@
          <useProjectArtifact>false</useProjectArtifact>
          <useTransitiveDependencies>true</useTransitiveDependencies>
          <excludes>
-            <exclude>org.jboss.seam.persistence:*</exclude>
+            <exclude>com.ctp.cdi.query:*</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
@@ -55,7 +55,7 @@
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.persistence:seam-persistence-api:jar:javadoc</include>
+            <include>com.ctp.cdi.query:cdi-query-api:jar:javadoc</include>
          </includes>
          <unpackOptions>
             <excludes>
@@ -70,7 +70,7 @@
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.persistence:seam-persistence-reference-guide</include>
+            <include>com.ctp.cdi.query:cdi-query-reference-guide</include>
          </includes>
          <unpackOptions>
             <excludes>
@@ -85,8 +85,8 @@
          <unpack>true</unpack>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.persistence:seam-persistence-api:*:sources</include>
-            <include>org.jboss.seam.persistence:seam-persistence-impl:*:sources</include>
+            <include>com.ctp.cdi.query:cdi-query-api:*:sources</include>
+            <include>com.ctp.cdi.query:cdi-query-impl:*:sources</include>
          </includes>
          <unpackOptions>
             <excludes>

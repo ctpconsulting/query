@@ -1,5 +1,5 @@
 
-Seam Persistence ${project.version}
+CDI Query ${project.version}
 ===================================
 
 
@@ -14,13 +14,9 @@ Contents of distribution
 
    API Docs and reference guide.
   
- examples/
-
-   Seam Persistence Examples
-  
  lib/
 
-   Seam Persistence dependencies
+   CDI Query dependencies
   
  source/
  
@@ -32,14 +28,13 @@ Licensing
  This distribution, as a whole, is licensed under the terms of the Apache
  Software License, Version 2.0 (ASL).
 
-Seam Persistence URLs
+URLs
 ==================
 
-Seam Framework Home Page:      http://www.seamframework.org
-Downloads:                     http://www.seamframework.org/Download/SeamDownloads
-Forums:                        http://www.seamframework.org/Community/SeamUsers
-Source Code:                   git://github.com/seam/persistence.git
-Issue Tracking:                http://jira.jboss.org/jira/browse/SEAMPERSIST
+Seam Framework Home Page:      http://ctpconsulting.github.com/query/
+Downloads:                     TBD
+Source Code:                   git://github.com/ctpconsulting/query.git
+Issue Tracking:                https://github.com/ctpconsulting/query
 
 Release Notes
 =============
