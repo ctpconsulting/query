@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.ctp.cdi.query.test.domain.Simple;
 
-public class EntityValidatorTest {
+public class EntityVerifierTest {
 
     @Test
     public void shouldAcceptEntityClass() {

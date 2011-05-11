@@ -13,7 +13,7 @@ import com.ctp.cdi.query.meta.DaoEntity;
 // TODO daoutils should be replaced by proper metadata extractor class
 public final class DaoUtils {
     
-    private static final Logger log = Logger.getLogger(DaoUtils.class);
+    private static final Logger LOG = Logger.getLogger(DaoUtils.class);
     
     private DaoUtils() {
     }
@@ -24,7 +24,7 @@ public final class DaoUtils {
      * @return                  Meta data containing entity and primary key classes.
      */
     public static DaoEntity extractEntityMetaData(Class<?> daoClass) {
-        log.debugv("extractEntityMetaData: class = {0}", daoClass);
+        LOG.debugv("extractEntityMetaData: class = {0}", daoClass);
         // TODO in AnnotationMetadataExtractor
         DaoEntity fromAnnotation = extractFromAnnotation(daoClass);
         if (fromAnnotation != null) {
@@ -56,7 +56,7 @@ public final class DaoUtils {
     
     @SuppressWarnings("unchecked")
     private static DaoEntity extractFrom(Type type) {
-        log.debugv("extractFrom: type = {0}", type);
+        LOG.debugv("extractFrom: type = {0}", type);
         if (!(type  instanceof ParameterizedType)) {
             return null;
         }

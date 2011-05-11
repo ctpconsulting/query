@@ -31,14 +31,10 @@ Lightweight checkstyle configuration
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="ConstantName">
-      <property name="format" value="^(log[_a-zA-Z0-9]*|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
+      <property name="format" value="^(a-zA-Z0-9]*|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
     </module>
-    <module name="LocalFinalVariableName">
-      <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
-    </module>
-    <module name="LocalVariableName">
-      <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
-    </module>
+    <module name="LocalFinalVariableName"/>
+    <module name="LocalVariableName"/>
     <module name="MemberName">
       <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
     </module>
@@ -92,15 +88,21 @@ Lightweight checkstyle configuration
     </module>
     <module name="EmptyBlock"/>
     <module name="LeftCurly"/>
-    <module name="NeedBraces"/>
+    <module name="NeedBraces">
+      <property name="severity" value="error"/>
+    </module>
     <module name="RightCurly"/>
     <module name="AvoidInlineConditionals">
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
-    <module name="DoubleCheckedLocking"/>
+    <module name="DoubleCheckedLocking">
+      <message key="doublechecked.locking.avoid" value="The double-checked locking idiom is broken and should be avoided. Try to apply value holder idiom http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"/>
+    </module>
     <module name="EmptyStatement"/>
-    <module name="EqualsHashCode"/>
+    <module name="EqualsHashCode">
+      <property name="severity" value="error"/>
+    </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber">
@@ -152,6 +154,12 @@ Lightweight checkstyle configuration
       <property name="ignoreSetter" value="true"/>
       <property name="ignoreAbstractMethods" value="true"/>
     </module>
+    <module name="BooleanExpressionComplexity">
+      <property name="max" value="4"/>
+    </module>
+    <module name="CyclomaticComplexity">
+      <property name="max" value="8"/>
+    </module>
   </module>
   <module name="FileLength">
     <property name="severity" value="ignore"/>
@@ -172,9 +180,8 @@ Lightweight checkstyle configuration
     <property name="severity" value="ignore"/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
-  <!-- 
   <module name="SuppressionFilter">
-    <property name="file" value="checkstyle-suppression.xml"/>
+    <metadata name="net.sf.eclipsecs.core.comment" value="Defines which rules are not applicable for certain packages, classes etc."/>
+    <property name="file" value="${samedir}suppressions.xml"/>
   </module>
-   -->
 </module>

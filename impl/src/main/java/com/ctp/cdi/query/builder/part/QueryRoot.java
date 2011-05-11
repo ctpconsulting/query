@@ -15,7 +15,7 @@ public class QueryRoot extends QueryPart {
     
     public static final String QUERY_PREFIX = "findBy";
     
-    private static final Logger log = Logger.getLogger(QueryRoot.class);
+    private static final Logger LOG = Logger.getLogger(QueryRoot.class);
     
     private final String entityName;
     private String jpqlQuery;
@@ -62,7 +62,7 @@ public class QueryRoot extends QueryPart {
         QueryBuilderContext ctx = new QueryBuilderContext();
         buildQuery(ctx);
         jpqlQuery = ctx.resultString();
-        log.debugv("createJpql: Query is {0}", jpqlQuery);
+        LOG.debugv("createJpql: Query is {0}", jpqlQuery);
         return jpqlQuery;
     }
     
