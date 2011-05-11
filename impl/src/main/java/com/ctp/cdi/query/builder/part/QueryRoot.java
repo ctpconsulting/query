@@ -67,8 +67,9 @@ public class QueryRoot extends QueryPart {
     }
     
     private String removePrefix(String queryPart) {
-        if (queryPart.startsWith(QUERY_PREFIX))
+        if (queryPart.startsWith(QUERY_PREFIX)) {
             return queryPart.substring(QUERY_PREFIX.length());
+        }
         return queryPart;
     }
 

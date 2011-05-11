@@ -2,8 +2,12 @@
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!--
+    This configuration file was written by the eclipse-cs plugin configuration editor
+-->
+<!--
     Checkstyle-Configuration: CDI Query rules
-    Description: Lightweight checkstyle configuration
+    Description: 
+Lightweight checkstyle configuration
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -71,7 +75,9 @@
       <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
     </module>
     <module name="NoWhitespaceBefore"/>
-    <module name="OperatorWrap"/>
+    <module name="OperatorWrap">
+      <property name="option" value="eol"/>
+    </module>
     <module name="ParenPad"/>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
@@ -95,7 +101,6 @@
     <module name="DoubleCheckedLocking"/>
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber">
@@ -142,6 +147,11 @@
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
+    <module name="HiddenField">
+      <property name="tokens" value="VARIABLE_DEF"/>
+      <property name="ignoreSetter" value="true"/>
+      <property name="ignoreAbstractMethods" value="true"/>
+    </module>
   </module>
   <module name="FileLength">
     <property name="severity" value="ignore"/>
@@ -158,5 +168,13 @@
     <property name="severity" value="ignore"/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
-  <module name="StrictDuplicateCode"/>
+  <module name="StrictDuplicateCode">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
+  <!-- 
+  <module name="SuppressionFilter">
+    <property name="file" value="checkstyle-suppression.xml"/>
+  </module>
+   -->
 </module>

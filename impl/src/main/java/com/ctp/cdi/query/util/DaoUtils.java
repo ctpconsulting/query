@@ -15,7 +15,8 @@ public final class DaoUtils {
     
     private static final Logger log = Logger.getLogger(DaoUtils.class);
     
-    private DaoUtils() {}
+    private DaoUtils() {
+    }
     
     /**
      * Extract the generic type information from the DAO class or interface definition.
@@ -38,15 +39,18 @@ public final class DaoUtils {
             }
         }
         DaoEntity result = extractFrom(daoClass.getGenericSuperclass());
-        if (result != null)
+        if (result != null) {
             return result;
+        }
         for (Type intf : daoClass.getGenericInterfaces()) {
             result = extractFrom(intf);
-            if (result != null)
+            if (result != null) {
                 return result;
+            }
         }
-        if (daoClass.getSuperclass() != null)
+        if (daoClass.getSuperclass() != null) {
             return extractEntityMetaData(daoClass.getSuperclass());
+        }
         return null;
     }
     
@@ -74,10 +78,10 @@ public final class DaoUtils {
     }
     
     private static DaoEntity extractFromAnnotation(Class<?> daoClass) {
-    	Dao dao = daoClass.getAnnotation(Dao.class);
-    	if (!NonEntity.class.equals(dao.value())) {
-    		return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
-    	}
+        Dao dao = daoClass.getAnnotation(Dao.class);
+        if (!NonEntity.class.equals(dao.value())) {
+            return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
+        }
 
         return null;
     }

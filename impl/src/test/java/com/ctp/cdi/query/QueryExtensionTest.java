@@ -17,31 +17,30 @@ import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
-
 @RunWith(Arquillian.class)
 public class QueryExtensionTest {
-    
+
     @Deployment(order = 2)
     public static Archive<?> deployment() {
-	return Deployments.initDeployment()
-		.addPackage(DaoInterface.class.getPackage())
-		.addPackage(Simple.class.getPackage());
+        return Deployments.initDeployment()
+                          .addPackage(DaoInterface.class.getPackage())
+                          .addPackage(Simple.class.getPackage());
     }
 
     @Inject
     Instance<DaoInterface> dao;
-    
+
     @Inject
     Instance<ExtendedDaoInterface> extendedDao;
-    
+
     @Inject
     Instance<SimpleDao> extendedClassDao;
 
     @Test
     public void shouldInject() {
-	Assert.assertNotNull(dao.get());
-	Assert.assertNotNull(extendedDao.get());
-	Assert.assertNotNull(extendedClassDao.get());
+        Assert.assertNotNull(dao.get());
+        Assert.assertNotNull(extendedDao.get());
+        Assert.assertNotNull(extendedClassDao.get());
     }
 
 }

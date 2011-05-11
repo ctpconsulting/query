@@ -15,11 +15,11 @@ import com.ctp.cdi.query.meta.NonEntityException;
 public abstract class EntityUtils {
 
     public static boolean isNew(Object entity) {
-		assertIsEntity(entity);
-		Property<Serializable> property = primaryKey(entity.getClass());
-		property.setAccessible();
-		Serializable value = property.getValue(entity);
-		return value == null;
+        assertIsEntity(entity);
+        Property<Serializable> property = primaryKey(entity.getClass());
+        property.setAccessible();
+        Serializable value = property.getValue(entity);
+        return value == null;
     }
     
     public static Class<? extends Serializable> primaryKeyClass(Class<?> entityClass) {
@@ -38,16 +38,16 @@ public abstract class EntityUtils {
     
     private static Property<Serializable> primaryKey(Class<?> entityClass) {
         PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entityClass)
-	      .addCriteria(new AnnotatedPropertyCriteria(Id.class));
+                                                           .addCriteria(new AnnotatedPropertyCriteria(Id.class));
         return query.getFirstResult();
     }
     
     private static void assertIsEntity(Object entity) {
-		if (entity == null) {
-			throw new IllegalArgumentException("Provided object is null");
-		}
-		if (!isEntityClass(entity.getClass())) {
-			throw new NonEntityException("Provided object is not an @Entity");
-		}
+        if (entity == null) {
+            throw new IllegalArgumentException("Provided object is null");
+        }
+        if (!isEntityClass(entity.getClass())) {
+            throw new NonEntityException("Provided object is not an @Entity");
+        }
     }
 }

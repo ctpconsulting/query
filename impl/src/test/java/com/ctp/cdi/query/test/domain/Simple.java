@@ -12,10 +12,10 @@ import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name=Simple.BY_NAME,
-                query="select s from Simple s where s.name = ?1 and s.enabled = ?2 order by s.id asc"),
-    @NamedQuery(name=Simple.BY_ID,
-                query="select s from Simple s where s.id = :id and s.enabled = :enabled")
+    @NamedQuery(name = Simple.BY_NAME,
+                query = "select s from Simple s where s.name = ?1 and s.enabled = ?2 order by s.id asc"),
+    @NamedQuery(name = Simple.BY_ID,
+                query = "select s from Simple s where s.id = :id and s.enabled = :enabled")
 })
 public class Simple {
     
