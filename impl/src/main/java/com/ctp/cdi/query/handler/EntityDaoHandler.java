@@ -33,7 +33,7 @@ import javax.persistence.criteria.CriteriaQuery;
  */
 public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
 
-    private static final Logger LOG = Logger.getLogger(EntityDaoHandler.class);
+    private Logger log = Logger.getLogger(EntityDaoHandler.class);
 
     private final EntityManager entityManager;
     private final Class<E> entityClass;
@@ -93,7 +93,7 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
                 .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
         jpqlQuery += prepareWhere(properties);
-        LOG.debugv("findBy: Created query {0}", jpqlQuery);
+        log.debugv("findBy: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
         addParameters(query, example, properties);
         return query.getResultList();

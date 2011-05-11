@@ -28,7 +28,7 @@ import com.ctp.cdi.query.WithEntityManager;
  */
 public class DaoComponent {
     
-    private static final Logger LOG = Logger.getLogger(DaoComponent.class);
+    private Logger log = Logger.getLogger(DaoComponent.class);
 
     private Class<?> daoClass;
     private DaoEntity entityClass;
@@ -128,7 +128,7 @@ public class DaoComponent {
             }
             current = current.getSuperclass();
         }
-        LOG.debugv("collectClasses(): Found {0} for {1}", result, daoClass);
+        log.debugv("collectClasses(): Found {0} for {1}", result, daoClass);
         return result;
     }
 
