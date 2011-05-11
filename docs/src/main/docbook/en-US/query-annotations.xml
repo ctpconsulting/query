@@ -4,7 +4,97 @@
 <chapter id="annotations">
     <title>Query Annotations</title>
     <para>
-        TODO
+        While method expressions are fine for simple queries, they will often reach their limit once things get slightly
+        more complex. Another aspect is the way you want to use JPA: The recommended approach using JPA for best performance is over
+        named queries. To help incorporate those use cases, the CDI Query module supports also annotating methods for
+        more control on the generated query.
     </para>
+    
+    <section id="annotations-usage">
+        <title>Using Query Annotations</title>
+        <para>
+            The simples way to define a specific query is by annotation a method and providing the JPQL query string which
+            has to be executed. In code, this looks like the following sample:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+    @Query("select count(p) from Person p where p.age > ?1")
+    Long countAllOlderThan(int minAge);
+}]]>    </programlisting>
+        <para>
+            The parameter binding in the query corresponds to the argument index in the method.
+        </para>
+        <para>
+            You can also refer to a named query which is constructed and executed automatically. The <literal>@Query</literal>
+            annotation has a <literal>named</literal> attribute which corresponds to the query name:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Entity
+@NamedQueries({
+    @NamedQuery(name = Person.BY_MIN_AGE,
+                query = "select count(p) from Person p where p.age > ?1 order by p.age asc")
+})
+public class Person {
+    public static final String BY_MIN_AGE = "person.byMinAge";
+    ...
+}
+
+public interface PersonDao extends EntityDao<Person, Long> {
+    @Query(named = Person.BY_MIN_AGE)
+    Long countAllOlderThan(int minAge);
+}]]>    </programlisting>
+        <para>
+            Same as before, the parameter binding correspons to the argument index in the method. If the named query requires
+            named parameters to be used, this can be done by annotating the arguments with the <literal>@QueryParam</literal>
+            annotation.
+        </para>
+        <tip>
+            Java does not preserve method parameter names, that's why the annotation is needed.
+        </tip>
+        <programlisting role="JAVA"><![CDATA[@NamedQuery(name = Person.BY_MIN_AGE,
+                query = "select count(p) from Person p where p.age > :minAge order by p.age asc")
+
+public interface PersonDao extends EntityDao<Person, Long> {
+    @Query(named = Person.BY_MIN_AGE)
+    Long countAllOlderThan(@QueryParam("minAge") int minAge);
+}]]>    </programlisting>
+    </section>
+    
+    <section id="annotations-options">
+        <title>Annotation Options</title>
+        <para>
+            Beside providing a query string or reference, the <literal>@Query</literal> annotation provides also two more
+            attributes:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+    @Query(named = Person.BY_MIN_AGE, max = 10, lock = LockModeType.PESSIMISTIC_WRITE)
+    List<Person> findAllForUpdate(int minAge);
+}]]>    </programlisting>
+        <para>
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>max</literal></entry>
+                            <entry>
+                                Limits the number of results.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>lock</literal></entry>
+                            <entry>
+                                Use a specific <literal>LockModeType</literal> to execute the query.
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+            Note that these options can also be applied to <xref linkend="methodexpressions"/>
+        </para>
+    </section>
 
 </chapter>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="methodexperssions">
+<chapter id="methodexpressions">
     <title>Query Method Expressions</title>
     <para>
         Good naming is a difficult aspects in software engineering. A good method name usually makes comments unnecessary
         and states exactly what the method does. And with method expressions, the method name is actually the implementation!
     </para>
     
-    <section>
+    <section id="methodexpressions-usage">
         <title>Using method expressions</title>
         <para>
             Let's start by looking at an example:
@@ -123,7 +123,7 @@ public interface PersonDao extends EntityDao<Person, Long> {
         </para>
     </section>
     
-    <section>
+    <section id="methodexpressions-options">
         <title>Query Options</title>
         <para>
             CDI Query supports query options on method expressions. If you want to page a query, you can change the first

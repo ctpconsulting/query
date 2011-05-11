@@ -158,6 +158,19 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Assert.assertEquals(simple.getId(), result.getId());
         Assert.assertEquals(name, result.getName());
     }
+    
+    @Test
+    public void shouldReturnAggregate() {
+        // given
+        final String name = "testReturnAggregate";
+        Simple simple = createSimple(name);
+        
+        // when
+        Long result = dao.findCountByQuery(name);
+        
+        // then
+        Assert.assertNotNull(result);
+    }
 
     private Simple createSimple(String name) {
         Simple result = new Simple(name);
