@@ -15,10 +15,12 @@ public abstract class QueryUtils {
     }
     
     public static String uncapitalize(String value) {
-        if (value == null)
+        if (value == null) {
             return null;
-        if (value.length() == 1)
+        }
+        if (value.length() == 1) {
             return value.toLowerCase();
+        }
         return value.substring(0, 1).toLowerCase() + value.substring(1);
     }
     

@@ -65,8 +65,9 @@ public class QueryHandler {
     
     private Class<?> extractFromInterface(Class<?> proxyClass) {
         for (Class<?> interFace : proxyClass.getInterfaces()) {
-            if (!ProxyObject.class.equals(interFace))
+            if (!ProxyObject.class.equals(interFace)) {
                 return interFace;
+            }
         }
         return null;
     }

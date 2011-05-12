@@ -15,7 +15,7 @@ public class QueryRoot extends QueryPart {
     
     public static final String QUERY_PREFIX = "findBy";
     
-    private static final Logger log = Logger.getLogger(QueryRoot.class);
+    private Logger log = Logger.getLogger(QueryRoot.class);
     
     private final String entityName;
     private String jpqlQuery;
@@ -67,8 +67,9 @@ public class QueryRoot extends QueryPart {
     }
     
     private String removePrefix(String queryPart) {
-        if (queryPart.startsWith(QUERY_PREFIX))
+        if (queryPart.startsWith(QUERY_PREFIX)) {
             return queryPart.substring(QUERY_PREFIX.length());
+        }
         return queryPart;
     }
 

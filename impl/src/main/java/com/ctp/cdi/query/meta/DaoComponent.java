@@ -28,7 +28,7 @@ import com.ctp.cdi.query.WithEntityManager;
  */
 public class DaoComponent {
     
-    private static final Logger log = Logger.getLogger(DaoComponent.class);
+    private Logger log = Logger.getLogger(DaoComponent.class);
 
     private Class<?> daoClass;
     private DaoEntity entityClass;
@@ -37,8 +37,9 @@ public class DaoComponent {
     private Map<Method, DaoMethod> methods = new HashMap<Method, DaoMethod>();
     
     public DaoComponent(Class<?> daoClass, DaoEntity entityClass) {
-        if (entityClass == null)
+        if (entityClass == null) {
             throw new RuntimeException("Entity class cannot be null");
+        }
         this.daoClass = daoClass;
         this.entityClass = entityClass;
         initialize();
@@ -122,8 +123,9 @@ public class DaoComponent {
         while (!Object.class.equals(current) && current != null) {
             result.add(current);
             Class<?>[] interfaces = current.getInterfaces();
-            if (interfaces != null)
+            if (interfaces != null) {
                 result.addAll(Arrays.asList(interfaces));
+            }
             current = current.getSuperclass();
         }
         log.debugv("collectClasses(): Found {0} for {1}", result, daoClass);

@@ -16,29 +16,29 @@ public class DaoUtilsTest {
     public void shouldExtractFromInterface() {
         // when
         DaoEntity result = DaoUtils.extractEntityMetaData(ExtendedDaoInterface.class);
-        
+
         // then
         Assert.assertNotNull(result);
         Assert.assertEquals(Simple.class, result.getEntityClass());
         Assert.assertEquals(Long.class, result.getPrimaryClass());
     }
-    
+
     @Test
     public void shouldExtractFromClass() {
         // when
         DaoEntity result = DaoUtils.extractEntityMetaData(SimpleDao.class);
-        
+
         // then
         Assert.assertNotNull(result);
         Assert.assertEquals(Simple.class, result.getEntityClass());
         Assert.assertEquals(Long.class, result.getPrimaryClass());
     }
-    
+
     @Test
     public void shouldExtractFromAnnotation() {
         // when
         DaoEntity result = DaoUtils.extractEntityMetaData(DaoInterface.class);
-        
+
         // then
         Assert.assertNotNull(result);
         Assert.assertEquals(Simple.class, result.getEntityClass());

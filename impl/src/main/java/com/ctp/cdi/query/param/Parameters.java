@@ -20,7 +20,7 @@ import com.ctp.cdi.query.QueryParam;
  */
 public class Parameters {
     
-    private static final Logger log = Logger.getLogger(Parameters.class);
+    private Logger log = Logger.getLogger(Parameters.class);
     
     private static final int DEFAULT_MAX = 0;
     private static final int DEFAULT_FIRST = -1;
