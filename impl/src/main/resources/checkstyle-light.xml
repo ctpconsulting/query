@@ -13,25 +13,8 @@ Lightweight checkstyle configuration
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
-    <module name="JavadocMethod">
-      <property name="severity" value="ignore"/>
-      <property name="suppressLoadErrors" value="true"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="JavadocType">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="JavadocVariable">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="JavadocStyle">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="ConstantName">
-      <property name="format" value="^(a-zA-Z0-9]*|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
+      <property name="format" value="^((log)|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
     </module>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
@@ -57,16 +40,10 @@ Lightweight checkstyle configuration
       <property name="max" value="125"/>
       <property name="tabWidth" value="4"/>
     </module>
-    <module name="MethodLength">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="ParameterNumber">
-      <property name="severity" value="ignore"/>
+      <property name="max" value="5"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
-    <module name="EmptyForIteratorPad"/>
-    <module name="MethodParamPad"/>
     <module name="NoWhitespaceAfter">
       <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
     </module>
@@ -74,6 +51,8 @@ Lightweight checkstyle configuration
     <module name="OperatorWrap">
       <property name="option" value="eol"/>
     </module>
+    <module name="EmptyForIteratorPad"/>
+    <module name="MethodParamPad"/>
     <module name="ParenPad"/>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
@@ -82,20 +61,12 @@ Lightweight checkstyle configuration
     </module>
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
-    <module name="AvoidNestedBlocks">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="EmptyBlock"/>
     <module name="LeftCurly"/>
     <module name="NeedBraces">
       <property name="severity" value="error"/>
     </module>
     <module name="RightCurly"/>
-    <module name="AvoidInlineConditionals">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="DoubleCheckedLocking">
       <message key="doublechecked.locking.avoid" value="The double-checked locking idiom is broken and should be avoided. Try to apply value holder idiom http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"/>
     </module>
@@ -106,7 +77,7 @@ Lightweight checkstyle configuration
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber">
-      <property name="ignoreNumbers" value="-1, 0, 1, 2,0.5"/>
+      <property name="ignoreNumbers" value="-1, 0, 1, 2, 0.5"/>
       <property name="ignoreHashCodeMethod" value="true"/>
     </module>
     <module name="MissingSwitchDefault"/>
@@ -115,40 +86,10 @@ Lightweight checkstyle configuration
     </module>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
-    <module name="DesignForExtension">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="FinalClass">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="HideUtilityClassConstructor"/>
     <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier">
-      <property name="severity" value="ignore"/>
-      <property name="packageAllowed" value="true"/>
-      <property name="protectedAllowed" value="true"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="GenericIllegalRegexp">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
-    <module name="TodoComment">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="UpperEll"/>
-    <module name="PackageHtml">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
     <module name="HiddenField">
       <property name="tokens" value="VARIABLE_DEF"/>
       <property name="ignoreSetter" value="true"/>
@@ -161,24 +102,8 @@ Lightweight checkstyle configuration
       <property name="max" value="8"/>
     </module>
   </module>
-  <module name="FileLength">
-    <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-  </module>
   <module name="FileTabCharacter">
     <property name="eachLine" value="true"/>
-  </module>
-  <module name="NewlineAtEndOfFile">
-    <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-  </module>
-  <module name="Translation">
-    <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-  </module>
-  <module name="StrictDuplicateCode">
-    <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="SuppressionFilter">
     <metadata name="net.sf.eclipsecs.core.comment" value="Defines which rules are not applicable for certain packages, classes etc."/>
