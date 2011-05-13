@@ -38,7 +38,7 @@ public class DaoComponent {
     
     public DaoComponent(Class<?> daoClass, DaoEntity entityClass) {
         if (entityClass == null) {
-            throw new RuntimeException("Entity class cannot be null");
+            throw new IllegalArgumentException("Entity class cannot be null");
         }
         this.daoClass = daoClass;
         this.entityClass = entityClass;
