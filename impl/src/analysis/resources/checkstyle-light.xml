@@ -12,6 +12,7 @@ Lightweight checkstyle configuration
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
+    <property name="cacheFile" value="checkstyle-cachefile"/>
     <property name="tabWidth" value="4"/>
     <module name="ConstantName">
       <property name="format" value="^((log)|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
@@ -105,8 +106,10 @@ Lightweight checkstyle configuration
   <module name="FileTabCharacter">
     <property name="eachLine" value="true"/>
   </module>
+  <!-- Uncomment for Eclipse plugin. Maven plugin has dedicated configuration for that
   <module name="SuppressionFilter">
     <metadata name="net.sf.eclipsecs.core.comment" value="Defines which rules are not applicable for certain packages, classes etc."/>
     <property name="file" value="${samedir}suppressions.xml"/>
   </module>
+   -->
 </module>

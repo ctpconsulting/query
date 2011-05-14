@@ -19,7 +19,7 @@
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
-
+    
     <build>
         <testResources>
             <testResource>
@@ -37,6 +37,59 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0-beta-2</version>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jxr-plugin</artifactId>
+                            <version>2.2</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-report-plugin</artifactId>
+                            <version>2.8.1</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>2.7-SNAPSHOT</version>
+                            <configuration>
+                                <linkXRef>true</linkXRef>
+                                <cacheFile>src/analysis/resources/checkstyle-cachefile</cacheFile>
+                                <configLocation>src/analysis/resources/checkstyle-light.xml</configLocation>
+                                <suppressionsLocation>src/analysis/resources/suppressions.xml</suppressionsLocation>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <version>2.5</version>
+                            <configuration>
+                                <linkXRef>true</linkXRef>
+                                <sourceEncoding>utf-8</sourceEncoding>
+                                <failOnViolation>true</failOnViolation>
+                                <targetJdk>1.6</targetJdk>
+                                <failurePriority>2</failurePriority>
+                                <rulesets>
+                                    <ruleset>src/analysis/resources/pmd-ruleset.xml</ruleset>
+                                </rulesets>
+                                <excludes>
+                                    <exclude>**/*_.java</exclude>
+                                    <exclude>**/generated/*.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>
+                                    
+                    </reportPlugins>
                 </configuration>
             </plugin>
         </plugins>

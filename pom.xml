@@ -274,6 +274,14 @@
             <name>Thomas Hug</name>
             <email>thomas.hug@ctp-consulting.com</email>
         </developer>
+        <developer>
+            <name>Bartosz Majsak</name>
+            <email>bartosz.majsak@ctp-consulting.com</email>
+        </developer>
+        <developer>
+            <name>Erik Jan de Wit</name>
+            <email>erikjan.dewit@ctp-consulting.com</email>
+        </developer>
     </developers>
 
     <scm>
