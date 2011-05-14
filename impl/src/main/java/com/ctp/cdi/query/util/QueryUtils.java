@@ -6,7 +6,10 @@ import java.text.MessageFormat;
  *
  * @author thomashug
  */
-public abstract class QueryUtils {
+public final class QueryUtils {
+    
+    private QueryUtils() {
+    }
     
     private static final String KEYWORD_SPLITTER = "({0})(?=[A-Z])";
     

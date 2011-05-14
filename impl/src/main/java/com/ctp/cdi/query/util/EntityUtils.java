@@ -12,8 +12,11 @@ import org.jboss.seam.solder.properties.query.PropertyQuery;
 
 import com.ctp.cdi.query.meta.NonEntityException;
 
-public abstract class EntityUtils {
+public final class EntityUtils {
 
+    private EntityUtils() {
+    }
+    
     public static boolean isNew(Object entity) {
         assertIsEntity(entity);
         Property<Serializable> property = primaryKey(entity.getClass());
