@@ -1,10 +1,13 @@
 /.project
 /.classpath
 /.settings/
+/checkstyle-cachefile
 /target/
 /docs/target/
 /impl/.classpath
 /impl/.project
+/impl/.pmd
+/impl/.checkstyle
 /impl/.settings/
 /impl/derby.log
 /docs/.project
