@@ -28,13 +28,13 @@ import com.ctp.cdi.query.WithEntityManager;
  */
 public class DaoComponent {
     
-    private Logger log = Logger.getLogger(DaoComponent.class);
+    private final Logger log = Logger.getLogger(DaoComponent.class);
 
-    private Class<?> daoClass;
-    private DaoEntity entityClass;
+    private final Class<?> daoClass;
+    private final DaoEntity entityClass;
     private Annotation[] qualifiers;
     
-    private Map<Method, DaoMethod> methods = new HashMap<Method, DaoMethod>();
+    private final Map<Method, DaoMethod> methods = new HashMap<Method, DaoMethod>();
     
     public DaoComponent(Class<?> daoClass, DaoEntity entityClass) {
         if (entityClass == null) {
