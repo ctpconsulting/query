@@ -16,7 +16,7 @@ import com.ctp.cdi.query.meta.DaoComponentsFactory;
  */
 public class QueryExtension extends ServiceHandlerExtension {
 
-    private Logger log = Logger.getLogger(QueryExtension.class);
+    private final Logger log = Logger.getLogger(QueryExtension.class);
 
     @Override
     protected <X> Class<?> getHandlerClass(ProcessAnnotatedType<X> event) {

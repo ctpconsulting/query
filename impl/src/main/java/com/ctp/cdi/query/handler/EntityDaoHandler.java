@@ -33,7 +33,7 @@ import javax.persistence.criteria.CriteriaQuery;
  */
 public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
 
-    private Logger log = Logger.getLogger(EntityDaoHandler.class);
+    private final Logger log = Logger.getLogger(EntityDaoHandler.class);
 
     private final EntityManager entityManager;
     private final Class<E> entityClass;
