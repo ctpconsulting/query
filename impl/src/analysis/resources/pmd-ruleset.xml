@@ -334,9 +334,14 @@
     </rule>
     
     <!-- JUnit rules -->
+    <!-- 
+    Does not work with abstract classes, giving false positive.
+    Enable to see it complaining about CriteriaTest for instance.
+    
     <rule ref="rulesets/junit.xml/TestClassWithoutTestCases">
         <priority>1</priority>
     </rule>
+     -->
     <rule ref="rulesets/junit.xml/JUnitStaticSuite">
         <priority>3</priority>
     </rule>
