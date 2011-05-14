@@ -78,7 +78,6 @@
                                 <sourceEncoding>utf-8</sourceEncoding>
                                 <failOnViolation>true</failOnViolation>
                                 <targetJdk>1.6</targetJdk>
-                                <failurePriority>2</failurePriority>
                                 <rulesets>
                                     <ruleset>src/analysis/resources/pmd-ruleset.xml</ruleset>
                                 </rulesets>
@@ -88,7 +87,14 @@
                                 </excludes>
                             </configuration>
                         </plugin>
-                                    
+                         <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <version>2.3.2</version>
+                            <configuration>
+                                <excludeFilterFile>src/analysis/resources/findbugs-exclusion.xml</excludeFilterFile>
+                            </configuration>
+                        </plugin>
                     </reportPlugins>
                 </configuration>
             </plugin>
