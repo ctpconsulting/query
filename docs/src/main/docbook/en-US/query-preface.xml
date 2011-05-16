@@ -17,31 +17,33 @@
         on the though things. The code sample below will give you a quick overview on the common usage scenarios of the
         CDI Query module:
     </para>
-    <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
+    <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+
+    List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
 
     @Query("select p from Person p where p.ssn = ?1")
-    public abstract Person findBySSN(String ssn);
+    Person findBySSN(String ssn);
     
     @Query(named=Person.BY_FULL_NAME)
-    public abstract Person findByFullName(String firstName, String lastName);
-    
-    public abstract List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
+    Person findByFullName(String firstName, String lastName);
 
 }]]></programlisting>
     <para>
         As you see in the sample, there are several usage scenarios outlined here:
         <itemizedlist>
             <listitem>
-                Create an unimplemented method which automatically executes a given JPQL query string with parameters.
+                Declare a method which executes a query by simply translating its name and parameters into a query. 
             </listitem>
             <listitem>
-                Create an unimplemented method which automatically executes a named query with parameters.
+                Declare a method which automatically executes a given JPQL query string with parameters.
             </listitem>
             <listitem>
-                Create a method which executes a query by a method expression and its parameters. 
+                Declare a method which automatically executes a named query with parameters.
             </listitem>
         </itemizedlist>
-        The details on how to use those features are outlines in the following chapters.
+        The implementation of the method is done automatically by the CDI Query module. A client can declare
+        a dependency to the interface only. The details on how to use those features are outlines in the 
+        following chapters.
     </para>
     
 </preface>

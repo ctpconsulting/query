@@ -91,7 +91,7 @@ public interface PersonDao extends EntityDao<Person, Long> {
     </section>
     
     <section id="multiple-entitymanagers">
-        <title>Using Multiple <literal>EntityManager</literal></title>
+        <title>Using Multiple <literal>EntityManager</literal>s</title>
         <para>
             While most applications will run just fine with a single <literal>EntityManager</literal>, there might be setups
             where multiple data sources are used. Similar to the default case, CDI Query requires to have producers for
@@ -103,7 +103,7 @@ public interface PersonDao extends EntityDao<Person, Long> {
 public @interface Customer {
 }
         
-public class CustomerDatasourceProducer {
+public class CustomerDataSourceProducer {
     ...
     @Produces @Customer
     public EntityManager create(){
@@ -121,8 +121,10 @@ public interface CustomerDao extends EntityDao<Customer, Long> {
     ...
 }]]>    </programlisting>
         <tip>
-            Qualifiers in CDI can also use attributes. This is not supported with the @WithEntityManager annotation,
-            it can only be qualified over a plain annotation.
+            <para>
+                Qualifiers in CDI can also use attributes. This is not supported with the @WithEntityManager annotation,
+                it can only be qualified over a plain annotation.
+            </para>
         </tip>
         <para>
             If a more granular qualifier support is required, the <literal>AbstractEntityDao</literal> class can be extended.

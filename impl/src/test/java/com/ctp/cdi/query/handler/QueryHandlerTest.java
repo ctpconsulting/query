@@ -10,10 +10,8 @@ import javax.persistence.PersistenceContext;
 import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
@@ -22,7 +20,6 @@ import com.ctp.cdi.query.test.service.Simple2Dao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
-@RunWith(Arquillian.class)
 public class QueryHandlerTest extends TransactionalTestCase {
     
     @Deployment

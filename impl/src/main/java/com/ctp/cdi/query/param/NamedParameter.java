@@ -8,7 +8,7 @@ import javax.persistence.Query;
  */
 public class NamedParameter extends Parameter {
 
-    private String name;
+    private final String name;
 
     public NamedParameter(String name, Object value, int argIndex) {
         super(value, argIndex);

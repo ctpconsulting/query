@@ -4,8 +4,8 @@
 <chapter id="installation">
     <title>Installation</title>
     <para>
-        To use the CDI Query module, you need to put the API and implementation JARs on the classpath of your enterprise
-        application.
+        To use the CDI Query module, you need to add the API and implementation JARs to the runtime classpath
+        of your enterprise application.
     </para>
     
     <section id="installation-prerequisites">
@@ -66,8 +66,8 @@
         <para>
             CDI Query requires an EntityManager exposed via a CDI producer - which is common practice in Java EE 6 applications.
         </para>
-        <programlisting role="JAVA"><![CDATA[public class DatasourceProducer {
-   
+        <programlisting role="JAVA"><![CDATA[public class DataSourceProducer {
+
     @PersistenceUnit
     private EntityManagerFactory emf;
 
@@ -76,7 +76,7 @@
         return emf.createEntityManager();
     }
 
-    public void close(@Disposes EntityManager em){
+    public void close(@Disposes EntityManager em) {
         em.close();
     }
 }]]>    </programlisting>

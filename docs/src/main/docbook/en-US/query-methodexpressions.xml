@@ -51,18 +51,18 @@ public interface PersonDao extends EntityDao<Person, Long> {
             Other assumptions taken by the expression evaluator:
             <itemizedlist>
                 <listitem>
-                    The property name is lower cased while the property in the expression has an upper cases first character.
+                    The property name starts lower cased while the property in the expression has an upper cases first character.
                 </listitem>
             </itemizedlist>
         </para>
         <para>
-            Following operators are currently supported to be used in method expressions:
+            Following comparators are currently supported to be used in method expressions:
             <informaltable>
                 <tgroup cols="3">
                     <thead>
                         <row>
                             <entry>Name</entry>
-                            <entry># of arguments</entry>
+                            <entry># of Arguments</entry>
                             <entry>Description</entry>
                         </row>
                     </thead>

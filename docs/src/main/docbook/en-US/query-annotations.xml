@@ -47,7 +47,9 @@ public interface PersonDao extends EntityDao<Person, Long> {
             annotation.
         </para>
         <tip>
-            Java does not preserve method parameter names, that's why the annotation is needed.
+            <para>
+                Java does not preserve method parameter names, that's why the annotation is needed.
+            </para>
         </tip>
         <programlisting role="JAVA"><![CDATA[@NamedQuery(name = Person.BY_MIN_AGE,
                 query = "select count(p) from Person p where p.age > :minAge order by p.age asc")

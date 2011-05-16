@@ -8,8 +8,10 @@
         queries. It takes advantage of the JPA 2 meta model, which helps creating type safe queries.
     </para>
     <tip>
-        The JPA meta model can easily be generated with an annotation processor. Hibernate or Eclipse link provide
-        such a processor, which can be integrated into your compile and build cycle.
+        <para>
+            The JPA meta model can easily be generated with an annotation processor. Hibernate or Eclipse link provide
+            such a processor, which can be integrated into your compile and build cycle.
+        </para>
     </tip>
     <para>
         Note that this criteria API is not intended to replace the standard criteria API - it's rather a utility API that
@@ -30,13 +32,13 @@
                     .like(Person_.name, "%" + name + "%")
                     .gtOrEq(Person_.age, minAge)
                     .eq(Person_.validated, Boolean.TRUE)
-                    .desc(Person_.age)
+                    .orderDesc(Person_.age)
                     .createQuery()
                     .getResultList();
     }
 }]]>    </programlisting>
         <para>
-            Following predicates are supported by the API:
+            Following comparators are supported by the API:
             <informaltable>
                 <tgroup cols="2">
                     <thead>
@@ -60,7 +62,7 @@
                         </row>
                         <row>
                             <entry><literal>.like(..., ...)</literal></entry>
-                            <entry>A SQL 'like' equivalent predicate. Use % on the value.</entry>
+                            <entry>A SQL 'like' equivalent comparator. Use % on the value.</entry>
                         </row>
                         <row>
                             <entry><literal>.notLike(..., ...)</literal></entry>
@@ -118,14 +120,14 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry><literal>.asc(...)</literal></entry>
+                            <entry><literal>.orderAsc(...)</literal></entry>
                             <entry>
                                 Sorts the result ascending by the given property. Note that this can be applied to
                                 several properties
                             </entry>
                         </row>
                         <row>
-                            <entry><literal>.desc(...)</literal></entry>
+                            <entry><literal>.orderDesc(...)</literal></entry>
                             <entry>
                                 Sorts the result descending by the given property. Note that this can be applied to
                                 several properties
@@ -142,7 +144,7 @@
             </informaltable>
         </para>
         <para>
-            Once all predicates and query options are applied, the <literal>createQuery()</literal> method is called.
+            Once all rs and query options are applied, the <literal>createQuery()</literal> method is called.
             This creates a JPA TypedQuery object for the DAO entity. If required, further processing can be applied here.
         </para>
     </section>
@@ -185,7 +187,7 @@
     <section id="criteria-boolean">
         <title>Boolean Operators</title>
         <para>
-            By default, all query predicates are concatenated as an <literal>and</literal> conjunction to the query.
+            By default, all query operators are concatenated as an <literal>and</literal> conjunction to the query.
             The CDI Query criteria API also allows to add groups of disjunctions. The current API restricts the number
             of groups to three. This is due to the restriction that the java compiler generates warnings for varargs with
             generics (and of course we try to keep your code warning-free). To provide more groups, the groups have to

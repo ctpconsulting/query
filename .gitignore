@@ -22,8 +22,10 @@
 /api/target/
 /combined/target/
 /impl/target/
-
 /combined/.classpath
 /docs/.classpath
 /api/nb-configuration.xml
 /.DS_Store
+/checkstyle-cachefile
+
+.DS_Store

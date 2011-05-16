@@ -1,7 +1,5 @@
 package com.ctp.cdi.query.meta;
 
-import com.ctp.cdi.query.handler.EntityDaoHandler;
-
 /**
  * DAO method type. Stands for
  * <ul>
