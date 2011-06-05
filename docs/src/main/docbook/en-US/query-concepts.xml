@@ -100,23 +100,23 @@ public interface PersonDao extends EntityDao<Person, Long> {
         <programlisting role="JAVA"><![CDATA[@Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
-public @interface Customer {
+public @interface CustomerData {
 }
         
 public class CustomerDataSourceProducer {
     ...
-    @Produces @Customer
+    @Produces @CustomerData
     public EntityManager create(){
         return emf.createEntityManager();
     }
 }]]>    </programlisting>
         <para>
-            The <literal>@Customer</literal> is a CDI qualifier - all available <literal>EntityManager</literal> have to
+            The <literal>@CustomerData</literal> is a CDI qualifier - all available <literal>EntityManager</literal> have to
             be exposed similar with a different qualifier. The link to the Query DAO happens then over a custom annotation
             on the DAO:
         </para>
         <programlisting role="JAVA"><![CDATA[@Dao
-@WithEntityManager(Customer.class)
+@WithEntityManager(CustomerData.class)
 public interface CustomerDao extends EntityDao<Customer, Long> {
     ...
 }]]>    </programlisting>
@@ -134,12 +134,12 @@ public interface CustomerDao extends EntityDao<Customer, Long> {
         <programlisting role="JAVA"><![CDATA[@Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
-public @interface Customer {
+public @interface CustomerData {
     CustomerType value();
 }
         
 public abstract class CustomerDao extends AbstractEntityDao<Customer, Long> {
-    @Override @Customer(CRM)
+    @Override @CustomerData(CRM)
     protected abstract EntityManager getEntityManager();
     
     ...
