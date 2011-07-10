@@ -41,7 +41,6 @@
       <dependency>
          <groupId>com.ctp.cdi.query</groupId>
          <artifactId>cdi-query-api</artifactId>
-         <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
       </dependency>
@@ -49,7 +48,6 @@
       <dependency>
          <groupId>com.ctp.cdi.query</groupId>
          <artifactId>cdi-query-impl</artifactId>
-         <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
       </dependency>
@@ -57,16 +55,7 @@
       <dependency>
          <groupId>com.ctp.cdi.query</groupId>
          <artifactId>cdi-query-api</artifactId>
-         <version>${project.version}</version>
          <classifier>javadoc</classifier>
-      </dependency>
-
-      <dependency>
-         <groupId>com.ctp.cdi.query</groupId>
-         <artifactId>cdi-query-reference-guide</artifactId>
-         <version>${project.version}</version>
-         <type>war</type>
-         <optional>true</optional>
       </dependency>
 
    </dependencies>

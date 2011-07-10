@@ -18,6 +18,10 @@
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
+    
+    <properties>
+        <project.parent.url>${project.artifactId}</project.parent.url>
+    </properties>
 
     <dependencies>
 

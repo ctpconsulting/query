@@ -22,7 +22,6 @@
     
     <properties>
         <version.maven.compiler>2.3.1</version.maven.compiler>
-        <version.maven.site>3.0-beta-2</version.maven.site>
         <version.maven.jxr>2.2</version.maven.jxr>
         <version.maven.surefire>2.8.1</version.maven.surefire>
         <version.maven.checkstyle>2.7-SNAPSHOT</version.maven.checkstyle>
@@ -31,6 +30,7 @@
         <version.maven.cobertura>2.5</version.maven.cobertura>
         <jdk.source>1.6</jdk.source>
         <jdk.target>1.6</jdk.target>
+        <project.parent.url>${project.artifactId}</project.parent.url>
     </properties>
     
     <build>
@@ -46,7 +46,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven.compiler}</version>
                 <configuration>
                     <source>${jdk.source}</source>
                     <target>${jdk.target}</target>
@@ -149,7 +148,7 @@
                         <artifactId>maven-site-plugin</artifactId>
                         <version>${version.maven.site}</version>
                         <configuration>
-                            <reportPlugins>
+                            <reportPlugins combine.children="append">
                                 <plugin>
                                     <groupId>org.apache.maven.plugins</groupId>
                                     <artifactId>maven-jxr-plugin</artifactId>
