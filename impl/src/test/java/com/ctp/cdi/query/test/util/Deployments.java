@@ -24,8 +24,7 @@ public abstract class Deployments {
                 .addAsWebInfResource("test-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsWebInfResource("glassfish-resources.xml");
-        // TODO: Adding the datasource was somehow refusing to work with
-        // arquillian.xml.
+        // TODO: Adding the datasource was somehow refusing to work with arquillian.xml.
         // Switched to web deployment for the time being.
     }
 

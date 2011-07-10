@@ -156,14 +156,14 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
     }
 
     private String prepareWhere(List<Property<Object>> properties) {
-        String result = "";
         Iterator<Property<Object>> iterator = properties.iterator();
+        StringBuilder result = new StringBuilder();
         while (iterator.hasNext()) {
             String name = iterator.next().getName();
-            result += "e." + name + " = :" + name + (iterator.hasNext() ? " and " : "");
+            result.append("e.").append(name).append(" = :").append(name).append(iterator.hasNext() ? " and " : "");
 
         }
-        return result;
+        return result.toString();
     }
 
     private List<String> extractPropertyNames(SingularAttribute<E, ?>... attributes) {

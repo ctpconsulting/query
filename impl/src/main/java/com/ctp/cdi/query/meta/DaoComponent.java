@@ -92,7 +92,7 @@ public class DaoComponent {
      * @return          A list of annotations, empty when using the default entity manager.
      */
     public Annotation[] getEntityManagerQualifiers() {
-        return qualifiers;
+        return Arrays.copyOf(qualifiers, qualifiers.length);
     }
 
     private void initialize() {

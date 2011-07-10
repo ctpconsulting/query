@@ -43,8 +43,7 @@ public class QueryRoot extends QueryPart {
         String[] orParts = splitByKeyword(removePrefix(queryPart), "Or");
         boolean first = true;
         for (String or : orParts) {
-            OrQueryPart orPart = new OrQueryPart();
-            orPart.setIsFirst(first);
+            OrQueryPart orPart = new OrQueryPart(first);
             first = false;
             children.add(orPart.build(or));
         }

@@ -8,7 +8,11 @@ import com.ctp.cdi.query.builder.QueryBuilderContext;
  */
 class AndQueryPart extends ConnectingQueryPart {
 
-    @Override
+    public AndQueryPart(boolean first) {
+		super(first);
+	}
+
+	@Override
     protected QueryPart build(String queryPart) {
         children.add(new PropertyQueryPart().build(queryPart));
         return this;
@@ -16,7 +20,7 @@ class AndQueryPart extends ConnectingQueryPart {
 
     @Override
     protected QueryPart buildQuery(QueryBuilderContext ctx) {
-        if (!isFirst) {
+        if (!first) {
             ctx.append(" and ");
         }
         buildQueryForChildren(ctx);
