@@ -27,3 +27,4 @@
 /api/nb-configuration.xml
 /checkstyle-cachefile
 .DS_Store
+.externalToolBuilders
