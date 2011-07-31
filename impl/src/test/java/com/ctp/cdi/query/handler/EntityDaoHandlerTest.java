@@ -75,7 +75,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         
         // when
         simple = dao.saveAndFlush(simple);
-        Simple fetch = (Simple) entityManager.createNativeQuery("select * from simple where id = ?", Simple.class)
+        Simple fetch = (Simple) entityManager.createNativeQuery("select * from simple_table where id = ?", Simple.class)
                 .setParameter(1, simple.getId())
                 .getSingleResult();
         
