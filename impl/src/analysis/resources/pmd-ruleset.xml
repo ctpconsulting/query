@@ -61,8 +61,8 @@
         <priority>3</priority>
     </rule>
     <rule ref="rulesets/basic.xml/JumbledIncrementer">
-        <priority>3</priority>
         <description>Avoid jumbled loop incrementers - it's usually a mistake, and it's confusing even if it's what's intended.</description>
+        <priority>3</priority>
     </rule>
     <rule ref="rulesets/basic.xml/EmptySynchronizedBlock">
         <priority>3</priority>
@@ -173,13 +173,13 @@
     <rule ref="rulesets/codesize.xml/TooManyFields">
         <priority>3</priority>
         <properties>
-            <property name="maxfields">16</property>
+            <property name="maxfields" value="16"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/TooManyMethods">
         <priority>3</priority>
         <properties>
-            <property name="maxmethods">16</property>
+            <property name="maxmethods" value="16"/>
         </properties>
     </rule>
     

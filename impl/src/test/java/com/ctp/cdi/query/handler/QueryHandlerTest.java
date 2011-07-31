@@ -1,13 +1,14 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -49,8 +50,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
         List<Simple> result = dao.implementedQueryByName(name);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(1, result.size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
     
     @Test
@@ -63,9 +64,9 @@ public class QueryHandlerTest extends TransactionalTestCase {
         List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(1, result.size());
-        Assert.assertEquals(name, result.get(0).getName());
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(name, result.get(0).getName());
     }
     
     @Test
@@ -78,8 +79,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Simple result = dao.findByNamedQueryNamed(simple.getId(), Boolean.TRUE);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(name, result.getName());
+        assertNotNull(result);
+        assertEquals(name, result.getName());
     }
     
     @Test
@@ -92,8 +93,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Simple result = dao.findByQuery(name);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(name, result.getName());
+        assertNotNull(result);
+        assertEquals(name, result.getName());
     }
     
     @Test
@@ -106,8 +107,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Simple result = dao.findByNameAndEnabled(name, Boolean.TRUE);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(name, result.getName());
+        assertNotNull(result);
+        assertEquals(name, result.getName());
     }
     
     @Test
@@ -121,8 +122,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
         List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(1, result.size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
     
     @Test
@@ -136,9 +137,9 @@ public class QueryHandlerTest extends TransactionalTestCase {
         List<Simple> result = dao.findByNamedQueryRestricted(name, Boolean.TRUE, 1, 1);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(1, result.size());
-        Assert.assertEquals(second.getId(), result.get(0).getId());
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(second.getId(), result.get(0).getId());
     }
     
     @Test
@@ -151,22 +152,22 @@ public class QueryHandlerTest extends TransactionalTestCase {
         Simple2 result = dao2.findByName(name);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(simple.getId(), result.getId());
-        Assert.assertEquals(name, result.getName());
+        assertNotNull(result);
+        assertEquals(simple.getId(), result.getId());
+        assertEquals(name, result.getName());
     }
     
     @Test
     public void shouldReturnAggregate() {
         // given
         final String name = "testReturnAggregate";
-        Simple simple = createSimple(name);
+        createSimple(name);
         
         // when
         Long result = dao.findCountByQuery(name);
         
         // then
-        Assert.assertNotNull(result);
+        assertNotNull(result);
     }
 
     private Simple createSimple(String name) {

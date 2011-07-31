@@ -1,5 +1,10 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
@@ -44,7 +49,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         simple = dao.save(simple);
         
         // then
-        Assert.assertNotNull(simple.getId());
+        assertNotNull(simple.getId());
     }
     
     @Test
@@ -59,8 +64,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         simple = dao.save(simple);
         
         // then
-        Assert.assertEquals(id, simple.getId());
-        Assert.assertEquals(newName, simple.getName());
+        assertEquals(id, simple.getId());
+        assertEquals(newName, simple.getName());
     }
     
     @Test
@@ -75,7 +80,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
                 .getSingleResult();
         
         // then
-        Assert.assertEquals(simple.getId(), fetch.getId());
+        assertEquals(simple.getId(), fetch.getId());
     }
     
     @Test
@@ -89,7 +94,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         dao.refresh(simple);
         
         // then
-        Assert.assertEquals(name, simple.getName());
+        assertEquals(name, simple.getName());
     }
     
     @Test
@@ -101,7 +106,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         Simple find = dao.findBy(simple.getId());
         
         // then
-        Assert.assertEquals(simple.getName(), find.getName());
+        assertEquals(simple.getName(), find.getName());
     }
 
     @Test
@@ -114,9 +119,9 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         List<Simple> find = dao.findBy(simple, Simple_.name);
         
         // then
-        Assert.assertNotNull(find);
-        Assert.assertFalse(find.isEmpty());
-        Assert.assertEquals(simple.getName(), find.get(0).getName());
+        assertNotNull(find);
+        assertFalse(find.isEmpty());
+        assertEquals(simple.getName(), find.get(0).getName());
     }
     
     @Test
@@ -141,7 +146,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         Long result = dao.count();
         
         // then
-        Assert.assertEquals(Long.valueOf(1), result);
+        assertEquals(Long.valueOf(1), result);
     }
     
     @Test
@@ -155,7 +160,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         Simple lookup = entityManager.find(Simple.class, simple.getId());
         
         // then
-        Assert.assertNull(lookup);
+        assertNull(lookup);
     }
     
     private Simple createSimple(String name) {

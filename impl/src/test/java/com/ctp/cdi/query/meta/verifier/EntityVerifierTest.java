@@ -1,8 +1,10 @@
 package com.ctp.cdi.query.meta.verifier;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
 import javax.persistence.Entity;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.ctp.cdi.query.test.domain.Simple;
@@ -18,7 +20,7 @@ public class EntityVerifierTest {
         boolean isValid = entityVerifier.isEntity(Simple.class);
 
         // then
-        Assert.assertTrue(isValid);
+        assertTrue(isValid);
     }
 
     @Test
@@ -30,7 +32,7 @@ public class EntityVerifierTest {
         boolean isValid = entityVerifier.hasPrimaryKey(Simple.class);
 
         // then
-        Assert.assertTrue(isValid);
+        assertTrue(isValid);
     }
 
     @Test
@@ -42,7 +44,7 @@ public class EntityVerifierTest {
         boolean isValid = entityVerifier.verify(Simple.class);
 
         // then
-        Assert.assertTrue(isValid);
+        assertTrue(isValid);
     }
 
     @Test
@@ -54,7 +56,7 @@ public class EntityVerifierTest {
         boolean isValid = entityVerifier.verify(EntityWithoutId.class);
 
         // then
-        Assert.assertFalse(isValid);
+        assertFalse(isValid);
 
     }
 
