@@ -56,9 +56,13 @@ public class DaoMethod {
     private boolean isAnnotated() {
         if (method.isAnnotationPresent(Query.class)) {
             Query query = method.getAnnotation(Query.class);
-            return isNotEmpty(query.value()) || isNotEmpty(query.named());
+            return isValid(query);
         }
         return false;
+    }
+
+    private boolean isValid(Query query) {
+        return isNotEmpty(query.value()) || isNotEmpty(query.named()) || isNotEmpty(query.sql());
     }
 
     private boolean isDelegateMethod() {

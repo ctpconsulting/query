@@ -1,5 +1,9 @@
 package com.ctp.cdi.query.builder;
 
+import static com.ctp.cdi.query.util.QueryUtils.isNotEmpty;
+
+import java.lang.reflect.Method;
+
 import javax.persistence.EntityManager;
 
 import com.ctp.cdi.query.Query;
@@ -7,8 +11,6 @@ import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.meta.MethodType;
 import com.ctp.cdi.query.meta.QueryInvocation;
 import com.ctp.cdi.query.param.Parameters;
-import com.ctp.cdi.query.util.QueryUtils;
-import java.lang.reflect.Method;
 
 /**
  * Create the query based on method annotations.
@@ -33,8 +35,10 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
         EntityManager entityManager = context.getEntityManager();
         Parameters params = context.getParams();
         javax.persistence.Query result = null;
-        if (QueryUtils.isNotEmpty(query.named())) {
+        if (isNotEmpty(query.named())) {
             result = params.applyTo(entityManager.createNamedQuery(query.named()));
+        } else if (isNotEmpty(query.sql())) {
+            result = params.applyTo(entityManager.createNativeQuery(query.sql()));
         } else {
             result = params.applyTo(entityManager.createQuery(query.value()));
         }

@@ -169,6 +169,21 @@ public class QueryHandlerTest extends TransactionalTestCase {
         // then
         assertNotNull(result);
     }
+    
+    @Test
+    public void shouldFindWithNativeQuery() {
+        // given
+        final String name = "testFindWithNativeQuery";
+        createSimple(name);
+        createSimple(name);
+        
+        // when
+        List<Simple> result = dao.findWithNative(name);
+        
+        // then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+    }
 
     private Simple createSimple(String name) {
         Simple result = new Simple(name);
