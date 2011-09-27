@@ -13,11 +13,14 @@ import com.ctp.cdi.query.builder.QueryBuilder;
  */
 public class QueryRoot extends QueryPart {
     
+    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object");
+    
     public static final String QUERY_PREFIX = "findBy";
     
-    private Logger log = Logger.getLogger(QueryRoot.class);
+    private final Logger log = Logger.getLogger(QueryRoot.class);
     
     private final String entityName;
+    
     private String jpqlQuery;
     
     protected QueryRoot(String entityName) {
@@ -40,8 +43,7 @@ public class QueryRoot extends QueryPart {
         String[] orParts = splitByKeyword(removePrefix(queryPart), "Or");
         boolean first = true;
         for (String or : orParts) {
-            OrQueryPart orPart = new OrQueryPart();
-            orPart.setIsFirst(first);
+            OrQueryPart orPart = new OrQueryPart(first);
             first = false;
             children.add(orPart.build(or));
         }

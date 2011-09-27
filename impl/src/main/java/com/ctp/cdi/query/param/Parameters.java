@@ -20,17 +20,17 @@ import com.ctp.cdi.query.QueryParam;
  */
 public class Parameters {
     
-    private Logger log = Logger.getLogger(Parameters.class);
+    private static final Logger log = Logger.getLogger(Parameters.class);
     
     private static final int DEFAULT_MAX = 0;
     private static final int DEFAULT_FIRST = -1;
     
-    private final List<Parameter> parameters;
-    private int max = DEFAULT_MAX;
-    private int firstResult = DEFAULT_FIRST;
+    private final List<Parameter> parameterList;
+    private final int max;
+    private final int firstResult;
     
     private Parameters(List<Parameter> parameters, int max, int firstResult) {
-        this.parameters = parameters;
+        this.parameterList = parameters;
         this.max = max;
         this.firstResult = firstResult;
     }
@@ -63,7 +63,7 @@ public class Parameters {
     }
 
     public Query applyTo(Query query) {
-        for (Parameter param : parameters) {
+        for (Parameter param : parameterList) {
             param.apply(query);
         }
         return query;

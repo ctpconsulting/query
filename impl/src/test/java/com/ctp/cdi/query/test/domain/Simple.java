@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -17,6 +18,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = Simple.BY_ID,
                 query = "select s from Simple s where s.id = :id and s.enabled = :enabled")
 })
+@Table(name = "SIMPLE_TABLE")
 public class Simple {
     
     public static final String BY_NAME = "simple.byName";

@@ -12,6 +12,7 @@ import javax.persistence.LockModeType;
  * Currently supports:
  * <ul><li>JPQL queries as part of the annotation value</li>
  * <li>Execute named queries referenced by the named value</li>
+ * <li>Execute native SQL queries</li>
  * <li>Restrict the result size to a static value</li>
  * <li>Provide a lock mode</li></ul>
  * @author thomashug
@@ -21,6 +22,7 @@ import javax.persistence.LockModeType;
 public @interface Query {
     String value() default "";
     String named() default "";
+    String sql() default "";
     int max() default 0;
     LockModeType lock() default LockModeType.NONE;
 }

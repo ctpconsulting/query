@@ -1,6 +1,7 @@
 package com.ctp.cdi.query.meta.extractor;
 
-import junit.framework.Assert;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -18,9 +19,9 @@ public class TypeMetadataExtractorTest {
         DaoEntity result = DaoUtils.extractEntityMetaData(SimpleDao.class);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(Simple.class, result.getEntityClass());
-        Assert.assertEquals(Long.class, result.getPrimaryClass());
+        assertNotNull(result);
+        assertEquals(Simple.class, result.getEntityClass());
+        assertEquals(Long.class, result.getPrimaryClass());
     }
     
     @Test
@@ -29,9 +30,9 @@ public class TypeMetadataExtractorTest {
         DaoEntity result = DaoUtils.extractEntityMetaData(DaoInterface.class);
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(Simple.class, result.getEntityClass());
-        Assert.assertEquals(Long.class, result.getPrimaryClass());
+        assertNotNull(result);
+        assertEquals(Simple.class, result.getEntityClass());
+        assertEquals(Long.class, result.getPrimaryClass());
     }
     
 }

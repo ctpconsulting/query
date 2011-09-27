@@ -13,7 +13,7 @@ import com.ctp.cdi.query.meta.DaoEntity;
 // TODO daoutils should be replaced by proper metadata extractor class
 public final class DaoUtils {
     
-    private Logger log = Logger.getLogger(DaoUtils.class);
+    private static final Logger log = Logger.getLogger(DaoUtils.class);
     
     private DaoUtils() {
     }

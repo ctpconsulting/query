@@ -23,41 +23,46 @@ import com.ctp.cdi.query.util.EntityUtils;
  */
 public class DaoMethod {
 
-    private Method method;
-    private MethodType methodType;
-    private DaoComponent dao;
-    private QueryRoot queryRoot;
+    private final Method method;
+    private final MethodType methodType;
+    private final DaoComponent dao;
+    private final QueryRoot queryRoot;
     
     public DaoMethod(Method method, DaoComponent dao) {
         this.method = method;
         this.dao = dao;
-        extractMethodType();
-        initQueryRoot();
+        this.methodType  = extractMethodType();
+        this.queryRoot = initQueryRoot();
     }
     
-    private void extractMethodType() {
+    private MethodType extractMethodType() {
         if (isDelegateMethod()) {
-            methodType = MethodType.DELEGATE;
+            return MethodType.DELEGATE;
         } else if (isAnnotated()) {
-            methodType = MethodType.ANNOTATED;
-        } else {
-            methodType = MethodType.PARSE;
-        }
+            return MethodType.ANNOTATED;
+        } 
+        
+        return MethodType.PARSE;
     }
     
-    private void initQueryRoot() {
+    private QueryRoot initQueryRoot() {
         if (methodType == MethodType.PARSE) {
-            queryRoot = QueryRoot.create(method.getName(), 
+            return QueryRoot.create(method.getName(), 
                     EntityUtils.entityName(dao.getEntityClass()));
         }
+        return QueryRoot.UNKNOWN_ROOT;
     }
     
     private boolean isAnnotated() {
         if (method.isAnnotationPresent(Query.class)) {
             Query query = method.getAnnotation(Query.class);
-            return isNotEmpty(query.value()) || isNotEmpty(query.named());
+            return isValid(query);
         }
         return false;
+    }
+
+    private boolean isValid(Query query) {
+        return isNotEmpty(query.value()) || isNotEmpty(query.named()) || isNotEmpty(query.sql());
     }
 
     private boolean isDelegateMethod() {

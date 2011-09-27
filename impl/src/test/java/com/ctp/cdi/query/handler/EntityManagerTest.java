@@ -1,10 +1,11 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
-
-import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -41,8 +42,8 @@ public class EntityManagerTest {
         List<Simple> result = daoWithAnnotation.findByName("testUseQualifiedEntityManager");
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(0, result.size());
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
     
     @Test
@@ -51,8 +52,8 @@ public class EntityManagerTest {
         List<Simple> result = daoWithInjection.findByName("testUseInjectedEntityManager");
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(0, result.size());
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
     
     @Test
@@ -61,8 +62,8 @@ public class EntityManagerTest {
         List<Simple> result = daoWithInjection.findWithEm("testInjectEntityManager");
         
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(0, result.size());
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
 
 }

@@ -6,14 +6,14 @@ package com.ctp.cdi.query.builder.part;
  */
 abstract class ConnectingQueryPart extends QueryPart {
     
-    protected boolean isFirst;
-
-    public void setIsFirst(boolean isFirst) {
-        this.isFirst = isFirst;
-    }
+    protected final boolean first;
+    
+    public ConnectingQueryPart(boolean first) {
+		this.first = first;
+	}
 
     public boolean isFirst() {
-        return isFirst;
+        return first;
     }
     
 }

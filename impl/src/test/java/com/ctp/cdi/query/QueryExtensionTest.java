@@ -1,9 +1,9 @@
 package com.ctp.cdi.query;
 
+import static junit.framework.Assert.assertNotNull;
+
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-
-import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -38,9 +38,9 @@ public class QueryExtensionTest {
 
     @Test
     public void shouldInject() {
-        Assert.assertNotNull(dao.get());
-        Assert.assertNotNull(extendedDao.get());
-        Assert.assertNotNull(extendedClassDao.get());
+        assertNotNull(dao.get());
+        assertNotNull(extendedDao.get());
+        assertNotNull(extendedClassDao.get());
     }
 
 }

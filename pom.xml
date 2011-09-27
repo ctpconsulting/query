@@ -31,7 +31,34 @@
         <seam.version>3.0.0.Final</seam.version>
         <emma.version>2.0.5312</emma.version>
         <arquillian.version>1.0.0.Alpha5</arquillian.version>
+        <version.maven.site>3.0-beta-3</version.maven.site>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${version.maven.site}</version>
+                <configuration>
+                    <reportPlugins combine.children="append">
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>index</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -52,8 +79,29 @@
 
             <dependency>
                 <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query-api</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query-api</artifactId>
+                <version>${project.version}</version>
+                <classifier>javadoc</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
                 <artifactId>cdi-query-impl</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctp.cdi.query</groupId>
+                <artifactId>cdi-query-impl</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
             </dependency>
 
             <dependency>
@@ -67,7 +115,7 @@
                 <artifactId>weld-core</artifactId>
                 <version>1.1.0.Final</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -82,56 +130,56 @@
                 <version>4.8.1</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-junit</artifactId>
                 <version>${arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.arquillian.container</groupId>
                 <artifactId>arquillian-jbossas-managed-6</artifactId>
                 <version>${arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.jbossas</groupId>
                 <artifactId>jboss-server-manager</artifactId>
                 <version>1.0.3.GA</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.jbossas</groupId>
                 <artifactId>jboss-as-client</artifactId>
                 <version>6.0.0.Final</version>
                 <type>pom</type>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.arquillian.container</groupId>
                 <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
                 <version>${arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.jboss.arquillian.container</groupId>
                 <artifactId>arquillian-glassfish-embedded-3</artifactId>
                 <version>${arquillian.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.glassfish.extras</groupId>
                 <artifactId>glassfish-embedded-all</artifactId>
                 <version>3.1</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
@@ -267,12 +315,38 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>bamboo</id>
+            <distributionManagement>
+                <site>
+                    <id>bamboo-local</id>
+                    <url>file:///${bamboo.build.working.directory}/target/deployed-site</url>
+                </site>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>jenkins</id>
+            <distributionManagement>
+                <site>
+                    <id>local-jenkins</id>
+                    <url>file:///${env.WORKSPACE}/target/deployed-site</url>
+                </site>
+            </distributionManagement>
+        </profile>
     </profiles>
 
     <developers>
         <developer>
             <name>Thomas Hug</name>
             <email>thomas.hug@ctp-consulting.com</email>
+        </developer>
+        <developer>
+            <name>Bartosz Majsak</name>
+            <email>bartosz.majsak@ctp-consulting.com</email>
+        </developer>
+        <developer>
+            <name>Erik Jan de Wit</name>
+            <email>erikjan.dewit@ctp-consulting.com</email>
         </developer>
     </developers>
 
@@ -281,5 +355,6 @@
         <developerConnection>scm:git:git@github.com:ctpconsulting/query.git</developerConnection>
         <url>http://github.com/ctpconsulting/query</url>
     </scm>
+
 </project>
 

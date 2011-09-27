@@ -118,12 +118,12 @@ public class Criteria<C> {
         return this;
     }
     
-    public <P> Criteria<C> asc(SingularAttribute<? super C, P> att) {
+    public <P> Criteria<C> orderAsc(SingularAttribute<? super C, P> att) {
         add(new OrderBy<C, P>(att, OrderDirection.ASC));
         return this;
     }
     
-    public <P> Criteria<C> desc(SingularAttribute<? super C, P> att) {
+    public <P> Criteria<C> orderDesc(SingularAttribute<? super C, P> att) {
         add(new OrderBy<C, P>(att, OrderDirection.DESC));
         return this;
     }

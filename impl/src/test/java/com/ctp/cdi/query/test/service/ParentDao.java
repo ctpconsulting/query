@@ -72,7 +72,7 @@ public abstract class ParentDao extends AbstractEntityDao<Parent, Long> {
     
     public List<Parent> orderedQuery() {
         return criteria()
-                .asc(Parent_.name)
+                .orderAsc(Parent_.name)
                 .createQuery()
                 .getResultList();
     }

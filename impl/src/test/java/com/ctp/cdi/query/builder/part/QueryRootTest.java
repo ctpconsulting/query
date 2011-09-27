@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.builder.part;
 
-import junit.framework.Assert;
+import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class QueryRootTest {
         String result = QueryRoot.create(name, "Simple").getJpqlQuery().trim();
         
         // then
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
     
     @Test
@@ -41,7 +41,7 @@ public class QueryRootTest {
         String result = QueryRoot.create(name, "Simple").getJpqlQuery().trim();
         
         // then
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
     
 }

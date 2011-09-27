@@ -4,7 +4,8 @@ import com.ctp.cdi.query.meta.DaoEntity;
 
 public class TypeMetadataExtractor implements MetadataExtractor {
 
-    private final Class<?> dao;
+    @SuppressWarnings("unused")
+	private final Class<?> dao;
 
     public TypeMetadataExtractor(Class<?> dao) {
         this.dao = dao;

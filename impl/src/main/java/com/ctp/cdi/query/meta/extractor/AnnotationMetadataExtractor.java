@@ -11,8 +11,7 @@ import com.ctp.cdi.query.util.EntityUtils;
 public class AnnotationMetadataExtractor implements MetadataExtractor {
 
     private final Class<?> daoClass;
-
-    private Verifier<Class<?>> verifier;
+    private final Verifier<Class<?>> verifier;
 
     public AnnotationMetadataExtractor(Class<?> daoClass) {
         this.daoClass = daoClass;

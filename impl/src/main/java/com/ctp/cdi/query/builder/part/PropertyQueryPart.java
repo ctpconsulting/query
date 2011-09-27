@@ -35,7 +35,7 @@ class PropertyQueryPart extends QueryPart {
         String[] args = new String[comparator.getParamNum() + 1];
         args[0] = QueryBuilder.ENTITY_NAME + "." + name;
         for (int i = 1; i < args.length; i++) {
-            args[i] = "?" + String.valueOf(ctx.increment());
+            args[i] = "?" + ctx.increment();
         }
         ctx.append(MessageFormat.format(comparator.getJpql(), (Object[]) args));
         return this;

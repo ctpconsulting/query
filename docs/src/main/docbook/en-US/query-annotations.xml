@@ -47,7 +47,9 @@ public interface PersonDao extends EntityDao<Person, Long> {
             annotation.
         </para>
         <tip>
-            Java does not preserve method parameter names, that's why the annotation is needed.
+            <para>
+                Java does not preserve method parameter names, that's why the annotation is needed.
+            </para>
         </tip>
         <programlisting role="JAVA"><![CDATA[@NamedQuery(name = Person.BY_MIN_AGE,
                 query = "select count(p) from Person p where p.age > :minAge order by p.age asc")
@@ -55,6 +57,20 @@ public interface PersonDao extends EntityDao<Person, Long> {
 public interface PersonDao extends EntityDao<Person, Long> {
     @Query(named = Person.BY_MIN_AGE)
     Long countAllOlderThan(@QueryParam("minAge") int minAge);
+}]]>    </programlisting>
+        <para>
+            It is also possible to set a native SQL query in the annotation. The <literal>@Query</literal>
+            annotation has a <literal>sql</literal> attribute which corresponds to the SQL query to execute:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Entity
+@Table(name = "PERSON_TABLE")
+public class Person {
+    ...
+}
+
+public interface PersonDao extends EntityDao<Person, Long> {
+    @Query(sql = "SELECT * FROM PERSON_TABLE p WHERE p.AGE > ?1")
+    List<Person> findAllOlderThan(int minAge);
 }]]>    </programlisting>
     </section>
     

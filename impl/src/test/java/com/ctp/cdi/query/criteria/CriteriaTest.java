@@ -1,13 +1,14 @@
 package com.ctp.cdi.query.criteria;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -57,9 +58,9 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Simple> result3 = dao.queryByCriteria(name, Boolean.FALSE, 50, 100);
 
         // then
-        Assert.assertEquals(0, result1.size());
-        Assert.assertEquals(1, result2.size());
-        Assert.assertEquals(0, result3.size());
+        assertEquals(0, result1.size());
+        assertEquals(1, result2.size());
+        assertEquals(0, result3.size());
     }
 
     @Test
@@ -79,15 +80,15 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Parent> result = parentDao.joinQuery(name, nameOne, nameMany);
 
         // then
-        Assert.assertEquals(1, result.size());
-        Assert.assertNotNull(result.get(0));
+        assertEquals(1, result.size());
+        assertNotNull(result.get(0));
 
         Parent queried = result.get(0);
-        Assert.assertEquals(name, queried.getName());
-        Assert.assertNotNull(queried.getOne());
-        Assert.assertEquals(nameOne, queried.getOne().getName());
-        Assert.assertEquals(1, queried.getMany().size());
-        Assert.assertEquals(nameMany, queried.getMany().get(0).getName());
+        assertEquals(name, queried.getName());
+        assertNotNull(queried.getOne());
+        assertEquals(nameOne, queried.getOne().getName());
+        assertEquals(1, queried.getMany().size());
+        assertEquals(nameMany, queried.getMany().get(0).getName());
     }
 
     @Test
@@ -113,7 +114,7 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Parent> result = parentDao.orQuery(name + "1", name + "2");
 
         // then
-        Assert.assertEquals(2, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
@@ -135,11 +136,11 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Parent> result = parentDao.orderedQuery();
 
         // then
-        Assert.assertEquals(4, result.size());
-        Assert.assertEquals(name + "02", result.get(0).getName());
-        Assert.assertEquals(name + "12", result.get(1).getName());
-        Assert.assertEquals(name + "19", result.get(2).getName());
-        Assert.assertEquals(name + "99", result.get(3).getName());
+        assertEquals(4, result.size());
+        assertEquals(name + "02", result.get(0).getName());
+        assertEquals(name + "12", result.get(1).getName());
+        assertEquals(name + "19", result.get(2).getName());
+        assertEquals(name + "99", result.get(3).getName());
     }
 
     @Test
@@ -155,8 +156,8 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Parent> result = parentDao.nullAwareQuery(name, null, null);
 
         // then
-        Assert.assertEquals(1, result.size());
-        Assert.assertEquals(name, result.get(0).getName());
+        assertEquals(1, result.size());
+        assertEquals(name, result.get(0).getName());
     }
 
     @Test
@@ -174,10 +175,10 @@ public class CriteriaTest extends TransactionalTestCase {
         Parent result = parentDao.fetchQuery(name);
 
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(name, result.getName());
-        Assert.assertNotNull(result.getMany());
-        Assert.assertEquals(2, result.getMany().size());
+        assertNotNull(result);
+        assertEquals(name, result.getName());
+        assertNotNull(result.getMany());
+        assertEquals(2, result.getMany().size());
     }
 
     @Test
@@ -197,8 +198,8 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Parent> result = parentDao.fetchByName(name + "-1", name + "-2", name + "-3");
 
         // then
-        Assert.assertNotNull(result);
-        Assert.assertEquals(3, result.size());
+        assertNotNull(result);
+        assertEquals(3, result.size());
     }
 
     private Simple createSimple(String name, Integer counter) {

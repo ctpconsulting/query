@@ -91,7 +91,7 @@ public interface PersonDao extends EntityDao<Person, Long> {
     </section>
     
     <section id="multiple-entitymanagers">
-        <title>Using Multiple <literal>EntityManager</literal></title>
+        <title>Using Multiple <literal>EntityManager</literal>s</title>
         <para>
             While most applications will run just fine with a single <literal>EntityManager</literal>, there might be setups
             where multiple data sources are used. Similar to the default case, CDI Query requires to have producers for
@@ -100,29 +100,31 @@ public interface PersonDao extends EntityDao<Person, Long> {
         <programlisting role="JAVA"><![CDATA[@Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
-public @interface Customer {
+public @interface CustomerData {
 }
         
-public class CustomerDatasourceProducer {
+public class CustomerDataSourceProducer {
     ...
-    @Produces @Customer
+    @Produces @CustomerData
     public EntityManager create(){
         return emf.createEntityManager();
     }
 }]]>    </programlisting>
         <para>
-            The <literal>@Customer</literal> is a CDI qualifier - all available <literal>EntityManager</literal> have to
+            The <literal>@CustomerData</literal> is a CDI qualifier - all available <literal>EntityManager</literal> have to
             be exposed similar with a different qualifier. The link to the Query DAO happens then over a custom annotation
             on the DAO:
         </para>
         <programlisting role="JAVA"><![CDATA[@Dao
-@WithEntityManager(Customer.class)
+@WithEntityManager(CustomerData.class)
 public interface CustomerDao extends EntityDao<Customer, Long> {
     ...
 }]]>    </programlisting>
         <tip>
-            Qualifiers in CDI can also use attributes. This is not supported with the @WithEntityManager annotation,
-            it can only be qualified over a plain annotation.
+            <para>
+                Qualifiers in CDI can also use attributes. This is not supported with the @WithEntityManager annotation,
+                it can only be qualified over a plain annotation.
+            </para>
         </tip>
         <para>
             If a more granular qualifier support is required, the <literal>AbstractEntityDao</literal> class can be extended.
@@ -132,12 +134,12 @@ public interface CustomerDao extends EntityDao<Customer, Long> {
         <programlisting role="JAVA"><![CDATA[@Qualifier
 @Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
-public @interface Customer {
+public @interface CustomerData {
     CustomerType value();
 }
         
 public abstract class CustomerDao extends AbstractEntityDao<Customer, Long> {
-    @Override @Customer(CRM)
+    @Override @CustomerData(CRM)
     protected abstract EntityManager getEntityManager();
     
     ...

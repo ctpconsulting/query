@@ -9,13 +9,16 @@ import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
  */
 class OrQueryPart extends ConnectingQueryPart {
 
-    @Override
+    public OrQueryPart(boolean first) {
+		super(first);
+	}
+
+	@Override
     protected QueryPart build(String queryPart) {
         String[] andParts = splitByKeyword(queryPart, "And");
         boolean first = true;
         for (String and : andParts) {
-            AndQueryPart andPart = new AndQueryPart();
-            andPart.setIsFirst(first);
+            AndQueryPart andPart = new AndQueryPart(first);
             first = false;
             children.add(andPart.build(and));
         }
@@ -24,7 +27,7 @@ class OrQueryPart extends ConnectingQueryPart {
 
     @Override
     protected QueryPart buildQuery(QueryBuilderContext ctx) {
-        if (!isFirst) {
+        if (!first) {
             ctx.append(" or ");
         }
         buildQueryForChildren(ctx);
