@@ -10,8 +10,7 @@
 
     <artifactId>cdi-query-parent</artifactId>
     <groupId>com.ctp.cdi.query</groupId>
-    <version>1.0.0-SNAPSHOT</version>
-
+    <version>1.0.0.Alpha1</version>
     <packaging>pom</packaging>
     <name>CDI Query Module</name>
 
@@ -19,7 +18,32 @@
         The Parent for the CDI Query Module
     </description>
 
-    <url>http://www.ctp-consulting.com</url>
+    <url>http://ctpconsulting.github.com/query/</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://git@github.com:ctpconsulting/query.git</connection>
+        <developerConnection>scm:git:ssh://github.com/ctpconsulting/query.git</developerConnection>
+        <url>git://github.com/ctpconsulting/query</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Thomas Hug</name>
+            <email>thomas.hug@ctp-consulting.com</email>
+        </developer>
+        <developer>
+            <name>Bartosz Majsak</name>
+            <email>bartosz.majsak@ctp-consulting.com</email>
+        </developer>
+    </developers>
 
     <modules>
         <module>api</module>
@@ -334,27 +358,6 @@
             </distributionManagement>
         </profile>
     </profiles>
-
-    <developers>
-        <developer>
-            <name>Thomas Hug</name>
-            <email>thomas.hug@ctp-consulting.com</email>
-        </developer>
-        <developer>
-            <name>Bartosz Majsak</name>
-            <email>bartosz.majsak@ctp-consulting.com</email>
-        </developer>
-        <developer>
-            <name>Erik Jan de Wit</name>
-            <email>erikjan.dewit@ctp-consulting.com</email>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git://github.com/ctpconsulting/query.git</connection>
-        <developerConnection>scm:git:git@github.com:ctpconsulting/query.git</developerConnection>
-        <url>http://github.com/ctpconsulting/query</url>
-    </scm>
 
 </project>
 

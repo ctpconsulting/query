@@ -31,8 +31,7 @@ Licensing
 URLs
 ==================
 
-Seam Framework Home Page:      http://ctpconsulting.github.com/query/
-Downloads:                     TBD
+Home Page:                     http://ctpconsulting.github.com/query/
 Source Code:                   git://github.com/ctpconsulting/query.git
 Issue Tracking:                https://github.com/ctpconsulting/query
 
