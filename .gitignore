@@ -14,6 +14,7 @@
 /docs/.settings/
 /dist/.project
 /dist/.settings/
+/dist/target/
 /combined/.project
 /combined/.settings/
 /api/.classpath
