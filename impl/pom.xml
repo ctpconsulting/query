@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.ctp.cdi.query</groupId>
         <artifactId>cdi-query-parent</artifactId>
-        <version>1.0.0.Alpha1</version>
+        <version>1.0.0.Alpha2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -233,8 +233,7 @@
                                     <tasks>
                                         <delete dir="${project.build.directory}/classes" />
                                         <mkdir dir="${project.build.directory}/classes" />
-                                        <copy todir="${project.build.directory}/classes"
-                                            overwrite="true">
+                                        <copy todir="${project.build.directory}/classes" overwrite="true">
                                             <fileset dir="${project.build.directory}/generated-classes/emma/classes">
                                                 <include name="**/*" />
                                             </fileset>
