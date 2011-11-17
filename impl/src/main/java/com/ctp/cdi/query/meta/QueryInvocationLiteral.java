@@ -7,6 +7,7 @@ import javax.enterprise.util.AnnotationLiteral;
  * 
  * @author thomashug
  */
+@SuppressWarnings("all")
 public class QueryInvocationLiteral extends AnnotationLiteral<QueryInvocation>
         implements QueryInvocation {
 
