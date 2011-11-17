@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>com.ctp.cdi.query</groupId>
         <artifactId>cdi-query-parent</artifactId>
-        <version>1.0.0.Alpha1-SNAPSHOT</version>
+        <version>1.0.0.Alpha1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -232,15 +231,11 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <delete
-                                            dir="${project.build.directory}/classes" />
-                                        <mkdir
-                                            dir="${project.build.directory}/classes" />
-                                        <copy
-                                            todir="${project.build.directory}/classes"
+                                        <delete dir="${project.build.directory}/classes" />
+                                        <mkdir dir="${project.build.directory}/classes" />
+                                        <copy todir="${project.build.directory}/classes"
                                             overwrite="true">
-                                            <fileset
-                                                dir="${project.build.directory}/generated-classes/emma/classes">
+                                            <fileset dir="${project.build.directory}/generated-classes/emma/classes">
                                                 <include name="**/*" />
                                             </fileset>
                                         </copy>
