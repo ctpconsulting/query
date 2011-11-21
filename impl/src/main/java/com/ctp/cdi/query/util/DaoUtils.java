@@ -79,10 +79,9 @@ public final class DaoUtils {
     
     private static DaoEntity extractFromAnnotation(Class<?> daoClass) {
         Dao dao = daoClass.getAnnotation(Dao.class);
-        if (!NonEntity.class.equals(dao.value())) {
+        if (dao != null && !NonEntity.class.equals(dao.value())) {
             return new DaoEntity(dao.value(), EntityUtils.primaryKeyClass(dao.value()));
         }
-
         return null;
     }
 
