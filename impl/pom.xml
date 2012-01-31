@@ -18,7 +18,7 @@
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
-    
+
     <properties>
         <version.maven.compiler>2.3.1</version.maven.compiler>
         <version.maven.jxr>2.2</version.maven.jxr>
@@ -31,7 +31,7 @@
         <jdk.target>1.6</jdk.target>
         <project.parent.url>${project.artifactId}</project.parent.url>
     </properties>
-    
+
     <build>
         <testResources>
             <testResource>
@@ -54,12 +54,20 @@
     </build>
 
     <dependencies>
-
+        <!--
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        -->
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.13.0-GA</version>
+            <scope>provided</scope>
+        </dependency> 
 
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -72,7 +80,7 @@
             <artifactId>jboss-ejb-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -85,8 +93,21 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder</artifactId>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-impl</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-logging</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Tests -->
@@ -95,19 +116,19 @@
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
         </dependency>
-        
+
         <dependency>
-            <groupId>org.jboss.arquillian</groupId>
-            <artifactId>arquillian-junit</artifactId>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
         </dependency>
-        
+
         <!-- TODO: Move to a profile -->
-        
+
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
@@ -203,7 +224,7 @@
                             </reportPlugins>
                         </configuration>
                     </plugin>
-                    <!-- 
+                    <!--
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>emma-maven-plugin</artifactId>

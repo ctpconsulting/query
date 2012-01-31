@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>10</version>
+        <version>19</version>
     </parent>
 
     <artifactId>cdi-query-parent</artifactId>
@@ -51,9 +51,9 @@
     </modules>
 
     <properties>
-        <seam.version>3.0.0.Final</seam.version>
+        <seam.version>3.1.0.Final</seam.version>
         <emma.version>2.0.5312</emma.version>
-        <arquillian.version>1.0.0.Alpha5</arquillian.version>
+        <arquillian.version>1.0.0.CR7</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
     </properties>
 
@@ -92,6 +92,12 @@
                 <version>${seam.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.solder</groupId>
+                <artifactId>solder-logging</artifactId>
+                <version>${seam.version}</version>
             </dependency>
 
             <dependency>
@@ -158,16 +164,10 @@
 
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-junit</artifactId>
+                <artifactId>arquillian-bom</artifactId>
                 <version>${arquillian.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian.container</groupId>
-                <artifactId>arquillian-jbossas-managed-6</artifactId>
-                <version>${arquillian.version}</version>
-                <scope>test</scope>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -182,20 +182,6 @@
                 <artifactId>jboss-as-client</artifactId>
                 <version>6.0.0.Final</version>
                 <type>pom</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian.container</groupId>
-                <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-                <version>${arquillian.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian.container</groupId>
-                <artifactId>arquillian-glassfish-embedded-3</artifactId>
-                <version>${arquillian.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>

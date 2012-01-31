@@ -9,23 +9,22 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
-
-import org.jboss.logging.Logger;
-import org.jboss.seam.solder.properties.Property;
-import org.jboss.seam.solder.properties.query.NamedPropertyCriteria;
-import org.jboss.seam.solder.properties.query.PropertyQueries;
 
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.util.EntityUtils;
-import javax.persistence.criteria.CriteriaQuery;
+import org.jboss.solder.properties.Property;
+import org.jboss.solder.properties.query.NamedPropertyCriteria;
+import org.jboss.solder.properties.query.PropertyQueries;
+import org.jboss.solder.logging.Logger;
 
 /**
  * Implement basic functionality from the {@link EntityDao}.
- * 
+ *
  * @author thomashug
- * 
+ *
  * @param <E>
  *            Entity type.
  * @param <PK>

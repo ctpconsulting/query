@@ -5,9 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.jboss.seam.solder.properties.query.AnnotatedPropertyCriteria;
-import org.jboss.seam.solder.properties.query.PropertyQueries;
-import org.jboss.seam.solder.properties.query.PropertyQuery;
+import org.jboss.solder.properties.query.AnnotatedPropertyCriteria;
+import org.jboss.solder.properties.query.PropertyQueries;
+import org.jboss.solder.properties.query.PropertyQuery;
 
 public class EntityVerifier implements Verifier<Class<?>> {
 
