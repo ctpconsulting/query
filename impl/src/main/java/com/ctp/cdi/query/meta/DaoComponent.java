@@ -10,10 +10,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.logging.Logger;
-import org.jboss.seam.solder.reflection.AnnotationInstanceProvider;
-
 import com.ctp.cdi.query.WithEntityManager;
+import org.jboss.solder.reflection.AnnotationInstanceProvider;
+import org.jboss.solder.logging.Logger;
 
 /**
  * Stores information about a specific DAO. Extracts information about:
@@ -23,19 +22,19 @@ import com.ctp.cdi.query.WithEntityManager;
  *     <li>The primary key class</li>
  *     <li>All methods of the DAO.</li>
  * </ul>
- * 
+ *
  * @author thomashug
  */
 public class DaoComponent {
-    
+
     private final Logger log = Logger.getLogger(DaoComponent.class);
 
     private final Class<?> daoClass;
     private final DaoEntity entityClass;
     private Annotation[] qualifiers;
-    
+
     private final Map<Method, DaoMethod> methods = new HashMap<Method, DaoMethod>();
-    
+
     public DaoComponent(Class<?> daoClass, DaoEntity entityClass) {
         if (entityClass == null) {
             throw new IllegalArgumentException("Entity class cannot be null");
@@ -44,7 +43,7 @@ public class DaoComponent {
         this.entityClass = entityClass;
         initialize();
     }
-    
+
     /**
      * Looks up method meta data by a Method object.
      * @param method    The DAO method.
@@ -53,7 +52,7 @@ public class DaoComponent {
     public DaoMethod lookupMethod(Method method) {
         return methods.get(method);
     }
-    
+
     /**
      * Looks up the method type by a Method object.
      * @param method    The DAO method.
@@ -78,7 +77,7 @@ public class DaoComponent {
     public Class<? extends Serializable> getPrimaryKey() {
         return entityClass.getPrimaryClass();
     }
-    
+
     /**
      * Returns the original DAO class this meta data is related to.
      * @return          The class of the DAO.
@@ -116,7 +115,7 @@ public class DaoComponent {
             qualifiers = new Annotation[] {};
         }
     }
-    
+
     private Set<Class<?>> collectClasses() {
         Set<Class<?>> result = new HashSet<Class<?>>();
         Class<?> current = daoClass;
