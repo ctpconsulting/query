@@ -4,20 +4,19 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import org.jboss.logging.Logger;
-
 import com.ctp.cdi.query.Dao;
 import com.ctp.cdi.query.NonEntity;
 import com.ctp.cdi.query.meta.DaoEntity;
+import org.jboss.solder.logging.Logger;
 
 // TODO daoutils should be replaced by proper metadata extractor class
 public final class DaoUtils {
-    
+
     private static final Logger log = Logger.getLogger(DaoUtils.class);
-    
+
     private DaoUtils() {
     }
-    
+
     /**
      * Extract the generic type information from the DAO class or interface definition.
      * @param daoClass          DAO class to analyze.
@@ -30,7 +29,7 @@ public final class DaoUtils {
         if (fromAnnotation != null) {
             return fromAnnotation;
         }
-        
+
         // TODO in TypeMetadataExtractor
         for (Type inf : daoClass.getGenericInterfaces()) {
             DaoEntity result = extractFrom(inf);
@@ -53,7 +52,7 @@ public final class DaoUtils {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     private static DaoEntity extractFrom(Type type) {
         log.debugv("extractFrom: type = {0}", type);
@@ -73,10 +72,10 @@ public final class DaoUtils {
                 return result;
             }
         }
-        
+
         return result;
     }
-    
+
     private static DaoEntity extractFromAnnotation(Class<?> daoClass) {
         Dao dao = daoClass.getAnnotation(Dao.class);
         if (dao != null && !NonEntity.class.equals(dao.value())) {

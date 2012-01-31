@@ -8,10 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 
 import com.ctp.cdi.query.meta.NonEntityException;
-import org.jboss.seam.solder.properties.Property;
-import org.jboss.seam.solder.properties.query.AnnotatedPropertyCriteria;
-import org.jboss.seam.solder.properties.query.PropertyQueries;
-import org.jboss.seam.solder.properties.query.PropertyQuery;
+import org.jboss.solder.properties.Property;
+import org.jboss.solder.properties.query.AnnotatedPropertyCriteria;
+import org.jboss.solder.properties.query.PropertyQueries;
+import org.jboss.solder.properties.query.PropertyQuery;
 
 public final class EntityUtils {
 

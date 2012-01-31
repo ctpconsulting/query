@@ -1,21 +1,20 @@
 package com.ctp.cdi.query;
 
-import static junit.framework.Assert.assertNotNull;
-
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
 public class QueryExtensionTest {
