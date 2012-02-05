@@ -12,23 +12,22 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
 
-import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.builder.QueryBuilder;
-import com.ctp.cdi.query.util.EntityUtils;
+import org.jboss.solder.logging.Logger;
 import org.jboss.solder.properties.Property;
 import org.jboss.solder.properties.query.NamedPropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
-import org.jboss.solder.logging.Logger;
+
+import com.ctp.cdi.query.EntityDao;
+import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.util.EntityUtils;
 
 /**
  * Implement basic functionality from the {@link EntityDao}.
  *
  * @author thomashug
  *
- * @param <E>
- *            Entity type.
- * @param <PK>
- *            Primary key type, must be a serializable.
+ * @param <E>   Entity type.
+ * @param <PK>  Primary key type, must be a serializable.
  */
 public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
 

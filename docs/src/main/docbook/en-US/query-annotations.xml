@@ -13,7 +13,7 @@
     <section id="annotations-usage">
         <title>Using Query Annotations</title>
         <para>
-            The simples way to define a specific query is by annotation a method and providing the JPQL query string which
+            The simples way to define a specific query is by annotating a method and providing the JPQL query string which
             has to be executed. In code, this looks like the following sample:
         </para>
         <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {

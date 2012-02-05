@@ -6,7 +6,9 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
+@SuppressWarnings("serial")
 public class Tee implements Serializable {
+    
     @EmbeddedId
     private TeeId id;
     private int distance;

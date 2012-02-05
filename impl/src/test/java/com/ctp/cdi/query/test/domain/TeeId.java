@@ -6,7 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@SuppressWarnings("serial")
 public class TeeId implements Serializable {
+    
     @Column(nullable = false)
     private long teeSetId;
 
