@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.ctp.cdi.query.audit.ModifiedBy;
 import com.ctp.cdi.query.audit.CreatedOn;
 import com.ctp.cdi.query.audit.ModifiedOn;
 
@@ -27,11 +28,14 @@ public class AuditedEntity implements Serializable {
     
     private String name;
     
-    @CreatedOn
-    private String decoy;
+    @ModifiedBy
+    private String changer;
+    
+    @ModifiedBy
+    private Principal principal;
     
     @Temporal(TemporalType.TIME)
-    @ModifiedOn(setOnCreate = true)
+    @ModifiedOn(onCreate = true)
     private java.util.Date modified;
     
     private java.sql.Date sqlModified;
@@ -83,15 +87,19 @@ public class AuditedEntity implements Serializable {
         this.name = name;
     }
 
-    public String getDecoy() {
-        return decoy;
-    }
-
-    public void setDecoy(String decoy) {
-        this.decoy = decoy;
-    }
-
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public String getChanger() {
+        return changer;
+    }
+
+    public void setChanger(String changer) {
+        this.changer = changer;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
     }
 }

@@ -7,12 +7,14 @@ public class AuditEntityListener {
     
     @PrePersist
     public void create(Object entity) {
-        AuditTimestamps.forCreate(entity).updateTimestamps();
+        TimestampsProvider.forCreate(entity).updateTimestamps();
+        PrincipalProvider.forCreateAndUpdate(entity).updatePrincipal();
     }
     
     @PreUpdate
     public void update(Object entity) {
-        AuditTimestamps.forUpdate(entity).updateTimestamps();
+        TimestampsProvider.forUpdate(entity).updateTimestamps();
+        PrincipalProvider.forCreateAndUpdate(entity).updatePrincipal();
     }
 
 }

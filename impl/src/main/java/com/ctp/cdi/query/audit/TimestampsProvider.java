@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jboss.solder.logging.Logger;
 import org.jboss.solder.properties.Property;
 import org.jboss.solder.properties.query.AnnotatedPropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
@@ -14,26 +13,23 @@ import org.jboss.solder.properties.query.PropertyQuery;
 /**
  * Set timestamps on marked properties.
  */
-public class AuditTimestamps {
-    
-    private final Logger log = Logger.getLogger(AuditTimestamps.class);
+class TimestampsProvider extends AuditProvider {
 
-    private final Object entity;
     private final boolean create;
     private final long systime;
 
-    private AuditTimestamps(Object entity, boolean create) {
-        this.entity = entity;
+    private TimestampsProvider(Object entity, boolean create) {
+        super(entity);
         this.create = create;
         this.systime = System.currentTimeMillis();
     }
     
-    public static AuditTimestamps forCreate(Object entity) {
-        return new AuditTimestamps(entity, true);
+    public static TimestampsProvider forCreate(Object entity) {
+        return new TimestampsProvider(entity, true);
     }
     
-    public static AuditTimestamps forUpdate(Object entity) {
-        return new AuditTimestamps(entity, false);
+    public static TimestampsProvider forUpdate(Object entity) {
+        return new TimestampsProvider(entity, false);
     }
     
     public void updateTimestamps() {
@@ -46,11 +42,8 @@ public class AuditTimestamps {
                     .addCriteria(new AnnotatedPropertyCriteria(CreatedOn.class));
             properties.addAll(query.getWritableResultList());
         }
-        List<?> result = query.getResultList();
-        if (!result.isEmpty()) {
-            for (Property<Object> property : properties) {
-                setProperty(property);
-            }
+        for (Property<Object> property : properties) {
+            setProperty(property);
         }
     }
     
@@ -60,15 +53,17 @@ public class AuditTimestamps {
                 return;
             Object now = now(property.getJavaClass());
             property.setValue(entity, now);
+            log.debugv("Updated property {0} with {1}", propertyName(property), now);
         } catch (Exception e) {
-            log.errorv("Failed to set property {0}, is this a temporal type?", property.getName());
+            String message = "Failed to set property " + propertyName(property) + ", is this a temporal type?";
+            throw new AuditPropertyException(message, e);
         }
     }
 
     private boolean isCorrectContext(Property<Object> property) {
         if (create && property.getAnnotatedElement().isAnnotationPresent(ModifiedOn.class)) {
             ModifiedOn annotation = property.getAnnotatedElement().getAnnotation(ModifiedOn.class);
-            if (!annotation.setOnCreate())
+            if (!annotation.onCreate())
                 return false;
         }
         return true;

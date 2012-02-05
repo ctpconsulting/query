@@ -2,6 +2,7 @@ package com.ctp.cdi.query.audit;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
 
 import org.junit.Test;
 
@@ -16,14 +17,13 @@ public class AuditTimestampsTest {
         AuditedEntity entity = new AuditedEntity();
         
         // when
-        AuditTimestamps.forCreate(entity).updateTimestamps();
+        TimestampsProvider.forCreate(entity).updateTimestamps();
         
         // then
         assertNotNull(entity.getCreated());
         assertNotNull(entity.getModified());
         assertNull(entity.getGregorianModified());
         assertNull(entity.getSqlModified());
-        assertNull(entity.getDecoy());
         assertNull(entity.getTimestamp());
     }
 
@@ -33,7 +33,7 @@ public class AuditTimestampsTest {
         AuditedEntity entity = new AuditedEntity();
         
         // when
-        AuditTimestamps.forUpdate(entity).updateTimestamps();
+        TimestampsProvider.forUpdate(entity).updateTimestamps();
         
         // then
         assertNull(entity.getCreated());
@@ -49,10 +49,30 @@ public class AuditTimestampsTest {
         Simple entity = new Simple();
         
         // when
-        AuditTimestamps.forCreate(entity).updateTimestamps();
-        AuditTimestamps.forUpdate(entity).updateTimestamps();
+        TimestampsProvider.forCreate(entity).updateTimestamps();
+        TimestampsProvider.forUpdate(entity).updateTimestamps();
         
         // then finish the test
+    }
+    
+    @Test(expected = AuditPropertyException.class)
+    public void shouldFailOnInvalidEntity() {
+        // given
+        InvalidEntity entity = new InvalidEntity();
+        
+        // when
+        TimestampsProvider.forCreate(entity).updateTimestamps();
+        
+        // then
+        fail();
+    }
+    
+    private static class InvalidEntity {
+        
+        @CreatedOn
+        @SuppressWarnings("unused")
+        private String nonTemporal;
+    
     }
 
 }

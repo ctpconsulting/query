@@ -3,6 +3,7 @@ package com.ctp.cdi.query.audit;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
+import com.ctp.cdi.query.test.domain.Principal;
 import com.ctp.cdi.query.test.util.Deployments;
 
 @RunWith(Arquillian.class)
@@ -30,6 +32,20 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     
     @PersistenceContext
     private EntityManager entityManager;
+    
+    private final String who = "test999";
+    
+    @Produces @CurrentUser
+    public String who() {
+        return who;
+    }
+    
+    @Produces @CurrentUser
+    public Principal entity() {
+        Principal p = new Principal(who);
+        entityManager.persist(p);
+        return p;
+    }
     
     @Test
     public void shouldSetCreationDate() throws Exception {
@@ -62,6 +78,22 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
         assertNotNull(entity.getGregorianModified());
         assertNotNull(entity.getSqlModified());
         assertNotNull(entity.getTimestamp());
+    }
+    
+    @Test
+    public void shouldSetChangingPrincipal() {
+        // given
+        AuditedEntity entity = new AuditedEntity();
+        
+        // when
+        entityManager.persist(entity);
+        entityManager.flush();
+        
+        // then
+        assertNotNull(entity.getChanger());
+        assertEquals(who, entity.getChanger());
+        assertNotNull(entity.getPrincipal());
+        assertEquals(who, entity.getPrincipal().getName());
     }
 
 }
