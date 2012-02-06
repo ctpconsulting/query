@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.test.domain.Simple;
 
-public class AuditTimestampsTest {
+public class TimestampsProviderTest {
 
     @Test
     public void shouldSetDatesForCreation() {
@@ -17,7 +17,7 @@ public class AuditTimestampsTest {
         AuditedEntity entity = new AuditedEntity();
         
         // when
-        TimestampsProvider.forCreate(entity).updateTimestamps();
+        new TimestampsProvider().prePersist(entity);
         
         // then
         assertNotNull(entity.getCreated());
@@ -33,7 +33,7 @@ public class AuditTimestampsTest {
         AuditedEntity entity = new AuditedEntity();
         
         // when
-        TimestampsProvider.forUpdate(entity).updateTimestamps();
+        new TimestampsProvider().preUpdate(entity);
         
         // then
         assertNull(entity.getCreated());
@@ -49,8 +49,9 @@ public class AuditTimestampsTest {
         Simple entity = new Simple();
         
         // when
-        TimestampsProvider.forCreate(entity).updateTimestamps();
-        TimestampsProvider.forUpdate(entity).updateTimestamps();
+        TimestampsProvider provider = new TimestampsProvider();
+        provider.prePersist(entity);
+        provider.preUpdate(entity);
         
         // then finish the test
     }
@@ -61,7 +62,7 @@ public class AuditTimestampsTest {
         InvalidEntity entity = new InvalidEntity();
         
         // when
-        TimestampsProvider.forCreate(entity).updateTimestamps();
+        new TimestampsProvider().prePersist(entity);
         
         // then
         fail();

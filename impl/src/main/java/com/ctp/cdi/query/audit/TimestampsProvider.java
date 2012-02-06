@@ -15,24 +15,18 @@ import org.jboss.solder.properties.query.PropertyQuery;
  */
 class TimestampsProvider extends AuditProvider {
 
-    private final boolean create;
-    private final long systime;
+    @Override
+    public void prePersist(Object entity) {
+        updateTimestamps(entity, true);
+    }
 
-    private TimestampsProvider(Object entity, boolean create) {
-        super(entity);
-        this.create = create;
-        this.systime = System.currentTimeMillis();
+    @Override
+    public void preUpdate(Object entity) {
+        updateTimestamps(entity, false);
     }
     
-    public static TimestampsProvider forCreate(Object entity) {
-        return new TimestampsProvider(entity, true);
-    }
-    
-    public static TimestampsProvider forUpdate(Object entity) {
-        return new TimestampsProvider(entity, false);
-    }
-    
-    public void updateTimestamps() {
+    private void updateTimestamps(Object entity, boolean create) {
+        long systime = System.currentTimeMillis();
         List<Property<Object>> properties = new LinkedList<Property<Object>>();
         PropertyQuery<Object> query = PropertyQueries.<Object>createQuery(entity.getClass())
                 .addCriteria(new AnnotatedPropertyCriteria(ModifiedOn.class));
@@ -43,24 +37,24 @@ class TimestampsProvider extends AuditProvider {
             properties.addAll(query.getWritableResultList());
         }
         for (Property<Object> property : properties) {
-            setProperty(property);
+            setProperty(entity, property, systime, create);
         }
     }
     
-    private void setProperty(Property<Object> property) {
+    private void setProperty(Object entity, Property<Object> property, long systime, boolean create) {
         try {
-            if (!isCorrectContext(property))
+            if (!isCorrectContext(property, create))
                 return;
-            Object now = now(property.getJavaClass());
+            Object now = now(property.getJavaClass(), systime);
             property.setValue(entity, now);
-            log.debugv("Updated property {0} with {1}", propertyName(property), now);
+            log.debugv("Updated property {0} with {1}", propertyName(entity, property), now);
         } catch (Exception e) {
-            String message = "Failed to set property " + propertyName(property) + ", is this a temporal type?";
+            String message = "Failed to set property " + propertyName(entity, property) + ", is this a temporal type?";
             throw new AuditPropertyException(message, e);
         }
     }
 
-    private boolean isCorrectContext(Property<Object> property) {
+    private boolean isCorrectContext(Property<Object> property, boolean create) {
         if (create && property.getAnnotatedElement().isAnnotationPresent(ModifiedOn.class)) {
             ModifiedOn annotation = property.getAnnotatedElement().getAnnotation(ModifiedOn.class);
             if (!annotation.onCreate())
@@ -69,7 +63,7 @@ class TimestampsProvider extends AuditProvider {
         return true;
     }
 
-    private Object now(Class<?> field) throws Exception {
+    private Object now(Class<?> field, long systime) throws Exception {
         if (isCalendarClass(field)) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(systime);
@@ -87,4 +81,5 @@ class TimestampsProvider extends AuditProvider {
     private boolean isDateClass(Class<?> field) {
         return Date.class.isAssignableFrom(field);
     }
+
 }

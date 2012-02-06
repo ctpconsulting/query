@@ -3,17 +3,12 @@ package com.ctp.cdi.query.audit;
 import org.jboss.solder.logging.Logger;
 import org.jboss.solder.properties.Property;
 
-abstract class AuditProvider {
+abstract class AuditProvider implements PrePersistAuditListener, PreUpdateAuditListener {
 
     final Logger log = Logger.getLogger(getClass());
     
-    final Object entity;
-    
-    AuditProvider(Object entity) {
-        this.entity = entity;
-    }
-    
-    String propertyName(Property<Object> property) {
+    String propertyName(Object entity, Property<Object> property) {
         return entity.getClass().getSimpleName() + "." + property.getName();
     }
+
 }
