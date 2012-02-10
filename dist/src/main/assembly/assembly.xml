@@ -30,7 +30,8 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>com.ctp.cdi.query:cdi-query</include>
+            <include>com.ctp.cdi.query:cdi-query-api</include>
+            <include>com.ctp.cdi.query:cdi-query-impl</include>
          </includes>
          <excludes>
             <exclude>com.ctp.cdi.query:*:*:javadoc</exclude>

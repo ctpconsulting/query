@@ -9,7 +9,7 @@
 
     <artifactId>cdi-query-parent</artifactId>
     <groupId>com.ctp.cdi.query</groupId>
-    <version>1.0.0.Alpha4-SNAPSHOT</version>
+    <version>1.0.0.Alpha3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CDI Query Module</name>
 
@@ -47,7 +47,6 @@
     <modules>
         <module>api</module>
         <module>impl</module>
-        <module>combined</module>
     </modules>
 
     <properties>

@@ -50,15 +50,8 @@
         </tip>
         <para>
             Including the API at compile time and only include the implementation at runtime protects
-            you from inadvertantly depending on an implementation class. Alternatively you can add the
-            following single dependency to your pom.xml file to include the CDI Query module:
+            you from inadvertantly depending on an implementation class.
         </para>
-        <programlisting role="XML"><![CDATA[<dependency>
-    <groupId>com.ctp.cdi.query</groupId>
-    <artifactId>cdi-query</artifactId>
-    <version>${cdi.query.version}</version>
-</dependency>]]>
-        </programlisting>
     </section>
     
     <section id="installation-setup">
