@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Introduction</title><link rel="stylesheet" href="css/cambridge.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.74.0"/><link rel="home" href="index.html" title="CDI Query Module"/><link rel="up" href="index.html" title="CDI Query Module"/><link rel="prev" href="index.html" title="CDI Query Module"/><link rel="next" href="installation.html" title="Chapter 1. Installation"/></head><body><p id="title"><a href="http://www.ctp-consulting.com" class="site_href"><strong>Cambridge Technology Partners</strong></a><a href="http://www.ctp-consulting.com" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="index.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="installation.html"><strong>Next</strong></a></li></ul><div class="preface" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="introduction"/>Introduction</h2></div></div></div><p>
+        The DAO pattern (Data Access Object) used to be one of the core J2EE patterns and could be found in most 
+        enterprise applications reading and writing data to persistent stores. While the Java Persistence API (JPA) 
+        as part of Java EE 5+ has replaced many aspects of the DAO pattern, it is still a good approach to centralize
+        complex query logic related to specific entities.
+    </p><p>
+        The CDI Query module is intended to help you simplifying your DAO layer. While you will have complex queries
+        in a DAO requiring your full attention, there will also be many simple ones often requiring repetitive code and
+        cluttering your DAO. This is where the CDI query module will help you keeping your DAO lean so you can focus
+        on the though things. The code sample below will give you a quick overview on the common usage scenarios of the
+        CDI Query module:
+    </p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="JAVA"><!-- <br/> --><span class="java_keyword">public</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_keyword">interface</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_type">PersonDao</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_keyword">extends</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_type">EntityDao</span><!-- <br/> --><span class="java_operator">&lt;</span><!-- <br/> --><span class="java_type">Person</span><!-- <br/> --><span class="java_separator">,</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_type">Long</span><!-- <br/> --><span class="java_operator">&gt;</span><!-- <br/> --><span class="java_plain">&nbsp;</span><!-- <br/> --><span class="java_separator">{</span>
+</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">List</span><span class="java_operator">&lt;</span><span class="java_type">Person</span><span class="java_operator">&gt;</span><span class="java_plain">&nbsp;findByAgeBetweenAndGender</span><span class="java_separator">(</span><span class="java_type">int</span><span class="java_plain">&nbsp;minAge</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">int</span><span class="java_plain">&nbsp;maxAge</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">Gender</span><span class="java_plain">&nbsp;gender</span><span class="java_separator">);</span>
+</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;@</span><span class="java_type">Query</span><span class="java_separator">(</span><span class="java_literal">&quot;select&nbsp;p&nbsp;from&nbsp;Person&nbsp;p&nbsp;where&nbsp;p.ssn&nbsp;=&nbsp;?1&quot;</span><span class="java_separator">)</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">Person</span><span class="java_plain">&nbsp;findBySSN</span><span class="java_separator">(</span><span class="java_type">String</span><span class="java_plain">&nbsp;ssn</span><span class="java_separator">);</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;@</span><span class="java_type">Query</span><span class="java_separator">(</span><span class="java_plain">named</span><span class="java_operator">=</span><span class="java_type">Person</span><span class="java_separator">.</span><span class="java_plain">BY_FULL_NAME</span><span class="java_separator">)</span>
+<!--  --><br/><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">Person</span><span class="java_plain">&nbsp;findByFullName</span><span class="java_separator">(</span><span class="java_type">String</span><span class="java_plain">&nbsp;firstName</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">String</span><span class="java_plain">&nbsp;lastName</span><span class="java_separator">);</span>
+</span>
+<!--  --><br/><span class="java_separator">}</span></pre><p>
+        As you see in the sample, there are several usage scenarios outlined here:
+        </p><div class="itemizedlist"><ul><li>
+                Declare a method which executes a query by simply translating its name and parameters into a query. 
+            </li><li>
+                Declare a method which automatically executes a given JPQL query string with parameters.
+            </li><li>
+                Declare a method which automatically executes a named query with parameters.
+            </li></ul></div><p>
+        The implementation of the method is done automatically by the CDI Query module. A client can declare
+        a dependency to the interface only. The details on how to use those features are outlines in the 
+        following chapters.
+    </p></div><ul class="docnav"><li class="previous"><a accesskey="p" href="index.html"><strong>Prev</strong>CDI Query Module</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="installation.html"><strong>Next</strong>Chapter 1. Installation</a></li></ul></body></html>
