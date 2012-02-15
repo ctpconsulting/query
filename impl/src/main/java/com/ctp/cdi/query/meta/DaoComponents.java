@@ -1,10 +1,14 @@
 package com.ctp.cdi.query.meta;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.ctp.cdi.query.util.DaoUtils;
+import com.ctp.cdi.query.meta.extractor.AnnotationMetadataExtractor;
+import com.ctp.cdi.query.meta.extractor.MetadataExtractor;
+import com.ctp.cdi.query.meta.extractor.TypeMetadataExtractor;
 
 /**
  * Convenience class to access DAO and DAO method meta data. Acts as 
@@ -14,7 +18,10 @@ import com.ctp.cdi.query.util.DaoUtils;
  */
 public class DaoComponents {
     
-    private Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
+    private final Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
+    
+    private final List<MetadataExtractor> extractors = Arrays.asList(new AnnotationMetadataExtractor(),
+            new TypeMetadataExtractor());
     
     /**
      * Add a DAO class to the meta data repository.
@@ -25,7 +32,7 @@ public class DaoComponents {
     public boolean add(Class<?> daoClass) {
         // TODO dispatch based if we are dealing with @Dao or implements/extends
         // TODO use AnnotationMetadataExtractor
-        DaoEntity entityClass = DaoUtils.extractEntityMetaData(daoClass);
+        DaoEntity entityClass = extractEntityMetaData(daoClass);
         if (entityClass != null) {
             DaoComponent dao = new DaoComponent(daoClass, entityClass);
             daos.put(daoClass, dao);
@@ -36,7 +43,7 @@ public class DaoComponents {
          */
         return false;
     }
-    
+
     /**
      * Repository access - lookup the DAO component meta data for a specific DAO class.
      * @param daoClass      The DAO class to lookup the method for
@@ -58,6 +65,15 @@ public class DaoComponents {
      */
     public DaoMethod lookupMethod(Class<?> daoClass, Method method) {
         return lookupComponent(daoClass).lookupMethod(method);
+    }
+    
+    private DaoEntity extractEntityMetaData(Class<?> daoClass) {
+        for (MetadataExtractor extractor : extractors) {
+            DaoEntity entity = extractor.extract(daoClass);
+            if (entity != null)
+                return entity;
+        }
+        return null;
     }
 
 }

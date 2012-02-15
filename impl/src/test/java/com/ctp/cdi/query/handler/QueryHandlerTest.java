@@ -1,5 +1,8 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
@@ -7,18 +10,16 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
+
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple2;
 import com.ctp.cdi.query.test.service.Simple2Dao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 public class QueryHandlerTest extends TransactionalTestCase {
 

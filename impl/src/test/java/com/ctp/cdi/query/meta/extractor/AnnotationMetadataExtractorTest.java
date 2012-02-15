@@ -2,12 +2,12 @@ package com.ctp.cdi.query.meta.extractor;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 import org.junit.Test;
 
 import com.ctp.cdi.query.Dao;
 import com.ctp.cdi.query.meta.DaoEntity;
-import com.ctp.cdi.query.meta.NonEntityException;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.DaoInterface;
 
@@ -16,10 +16,10 @@ public class AnnotationMetadataExtractorTest {
     @Test
     public void shouldExtractEntityClassFromDaoAnnotation() {
         // given
-        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor(DaoInterface.class);
+        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 
         // when
-        DaoEntity result = extractor.extract();
+        DaoEntity result = extractor.extract(DaoInterface.class);
 
         // then
         assertNotNull(result);
@@ -27,26 +27,28 @@ public class AnnotationMetadataExtractorTest {
         assertEquals(Long.class, result.getPrimaryClass());
     }
 
-    @Test(expected = NonEntityException.class)
+    @Test
     public void shouldThrowExcptionWhenAnnotationWithEntityClassNotPresent() {
         // given
-        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor(NoEntityPresentDao.class);
+        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 
         // when
-        extractor.extract();
+        DaoEntity result = extractor.extract(NoEntityPresentDao.class);
 
-        // then Exception should be thrown
+        // then
+        assertNull(result);
     }
 
-    @Test(expected = NonEntityException.class)
+    @Test
     public void shouldThrowExceptionWhenAnnotationWithNonEntityClass() {
         // given
-        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor(NonEntityDao.class);
+        AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 
         // when
-        extractor.extract();
+        DaoEntity result = extractor.extract(NonEntityDao.class);
 
-        // then Exception should be thrown
+        // then
+        assertNull(result);
     }
 
     @Dao

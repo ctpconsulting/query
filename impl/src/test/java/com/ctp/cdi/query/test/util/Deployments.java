@@ -19,8 +19,10 @@ public abstract class Deployments {
      */
     public static WebArchive initDeployment() {
         Logging.reconfigure();
-        return ShrinkWrap.create(WebArchive.class, "test.war").addClasses(QueryExtension.class)
-                .addPackage(DaoComponents.class.getPackage()).addPackage(QueryBuilder.class.getPackage())
+        return ShrinkWrap.create(WebArchive.class, "test.war")
+                .addClasses(QueryExtension.class)
+                .addPackage(DaoComponents.class.getPackage())
+                .addPackage(QueryBuilder.class.getPackage())
                 .addAsWebInfResource("test-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsWebInfResource("glassfish-resources.xml");
