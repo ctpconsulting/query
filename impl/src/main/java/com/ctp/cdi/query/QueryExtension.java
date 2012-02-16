@@ -1,5 +1,7 @@
 package com.ctp.cdi.query;
 
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.jboss.solder.logging.Logger;
@@ -7,6 +9,7 @@ import org.jboss.solder.serviceHandler.ServiceHandlerExtension;
 
 import com.ctp.cdi.query.handler.QueryHandler;
 import com.ctp.cdi.query.meta.DaoComponentsFactory;
+import com.ctp.cdi.query.meta.unit.PersistenceUnits;
 
 /**
  * The main extension class for CDI queries, based on Seam Solder service handlers.
@@ -17,6 +20,10 @@ import com.ctp.cdi.query.meta.DaoComponentsFactory;
 public class QueryExtension extends ServiceHandlerExtension {
 
     private final Logger log = Logger.getLogger(QueryExtension.class);
+    
+    void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before) {
+        PersistenceUnits.instance().init();
+    }
 
     @Override
     protected <X> Class<?> getHandlerClass(ProcessAnnotatedType<X> event) {
