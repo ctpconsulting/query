@@ -1,11 +1,14 @@
 /.project
 /.classpath
 /.settings/
+/.idea/
+/cdi-query-parent.iml
 /checkstyle-cachefile
 /target/
 /docs/target/
 /impl/.classpath
 /impl/.project
+/impl/cdi-query-impl.iml
 /impl/.pmd
 /impl/.checkstyle
 /impl/.settings/
@@ -20,6 +23,7 @@
 /api/.classpath
 /api/.project
 /api/.settings/
+/api/cdi-query-api.iml
 /api/target/
 /combined/target/
 /impl/target/

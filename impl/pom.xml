@@ -23,10 +23,10 @@
         <version.maven.compiler>2.3.1</version.maven.compiler>
         <version.maven.jxr>2.2</version.maven.jxr>
         <version.maven.surefire>2.8.1</version.maven.surefire>
-        <version.maven.checkstyle>2.7-SNAPSHOT</version.maven.checkstyle>
-        <version.maven.pmd>2.5</version.maven.pmd>
-        <version.maven.findbugs>2.3.2</version.maven.findbugs>
-        <version.maven.cobertura>2.5</version.maven.cobertura>
+        <version.maven.checkstyle>2.9</version.maven.checkstyle>
+        <version.maven.pmd>2.7.1</version.maven.pmd>
+        <version.maven.findbugs>2.4.0</version.maven.findbugs>
+        <version.maven.cobertura>2.5.1</version.maven.cobertura>
         <jdk.source>1.6</jdk.source>
         <jdk.target>1.6</jdk.target>
         <project.parent.url>${project.artifactId}</project.parent.url>

@@ -10,7 +10,7 @@
 
     <groupId>${project.parent.groupId}</groupId>
     <artifactId>cdi-query-reference-guide</artifactId>
-    <version>1.0.0.Alpha4-SNAPSHOT</version>
+    <version>${project.parent.version}</version>
     <packaging>jdocbook</packaging>
     <name>CDI Query Reference Guide</name>
 
@@ -98,15 +98,9 @@
         					<pluginExecutions>
         						<pluginExecution>
         							<pluginExecutionFilter>
-        								<groupId>
-        									org.jboss.maven.plugins
-        								</groupId>
-        								<artifactId>
-        									maven-jdocbook-plugin
-        								</artifactId>
-        								<versionRange>
-        									[2.2.3,)
-        								</versionRange>
+        								<groupId>org.jboss.maven.plugins</groupId>
+        								<artifactId>maven-jdocbook-plugin</artifactId>
+        								<versionRange>[2.2.3,)</versionRange>
         								<goals>
         									<goal>resources</goal>
         									<goal>generate</goal>
