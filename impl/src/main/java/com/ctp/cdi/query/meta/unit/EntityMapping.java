@@ -37,22 +37,25 @@ class EntityMapping {
     
     private static String extractNodeAttribute(Element element, String childName, String attribute) {
         NodeList list = element.getElementsByTagName(childName);
-        if (list.getLength() == 0)
+        if (list.getLength() == 0) {
             return null;
+        }
         return extractAttribute(list.item(0), attribute);
     }
 
     private static String extractAttribute(Node item, String name) {
         Node node = item.getAttributes().getNamedItem(name);
-        if (node != null)
+        if (node != null) {
             return node.getTextContent();
+        }
         return null;
     }
 
     private static String extractNodeContent(Element element, String name) {
         NodeList list = element.getElementsByTagName(name);
-        if (list.getLength() == 0)
+        if (list.getLength() == 0) {
             return null;
+        }
         return list.item(0).getTextContent();
     }
     
@@ -65,22 +68,23 @@ class EntityMapping {
     }
     
     public boolean is(Class<?> entityClass) {
-        return className().equals(entityClass.getName());
+        return buildClassName(className).equals(entityClass.getName());
     }
     
     public Class<?> entityClass() {
         try {
-            String name = className();
-            return Class.forName(name);
+            String clazzName = buildClassName(className);
+            return Class.forName(clazzName);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Can't create class " + className(), e);
+            throw new IllegalArgumentException("Can't create class " + buildClassName(className), e);
         }
     }
     
     @SuppressWarnings("unchecked")
     public Class<? extends Serializable> idClass() {
         try {
-            return (Class<? extends Serializable>) (idClass != null ? Class.forName(idClass) : lookupIdClass());
+            return (Class<? extends Serializable>) 
+                    (idClass != null ? Class.forName(buildClassName(idClass)) : lookupIdClass());
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Failed to get ID class", e);
         }
@@ -115,8 +119,12 @@ class EntityMapping {
         return query.getFirstResult().getJavaClass();
     }
     
-    private String className() {
-        return packageName != null ? packageName + "." + className : className;
+    private String buildClassName(String name) {
+        return (packageName != null && !isClassNameQualified(name)) ? packageName + "." + name : name;
+    }
+    
+    private boolean isClassNameQualified(String name) {
+        return name.contains(".");
     }
     
 }

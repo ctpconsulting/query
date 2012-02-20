@@ -68,8 +68,9 @@ class PersistenceUnit {
                 result.add(MappingFile.readFromFile(new URL(baseUrl + list.item(i).getTextContent())));
             }
             MappingFile defaultOrm = MappingFile.defaultOrm(baseUrl);
-            if (defaultOrm != null)
+            if (defaultOrm != null) {
                 result.add(defaultOrm);
+            }
             return result;
         } catch (Exception e) {
             throw new RuntimeException("Failed initializing mapping files", e);
@@ -83,8 +84,9 @@ class PersistenceUnit {
     public EntityMapping find(Class<?> entityClass) {
         for (MappingFile file : mappingFiles) {
             EntityMapping mapping = file.find(entityClass);
-            if (mapping != null)
+            if (mapping != null) {
                 return mapping;
+            }
         }
         return null;
     }

@@ -39,8 +39,9 @@ class MappingFile {
     
     public static MappingFile defaultOrm(String baseUrl) throws IOException {
         File file = new File(baseUrl + RESOURCE_PATH);
-        if (file.exists())
+        if (file.exists()) {
             return readFromFile(file.toURI().toURL());
+        }
         return null;
     }
 
@@ -51,8 +52,9 @@ class MappingFile {
 
     public EntityMapping find(Class<?> entityClass) {
         for (EntityMapping entity : classes) {
-            if (entity.is(entityClass))
+            if (entity.is(entityClass)) {
                 return entity;
+            }
         }
         return null;
     }

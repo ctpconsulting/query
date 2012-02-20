@@ -39,8 +39,9 @@ public final class EntityUtils {
             return entityClass.getAnnotation(IdClass.class).value(); // Serializablity isn't required, could cause problems
         }
         Class clazz = PersistenceUnits.instance().primaryKeyIdClass(entityClass);
-        if (clazz != null)
+        if (clazz != null) {
             return clazz;
+        }
         Property<Serializable> property = primaryKey(entityClass);
         return property.getJavaClass();
     }

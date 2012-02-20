@@ -43,8 +43,9 @@ class TimestampsProvider extends AuditProvider {
     
     private void setProperty(Object entity, Property<Object> property, long systime, boolean create) {
         try {
-            if (!isCorrectContext(property, create))
+            if (!isCorrectContext(property, create)) {
                 return;
+            }
             Object now = now(property.getJavaClass(), systime);
             property.setValue(entity, now);
             log.debugv("Updated property {0} with {1}", propertyName(entity, property), now);
@@ -57,8 +58,9 @@ class TimestampsProvider extends AuditProvider {
     private boolean isCorrectContext(Property<Object> property, boolean create) {
         if (create && property.getAnnotatedElement().isAnnotationPresent(ModifiedOn.class)) {
             ModifiedOn annotation = property.getAnnotatedElement().getAnnotation(ModifiedOn.class);
-            if (!annotation.onCreate())
+            if (!annotation.onCreate()) {
                 return false;
+            }
         }
         return true;
     }

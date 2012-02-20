@@ -30,8 +30,6 @@ public class DaoComponents {
      *                      {@code false} otherwise.
      */
     public boolean add(Class<?> daoClass) {
-        // TODO dispatch based if we are dealing with @Dao or implements/extends
-        // TODO use AnnotationMetadataExtractor
         DaoEntity entityClass = extractEntityMetaData(daoClass);
         if (entityClass != null) {
             DaoComponent dao = new DaoComponent(daoClass, entityClass);
@@ -51,8 +49,7 @@ public class DaoComponents {
      */
     public DaoComponent lookupComponent(Class<?> daoClass) {
         if (daos.containsKey(daoClass)) {
-            DaoComponent component = daos.get(daoClass);
-            return component;
+            return daos.get(daoClass);
         }
         throw new RuntimeException("Unknown DAO class " + daoClass.getName());
     }
@@ -70,8 +67,9 @@ public class DaoComponents {
     private DaoEntity extractEntityMetaData(Class<?> daoClass) {
         for (MetadataExtractor extractor : extractors) {
             DaoEntity entity = extractor.extract(daoClass);
-            if (entity != null)
+            if (entity != null) {
                 return entity;
+            }
         }
         return null;
     }

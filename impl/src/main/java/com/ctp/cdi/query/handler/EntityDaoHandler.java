@@ -86,13 +86,13 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
-        String jpqlQuery = allQuery() + " where ";
+        StringBuilder jpqlQuery = new StringBuilder(allQuery()).append(" where ");
         List<String> names = extractPropertyNames(attributes);
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
                 .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
-        jpqlQuery += prepareWhere(properties);
+        jpqlQuery.append(prepareWhere(properties));
         log.debugv("findBy: Created query {0}", jpqlQuery);
-        TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+        TypedQuery<E> query = entityManager.createQuery(jpqlQuery.toString(), entityClass);
         addParameters(query, example, properties);
         return query.getResultList();
     }

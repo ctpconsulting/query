@@ -15,7 +15,8 @@ public class PersistenceUnits {
     
     private List<PersistenceUnit> persistenceUnits = Collections.emptyList();
     
-    private PersistenceUnits() {}
+    private PersistenceUnits() {
+    }
     
     public static PersistenceUnits instance() {
         return instance;
@@ -31,16 +32,18 @@ public class PersistenceUnits {
     
     public String primaryKeyField(Class<?> entityClass) {
         EntityMapping entity = find(entityClass);
-        if (entity != null)
+        if (entity != null) {
             return entity.getId();
+        }
         return null;
     }
     
     public Class<?> primaryKeyIdClass(Class<?> entityClass) {
         try {
             EntityMapping entity = find(entityClass);
-            if (entity != null && entity.getIdClass() != null)
+            if (entity != null && entity.getIdClass() != null) {
                 return Class.forName(entity.getIdClass());
+            }
             return null;
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Failed to instantiate IdClass", e);
@@ -49,15 +52,17 @@ public class PersistenceUnits {
     
     public String entityName(Class<?> entityClass) {
         EntityMapping entity = find(entityClass);
-        if (entity != null)
+        if (entity != null) {
             return entity.getName();
+        }
         return null;
     }
     
     public DaoEntity lookupMetadata(Class<?> entityClass) {
         EntityMapping entity = find(entityClass);
-        if (entity != null)
+        if (entity != null) {
             return new DaoEntity(entityClass, entity.idClass());
+        }
         return null;
     }
     

@@ -9,10 +9,10 @@ import com.ctp.cdi.query.builder.QueryBuilderContext;
 class AndQueryPart extends ConnectingQueryPart {
 
     public AndQueryPart(boolean first) {
-		super(first);
-	}
+        super(first);
+    }
 
-	@Override
+    @Override
     protected QueryPart build(String queryPart) {
         children.add(new PropertyQueryPart().build(queryPart));
         return this;
@@ -26,5 +26,5 @@ class AndQueryPart extends ConnectingQueryPart {
         buildQueryForChildren(ctx);
         return this;
     }
-    
+
 }
