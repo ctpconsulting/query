@@ -1,96 +1,31 @@
 package com.ctp.cdi.query.meta.unit;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.jboss.solder.properties.query.NamedPropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
 import org.jboss.solder.properties.query.PropertyQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 class EntityMapping {
 
     private final String name;
-    private final String packageName;
-    private final String className;
-    private final String idClass;
+    private final Class<?> entityClass;
+    private final Class<? extends Serializable> idClass;
     private final String id;
-    
-    public static List<EntityMapping> readFromDocument(Document doc) {
-        List<EntityMapping> result = new LinkedList<EntityMapping>();
-        String packageName = extractNodeContent(doc.getDocumentElement(), "package");
-        NodeList mappings = doc.getElementsByTagName("entity");
-        for (int i = 0; i < mappings.getLength(); i++) {
-            String name = extractAttribute(mappings.item(i), "name");
-            String className = extractAttribute(mappings.item(i), "class");
-            String idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
-            String id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
-            String embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
-            result.add(new EntityMapping(name, packageName, className, idClass, id != null ? id : embeddedId));
-        }
-        return result;
-    }
-    
-    private static String extractNodeAttribute(Element element, String childName, String attribute) {
-        NodeList list = element.getElementsByTagName(childName);
-        if (list.getLength() == 0) {
-            return null;
-        }
-        return extractAttribute(list.item(0), attribute);
-    }
 
-    private static String extractAttribute(Node item, String name) {
-        Node node = item.getAttributes().getNamedItem(name);
-        if (node != null) {
-            return node.getTextContent();
-        }
-        return null;
-    }
-
-    private static String extractNodeContent(Element element, String name) {
-        NodeList list = element.getElementsByTagName(name);
-        if (list.getLength() == 0) {
-            return null;
-        }
-        return list.item(0).getTextContent();
-    }
-    
-    private EntityMapping(String name, String packageName, String className, String idClass, String id) {
+    EntityMapping(String name, String packageName, String className, String idClass, String id) {
+        Class<?> entityClass = entityClass(className, packageName);
         this.name = name;
-        this.packageName = packageName;
-        this.className = className;
-        this.idClass = idClass;
+        this.entityClass = entityClass;
+        this.idClass = idClass(entityClass, idClass, packageName, id);
         this.id = id;
     }
     
     public boolean is(Class<?> entityClass) {
-        return buildClassName(className).equals(entityClass.getName());
-    }
-    
-    public Class<?> entityClass() {
-        try {
-            String clazzName = buildClassName(className);
-            return Class.forName(clazzName);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Can't create class " + buildClassName(className), e);
-        }
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Class<? extends Serializable> idClass() {
-        try {
-            return (Class<? extends Serializable>) 
-                    (idClass != null ? Class.forName(buildClassName(idClass)) : lookupIdClass());
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Failed to get ID class", e);
-        }
+        return this.entityClass.equals(entityClass);
     }
 
-    public String getIdClass() {
+    public Class<? extends Serializable> getIdClass() {
         return idClass;
     }
 
@@ -105,22 +40,40 @@ class EntityMapping {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("EntityMapping [packageName=").append(packageName)
-               .append(", name=").append(name)
-               .append(", className=").append(className)
+        builder.append("EntityMapping [name=").append(name)
+               .append(", entityClass=").append(entityClass)
                .append(", idClass=").append(idClass)
                .append(", id=").append(id).append("]");
         return builder.toString();
     }
     
-    private Class<?> lookupIdClass() {
-        PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entityClass())
+    private Class<?> entityClass(String entityClass, String packageName) {
+        try {
+            String clazzName = buildClassName(entityClass, packageName);
+            return Class.forName(clazzName);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Can't create class " + buildClassName(entityClass, packageName), e);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Class<? extends Serializable> idClass(Class<?> entity, String idClass, String packageName, String id) {
+        try {
+            return (Class<? extends Serializable>) 
+                    (idClass != null ? Class.forName(buildClassName(idClass, packageName)) : lookupIdClass(entity, id));
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Failed to get ID class", e);
+        }
+    }
+    
+    private Class<?> lookupIdClass(Class<?> entity, String id) {
+        PropertyQuery<Serializable> query = PropertyQueries.<Serializable>createQuery(entity)
                 .addCriteria(new NamedPropertyCriteria(id));
         return query.getFirstResult().getJavaClass();
     }
     
-    private String buildClassName(String name) {
-        return (packageName != null && !isClassNameQualified(name)) ? packageName + "." + name : name;
+    private String buildClassName(String clazzName, String packageName) {
+        return (packageName != null && !isClassNameQualified(clazzName)) ? packageName + "." + clazzName : clazzName;
     }
     
     private boolean isClassNameQualified(String name) {

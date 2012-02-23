@@ -1,10 +1,7 @@
 package com.ctp.cdi.query.meta.unit;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.ctp.cdi.query.meta.DaoEntity;
@@ -39,15 +36,11 @@ public class PersistenceUnits {
     }
     
     public Class<?> primaryKeyIdClass(Class<?> entityClass) {
-        try {
-            EntityMapping entity = find(entityClass);
-            if (entity != null && entity.getIdClass() != null) {
-                return Class.forName(entity.getIdClass());
-            }
-            return null;
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Failed to instantiate IdClass", e);
+        EntityMapping entity = find(entityClass);
+        if (entity != null && entity.getIdClass() != null) {
+            return entity.getIdClass();
         }
+        return null;
     }
     
     public String entityName(Class<?> entityClass) {
@@ -61,27 +54,18 @@ public class PersistenceUnits {
     public DaoEntity lookupMetadata(Class<?> entityClass) {
         EntityMapping entity = find(entityClass);
         if (entity != null) {
-            return new DaoEntity(entityClass, entity.idClass());
+            return new DaoEntity(entityClass, entity.getIdClass());
         }
         return null;
     }
     
     private List<PersistenceUnit> readPersistenceXmls() {
         try {
-            List<PersistenceUnit> result = new LinkedList<PersistenceUnit>();
-            Enumeration<URL> urls = classloader().getResources(PersistenceUnit.RESOURCE_PATH);
-            while (urls.hasMoreElements()) {
-                URL u = urls.nextElement();
-                result.addAll(PersistenceUnit.readFromFile(u));
-            }
-            return Collections.unmodifiableList(result);
+            PersistenceUnitReader reader = new PersistenceUnitReader();
+            return reader.readAll();
         } catch (IOException e) {
             throw new RuntimeException("Failed to read persistence unit info", e);
         }
-    }
-
-    private ClassLoader classloader() {
-        return Thread.currentThread().getContextClassLoader();
     }
     
     private EntityMapping find(Class<?> entityClass) {
