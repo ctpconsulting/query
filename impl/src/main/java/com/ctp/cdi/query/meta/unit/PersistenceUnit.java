@@ -8,17 +8,17 @@ class PersistenceUnit {
     public static final String DEFAULT_ORM_PATH = "META-INF/orm.xml";
 
     private final String unitName;
-    private final List<EntityMapping> entities;
+    private final List<EntityDescriptor> entities;
 
-    PersistenceUnit(String unitName, List<EntityMapping> entities) {
+    PersistenceUnit(String unitName, List<EntityDescriptor> entities) {
         this.unitName = unitName;
         this.entities = entities;
     }
     
-    public EntityMapping find(Class<?> entityClass) {
-        for (EntityMapping file : entities) {
-            if (file.is(entityClass)) {
-                return file;
+    public EntityDescriptor find(Class<?> entityClass) {
+        for (EntityDescriptor entity : entities) {
+            if (entity.is(entityClass)) {
+                return entity;
             }
         }
         return null;
@@ -32,7 +32,7 @@ class PersistenceUnit {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("PersistenceUnit [unitName=").append(unitName)
-               .append(", mappingFiles=").append(entities).append("]");
+               .append(", entities=").append(entities).append("]");
         return builder.toString();
     }
 

@@ -12,42 +12,47 @@ import org.w3c.dom.NodeList;
 
 public class EntityDescriptorReader extends DescriptorReader {
     
-    public List<EntityMapping> readAll(String baseUrl, String resource) throws IOException {
-        return readFromFile(read(baseUrl, resource));
+    public MappingFile readAll(String baseUrl, String resource) throws IOException {
+        return readFromDocument(read(baseUrl, resource).getDocument());
     }
 
-    public List<EntityMapping> readDefaultOrm(String baseUrl) throws IOException {
+    public MappingFile readDefaultOrm(String baseUrl) throws IOException {
         try {
             Descriptor desc = read(baseUrl, PersistenceUnit.DEFAULT_ORM_PATH);
-            return extractMapping(desc.getDocument());
+            return readFromDocument(desc.getDocument());
         } catch (IllegalArgumentException e) {
-            return Collections.emptyList();
+            return new MappingFile(Collections.<EntityDescriptor>emptyList(), Collections.<MappedSuperclassDescriptor>emptyList());
         }
     }
-
-    private List<EntityMapping> readFromFile(Descriptor descriptor) throws IOException {
-        return extractMapping(descriptor.getDocument());
-    }
-
-    private List<EntityMapping> extractMapping(Document doc) {
-        return readFromDocument(doc);
-    }
     
-    public List<EntityMapping> readFromDocument(Document doc) {
-        List<EntityMapping> result = new LinkedList<EntityMapping>();
-        String packageName = extractNodeContent(doc.getDocumentElement(), "package");
-        NodeList mappings = doc.getElementsByTagName("entity");
-        for (int i = 0; i < mappings.getLength(); i++) {
-            String name = extractAttribute(mappings.item(i), "name");
-            String className = extractAttribute(mappings.item(i), "class");
-            String idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
-            String id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
-            String embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
-            result.add(new EntityMapping(name, packageName, className, idClass, id != null ? id : embeddedId));
-        }
-        return result;
+    public MappingFile readFromDocument(Document doc) {
+        List<EntityDescriptor> entities = new EntityBuilder<EntityDescriptor>() {
+            @Override
+            EntityDescriptor instance(String name, String packageName, String className, String idClass, String id) {
+                return new EntityDescriptor(name, packageName, className, idClass, id);
+            }
+            @Override
+            String tagName() {
+                return "entity";
+            }
+        }.build(doc);
+        List<MappedSuperclassDescriptor> superClasses = new EntityBuilder<MappedSuperclassDescriptor>() {
+            @Override
+            MappedSuperclassDescriptor instance(String name, String packageName, String className, String idClass, String id) {
+                return new MappedSuperclassDescriptor(name, packageName, className, idClass, id);
+            }
+            @Override
+            String tagName() {
+                return "mapped-superclass";
+            }
+            @Override
+            void postProcess(List<MappedSuperclassDescriptor> result) {
+                Collections.sort(result, PersistentClassComparator.INSTANCE);
+            }
+        }.build(doc);
+        return new MappingFile(entities, superClasses);
     }
-    
+
     private String extractNodeAttribute(Element element, String childName, String attribute) {
         NodeList list = element.getElementsByTagName(childName);
         if (list.getLength() == 0) {
@@ -70,5 +75,50 @@ public class EntityDescriptorReader extends DescriptorReader {
             return null;
         }
         return list.item(0).getTextContent();
+    }
+    
+    public static class MappingFile {
+        private final List<EntityDescriptor> entities;
+        private final List<MappedSuperclassDescriptor> superClasses;
+
+        public MappingFile(List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses) {
+            this.entities = entities;
+            this.superClasses = superClasses;
+        }
+
+        public List<EntityDescriptor> getEntities() {
+            return entities;
+        }
+
+        public List<MappedSuperclassDescriptor> getSuperClasses() {
+            return superClasses;
+        }
+    }
+    
+    private abstract class EntityBuilder<T extends PersistentClassDescriptor> {
+        
+        public List<T> build(Document doc) {
+            List<T> result = new LinkedList<T>();
+            String packageName = extractNodeContent(doc.getDocumentElement(), "package");
+            NodeList mappings = doc.getElementsByTagName(tagName());
+            for (int i = 0; i < mappings.getLength(); i++) {
+                String name = extractAttribute(mappings.item(i), "name");
+                String className = extractAttribute(mappings.item(i), "class");
+                String idClass = extractNodeAttribute((Element) mappings.item(i), "id-class", "class");
+                String id = extractNodeAttribute((Element) mappings.item(i), "id", "name");
+                String embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
+                result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId));
+            }
+            postProcess(result);
+            return result;
+        }
+        
+        void postProcess(List<T> result) {
+        }
+
+        abstract T instance(String name, String packageName, String className, String idClass, String id); 
+        
+        abstract String tagName(); 
+        
     }
 }

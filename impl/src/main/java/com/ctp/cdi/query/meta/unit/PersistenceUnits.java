@@ -28,7 +28,7 @@ public class PersistenceUnits {
     }
     
     public String primaryKeyField(Class<?> entityClass) {
-        EntityMapping entity = find(entityClass);
+        EntityDescriptor entity = find(entityClass);
         if (entity != null) {
             return entity.getId();
         }
@@ -36,7 +36,7 @@ public class PersistenceUnits {
     }
     
     public Class<?> primaryKeyIdClass(Class<?> entityClass) {
-        EntityMapping entity = find(entityClass);
+        EntityDescriptor entity = find(entityClass);
         if (entity != null && entity.getIdClass() != null) {
             return entity.getIdClass();
         }
@@ -44,7 +44,7 @@ public class PersistenceUnits {
     }
     
     public String entityName(Class<?> entityClass) {
-        EntityMapping entity = find(entityClass);
+        EntityDescriptor entity = find(entityClass);
         if (entity != null) {
             return entity.getName();
         }
@@ -52,7 +52,7 @@ public class PersistenceUnits {
     }
     
     public DaoEntity lookupMetadata(Class<?> entityClass) {
-        EntityMapping entity = find(entityClass);
+        EntityDescriptor entity = find(entityClass);
         if (entity != null) {
             return new DaoEntity(entityClass, entity.getIdClass());
         }
@@ -68,9 +68,9 @@ public class PersistenceUnits {
         }
     }
     
-    private EntityMapping find(Class<?> entityClass) {
+    private EntityDescriptor find(Class<?> entityClass) {
         for (PersistenceUnit unit : persistenceUnits) {
-            EntityMapping entity = unit.find(entityClass);
+            EntityDescriptor entity = unit.find(entityClass);
             if (entity != null) {
                 return entity;
             }
