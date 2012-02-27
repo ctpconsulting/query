@@ -45,10 +45,6 @@ public class EntityDescriptorReader extends DescriptorReader {
             String tagName() {
                 return "mapped-superclass";
             }
-            @Override
-            void postProcess(List<MappedSuperclassDescriptor> result) {
-                Collections.sort(result, PersistentClassComparator.INSTANCE);
-            }
         }.build(doc);
         return new MappingFile(entities, superClasses);
     }
@@ -109,11 +105,7 @@ public class EntityDescriptorReader extends DescriptorReader {
                 String embeddedId = extractNodeAttribute((Element) mappings.item(i), "embedded-id", "name");
                 result.add(instance(name, packageName, className, idClass, id != null ? id : embeddedId));
             }
-            postProcess(result);
             return result;
-        }
-        
-        void postProcess(List<T> result) {
         }
 
         abstract T instance(String name, String packageName, String className, String idClass, String id); 

@@ -36,16 +36,9 @@ abstract class PersistentClassDescriptor {
     public Class<?> getEntityClass() {
         return entityClass;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getClass().getSimpleName())
-               .append(" [name=").append(name)
-               .append(", entityClass=").append(entityClass)
-               .append(", idClass=").append(idClass)
-               .append(", id=").append(id).append("]");
-        return builder.toString();
+    
+    String className(Class<?> clazz) {
+        return clazz == null ? null : clazz.getSimpleName();
     }
     
     private Class<?> entityClass(String entityClass, String packageName) {

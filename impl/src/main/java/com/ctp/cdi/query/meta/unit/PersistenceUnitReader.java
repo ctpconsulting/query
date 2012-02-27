@@ -38,15 +38,19 @@ public class PersistenceUnitReader extends DescriptorReader {
     private List<EntityDescriptor> extractMappings(Element element, String baseUrl) {
         try {
             EntityDescriptorReader reader = new EntityDescriptorReader();
-            List<EntityDescriptor> result = new LinkedList<EntityDescriptor>();
+            List<EntityDescriptor> entities = new LinkedList<EntityDescriptor>();
+            List<MappedSuperclassDescriptor> superClasses = new LinkedList<MappedSuperclassDescriptor>();
             NodeList list = element.getElementsByTagName("mapping-file");
             for (int i = 0; i < list.getLength(); i++) {
                 MappingFile mappings = reader.readAll(baseUrl, list.item(i).getTextContent());
-                result.addAll(mappings.getEntities());
+                entities.addAll(mappings.getEntities());
+                superClasses.addAll(mappings.getSuperClasses());
             }
             MappingFile mappings = reader.readDefaultOrm(baseUrl);
-            result.addAll(mappings.getEntities());
-            return result;
+            entities.addAll(mappings.getEntities());
+            superClasses.addAll(mappings.getSuperClasses());
+            DescriptorHierarchyBuilder.newInstance(entities, superClasses).buildHierarchy();
+            return entities;
         } catch (Exception e) {
             throw new RuntimeException("Failed initializing mapping files", e);
         }
