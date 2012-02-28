@@ -1,7 +1,9 @@
 package com.ctp.cdi.query.handler;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.List;
 
@@ -183,6 +185,27 @@ public class QueryHandlerTest extends TransactionalTestCase {
         // then
         assertNotNull(result);
         assertEquals(2, result.size());
+    }
+    
+    @Test
+    public void shouldOrderResultByMethodOrderBy() {
+        // given
+        final String name = "testFindWithNativeQuery";
+        createSimple(name);
+        createSimple(name);
+        createSimple(name);
+        
+        // when
+        List<Simple> result = dao.findByOrderByIdDesc();
+        
+        // then
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        long last = Long.MAX_VALUE;
+        for (Simple simple : result) {
+            assertTrue(simple.getId().longValue() < last);
+            last = simple.getId().longValue();
+        }
     }
 
     private Simple createSimple(String name) {

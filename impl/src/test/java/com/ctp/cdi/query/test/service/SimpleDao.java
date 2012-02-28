@@ -50,6 +50,8 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
     
     public abstract Simple findByNameAndEnabled(String name, Boolean enabled);
     
+    public abstract List<Simple> findByOrderByIdDesc();
+    
     @Query(sql = "SELECT * from SIMPLE_TABLE s WHERE s.name = ?1")
     public abstract List<Simple> findWithNative(String name);
     

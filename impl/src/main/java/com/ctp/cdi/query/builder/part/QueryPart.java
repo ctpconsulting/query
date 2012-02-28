@@ -1,8 +1,10 @@
 package com.ctp.cdi.query.builder.part;
 
-import com.ctp.cdi.query.builder.QueryBuilderContext;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
+import com.ctp.cdi.query.builder.QueryBuilderContext;
 
 /**
  *
@@ -22,8 +24,16 @@ public abstract class QueryPart  {
         }
     }
     
-    protected boolean hasChildren() {
-        return children != null && !children.isEmpty();
+    protected boolean hasChildren(Set<Class<? extends QueryPart>> excluded) {
+        if (children == null || children.isEmpty()) {
+            return false;
+        }
+        for (QueryPart part : children) {
+            if (!excluded.contains(part.getClass())) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }
