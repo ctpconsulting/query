@@ -14,11 +14,11 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 
 import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.builder.QueryBuilderFactory;
 import com.ctp.cdi.query.meta.DaoComponent;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.meta.DaoMethod;
 import com.ctp.cdi.query.meta.Initialized;
-import com.ctp.cdi.query.meta.QueryInvocationLiteral;
 
 /**
  * Entry point for query processing.
@@ -30,8 +30,8 @@ public class QueryHandler {
     @Inject @Any
     private Instance<EntityManager> entityManager;
     
-    @Inject @Any
-    private Instance<QueryBuilder> queryBuilder;
+    @Inject
+    private QueryBuilderFactory queryBuilder;
     
     @Inject @Initialized
     private DaoComponents components;
@@ -41,7 +41,7 @@ public class QueryHandler {
         Class<?> daoClass = extractFromProxy(context);
         DaoComponent dao = components.lookupComponent(daoClass);
         DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
-        QueryBuilder builder = queryBuilder.select(new QueryInvocationLiteral(method.getMethodType())).get();
+        QueryBuilder builder = queryBuilder.build(method);
         return builder.execute(new QueryInvocationContext(context, method, resolveEntityManager(dao)));
     }
     

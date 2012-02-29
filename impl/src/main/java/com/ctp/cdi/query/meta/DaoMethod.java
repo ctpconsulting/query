@@ -7,9 +7,9 @@ import java.lang.reflect.Modifier;
 
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.builder.part.QueryRoot;
+import com.ctp.cdi.query.builder.result.QueryProcessor;
+import com.ctp.cdi.query.builder.result.QueryProcessorFactory;
 import com.ctp.cdi.query.handler.EntityDaoHandler;
-import com.ctp.cdi.query.meta.result.QueryProcessor;
-import com.ctp.cdi.query.meta.result.QueryProcessorFactory;
 import com.ctp.cdi.query.util.EntityUtils;
 
 /**
@@ -37,6 +37,10 @@ public class DaoMethod {
         this.methodType  = extractMethodType();
         this.queryRoot = initQueryRoot();
         this.queryProcessor = QueryProcessorFactory.newInstance(method).build();
+    }
+    
+    public boolean returns(Class<?> returnType) {
+        return returnType.equals(method.getReturnType());
     }
     
     private MethodType extractMethodType() {

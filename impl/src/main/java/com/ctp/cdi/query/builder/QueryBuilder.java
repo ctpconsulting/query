@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.builder;
 
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import javax.persistence.Query;
 
 import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
-import java.lang.reflect.Method;
 
 /**
  * Query builder factory. Delegates to concrete implementations.

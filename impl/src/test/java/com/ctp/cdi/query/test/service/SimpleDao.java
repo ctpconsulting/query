@@ -11,6 +11,7 @@ import com.ctp.cdi.query.MaxResults;
 import com.ctp.cdi.query.Modifying;
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.QueryParam;
+import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple_;
 
@@ -58,6 +59,8 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
     @Modifying @Query("update Simple as s set s.name = ?1 where s.id = ?2")
     public abstract int updateNameForId(String name, Long id);
+    
+    public abstract QueryResult<Simple> findByName(String name);
     
     @Override
     protected abstract EntityManager getEntityManager();

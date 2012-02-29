@@ -1,6 +1,8 @@
 package com.ctp.cdi.query.handler;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
@@ -16,6 +18,7 @@ public class QueryInvocationContext {
     private final InvocationContext invocation;
     private final Class<?> entityClass;
     private final DaoMethod daoMethod;
+    private final List<QueryStringPostProcessor> postProcessors;
     
     public QueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -23,6 +26,19 @@ public class QueryInvocationContext {
         this.invocation = invocation;
         this.daoMethod = daoMethod;
         this.entityClass = daoMethod.getDao().getEntityClass();
+        this.postProcessors = new LinkedList<QueryStringPostProcessor>();
+    }
+    
+    public void addPostProcessor(QueryStringPostProcessor postProcessor) {
+        postProcessors.add(postProcessor);
+    }
+    
+    public String applyPostProcessors(String queryString) {
+        String result = queryString;
+        for (QueryStringPostProcessor processor : postProcessors) {
+            result = processor.postProcess(result);
+        }
+        return result;
     }
     
     public Object executeQuery(Query jpaQuery) {

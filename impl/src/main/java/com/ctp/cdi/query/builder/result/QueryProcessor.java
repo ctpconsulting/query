@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.meta.result;
+package com.ctp.cdi.query.builder.result;
 
 import javax.persistence.Query;
 

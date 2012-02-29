@@ -14,17 +14,19 @@ import javax.persistence.PersistenceContext;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple2;
+import com.ctp.cdi.query.test.domain.SimpleBuilder;
 import com.ctp.cdi.query.test.service.Simple2Dao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.Deployments;
 
 public class QueryHandlerTest extends TransactionalTestCase {
-
+    
     @Deployment
     public static Archive<?> deployment() {
         return Deployments.initDeployment()
@@ -41,12 +43,14 @@ public class QueryHandlerTest extends TransactionalTestCase {
     @Produces
     @PersistenceContext
     private EntityManager entityManager;
+    
+    private SimpleBuilder builder;
 
     @Test
     public void shouldDelegateToImplementation() {
         // given
         final String name = "testDelegateToImplementation";
-        createSimple(name);
+        builder.createSimple(name);
 
         // when
         List<Simple> result = dao.implementedQueryByName(name);
@@ -60,7 +64,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldCreateNamedQueryIndex() {
         // given
         final String name = "testCreateNamedQueryIndex";
-        createSimple(name);
+        builder.createSimple(name);
 
         // when
         List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
@@ -75,7 +79,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldCreateNamedQueryNamed() {
         // given
         final String name = "testCreateNamedQueryNamed";
-        Simple simple = createSimple(name);
+        Simple simple = builder.createSimple(name);
 
         // when
         Simple result = dao.findByNamedQueryNamed(simple.getId(), Boolean.TRUE);
@@ -89,7 +93,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldRunAnnotatedQuery() {
         // given
         final String name = "testRunAnnotatedQuery";
-        createSimple(name);
+        builder.createSimple(name);
 
         // when
         Simple result = dao.findByQuery(name);
@@ -103,7 +107,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldCreateQueryByMethodName() {
         // given
         final String name = "testCreateQueryByMethodName";
-        createSimple(name);
+        builder.createSimple(name);
 
         // when
         Simple result = dao.findByNameAndEnabled(name, Boolean.TRUE);
@@ -117,8 +121,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldRestrictResultSizeByAnnotation() {
         // given
         final String name = "testRestrictResultSizeByAnnotation";
-        createSimple(name);
-        createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
 
         // when
         List<Simple> result = dao.findByNamedQueryIndexed(name, Boolean.TRUE);
@@ -132,8 +136,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldRestrictResultSizeByParameters() {
         // given
         final String name = "testRestrictResultSizeByParameters";
-        createSimple(name);
-        Simple second = createSimple(name);
+        builder.createSimple(name);
+        Simple second = builder.createSimple(name);
 
         // when
         List<Simple> result = dao.findByNamedQueryRestricted(name, Boolean.TRUE, 1, 1);
@@ -163,7 +167,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldReturnAggregate() {
         // given
         final String name = "testReturnAggregate";
-        createSimple(name);
+        builder.createSimple(name);
 
         // when
         Long result = dao.findCountByQuery(name);
@@ -176,8 +180,8 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldFindWithNativeQuery() {
         // given
         final String name = "testFindWithNativeQuery";
-        createSimple(name);
-        createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
 
         // when
         List<Simple> result = dao.findWithNative(name);
@@ -191,9 +195,9 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldOrderResultByMethodOrderBy() {
         // given
         final String name = "testFindWithNativeQuery";
-        createSimple(name);
-        createSimple(name);
-        createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
+        builder.createSimple(name);
         
         // when
         List<Simple> result = dao.findByOrderByIdDesc();
@@ -213,7 +217,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
         // given
         final String name = "testFindWithNativeQuery";
         final String newName = "testFindWithNativeQueryUpdated" + System.currentTimeMillis();
-        Simple s = createSimple(name);
+        Simple s = builder.createSimple(name);
 
         // when
         int count = dao.updateNameForId(newName, s.getId());
@@ -221,12 +225,10 @@ public class QueryHandlerTest extends TransactionalTestCase {
         // then
         assertEquals(1, count);
     }
-
-    private Simple createSimple(String name) {
-        Simple result = new Simple(name);
-        entityManager.persist(result);
-        entityManager.flush();
-        return result;
+    
+    @Before
+    public void setup() {
+        builder = new SimpleBuilder(entityManager);
     }
 
     private Simple2 createSimple2(String name) {

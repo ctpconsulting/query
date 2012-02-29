@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.meta.result;
+package com.ctp.cdi.query.builder.result;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.ctp.cdi.query.Modifying;
+import com.ctp.cdi.query.QueryResult;
 
 public class QueryProcessorFactory {
 
@@ -20,11 +21,11 @@ public class QueryProcessorFactory {
     }
     
     public QueryProcessor build() {
+        if (returns(QueryResult.class)) {
+            return new NoOpQueryProcessor();
+        }
         if (returns(List.class)) {
             return new ListQueryProcessor();
-        }
-        if (returns(Query.class)) {
-            return new NoopQueryProcessor();
         }
         if (isModifying()) {
             return new ExecuteUpdateQueryProcessor(returns(Void.TYPE));
@@ -50,17 +51,17 @@ public class QueryProcessorFactory {
         }
     }
     
+    private static class NoOpQueryProcessor implements QueryProcessor {
+        @Override
+        public Object executeQuery(Query query) {
+            return query;
+        }
+    }
+    
     private static class SingleResultQueryProcessor implements QueryProcessor {
         @Override
         public Object executeQuery(Query query) {
             return query.getSingleResult();
-        }
-    }
-    
-    private static class NoopQueryProcessor implements QueryProcessor {
-        @Override
-        public Object executeQuery(Query query) {
-            return query;
         }
     }
     

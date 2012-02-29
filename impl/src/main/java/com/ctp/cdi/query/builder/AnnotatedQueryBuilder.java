@@ -32,11 +32,14 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
         Parameters params = context.getParams();
         javax.persistence.Query result = null;
         if (isNotEmpty(query.named())) {
-            result = params.applyTo(entityManager.createNamedQuery(query.named()));
+            String jpqlQuery = context.applyPostProcessors(query.named());
+            result = params.applyTo(entityManager.createNamedQuery(jpqlQuery));
         } else if (isNotEmpty(query.sql())) {
-            result = params.applyTo(entityManager.createNativeQuery(query.sql()));
+            String jpqlQuery = context.applyPostProcessors(query.sql());
+            result = params.applyTo(entityManager.createNativeQuery(jpqlQuery));
         } else {
-            result = params.applyTo(entityManager.createQuery(query.value()));
+            String jpqlQuery = context.applyPostProcessors(query.value());
+            result = params.applyTo(entityManager.createQuery(jpqlQuery));
         }
         return applyRestrictions(context, result);
     }
