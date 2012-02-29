@@ -8,6 +8,8 @@ import java.lang.reflect.Modifier;
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.builder.part.QueryRoot;
 import com.ctp.cdi.query.handler.EntityDaoHandler;
+import com.ctp.cdi.query.meta.result.QueryProcessor;
+import com.ctp.cdi.query.meta.result.QueryProcessorFactory;
 import com.ctp.cdi.query.util.EntityUtils;
 
 /**
@@ -27,12 +29,14 @@ public class DaoMethod {
     private final MethodType methodType;
     private final DaoComponent dao;
     private final QueryRoot queryRoot;
+    private final QueryProcessor queryProcessor;
     
     public DaoMethod(Method method, DaoComponent dao) {
         this.method = method;
         this.dao = dao;
         this.methodType  = extractMethodType();
         this.queryRoot = initQueryRoot();
+        this.queryProcessor = QueryProcessorFactory.newInstance(method).build();
     }
     
     private MethodType extractMethodType() {
@@ -79,6 +83,10 @@ public class DaoMethod {
 
     public QueryRoot getQueryRoot() {
         return queryRoot;
+    }
+
+    public QueryProcessor getQueryProcessor() {
+        return queryProcessor;
     }
 
 }

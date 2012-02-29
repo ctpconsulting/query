@@ -18,11 +18,7 @@ public class MethodQueryBuilder extends QueryBuilder {
     @Override
     public Object execute(QueryInvocationContext context) {
         Query jpaQuery = createJpaQuery(context);
-        if (returnsList(context.getMethod())) {
-            return jpaQuery.getResultList();
-        } else {
-            return jpaQuery.getSingleResult();
-        }
+        return context.executeQuery(jpaQuery);
     }
     
     private Query createJpaQuery(QueryInvocationContext context) {

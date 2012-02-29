@@ -14,10 +14,10 @@ abstract class PersistentClassDescriptor {
     final String id;
 
     PersistentClassDescriptor(String name, String packageName, String className, String idClass, String id) {
-        Class<?> entityClass = entityClass(className, packageName);
+        Class<?> clazz = entityClass(className, packageName);
         this.name = name;
-        this.entityClass = entityClass;
-        this.idClass = idClass(entityClass, idClass, packageName, id);
+        this.entityClass = clazz;
+        this.idClass = idClass(clazz, idClass, packageName, id);
         this.id = id;
     }
 

@@ -10,12 +10,14 @@ public class DescriptorHierarchyBuilder {
     private final List<EntityDescriptor> entities;
     private final List<MappedSuperclassDescriptor> superClasses;
 
-    private DescriptorHierarchyBuilder(List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses) {
+    private DescriptorHierarchyBuilder(List<EntityDescriptor> entities,
+            List<MappedSuperclassDescriptor> superClasses) {
         this.entities = entities;
         this.superClasses = superClasses;
     }
     
-    public static DescriptorHierarchyBuilder newInstance(List<EntityDescriptor> entities, List<MappedSuperclassDescriptor> superClasses) {
+    public static DescriptorHierarchyBuilder newInstance(List<EntityDescriptor> entities,
+            List<MappedSuperclassDescriptor> superClasses) {
         return new DescriptorHierarchyBuilder(entities, superClasses);
     }
     

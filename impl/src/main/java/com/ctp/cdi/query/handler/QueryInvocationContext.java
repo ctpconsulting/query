@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.ctp.cdi.query.meta.DaoMethod;
 import com.ctp.cdi.query.param.Parameters;
@@ -22,6 +23,10 @@ public class QueryInvocationContext {
         this.invocation = invocation;
         this.daoMethod = daoMethod;
         this.entityClass = daoMethod.getDao().getEntityClass();
+    }
+    
+    public Object executeQuery(Query jpaQuery) {
+        return daoMethod.getQueryProcessor().executeQuery(jpaQuery);
     }
     
     public Method getMethod() {

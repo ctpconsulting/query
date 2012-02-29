@@ -24,11 +24,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
         Method method = context.getMethod();
         Query query = method.getAnnotation(Query.class);
         javax.persistence.Query jpaQuery = createJpaQuery(query, context);
-        if (returnsList(method)) {
-            return jpaQuery.getResultList();
-        } else {
-            return jpaQuery.getSingleResult();
-        }
+        return context.executeQuery(jpaQuery);
     }
     
     private javax.persistence.Query createJpaQuery(Query query, QueryInvocationContext context) {

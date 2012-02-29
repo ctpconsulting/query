@@ -207,6 +207,20 @@ public class QueryHandlerTest extends TransactionalTestCase {
             last = simple.getId().longValue();
         }
     }
+    
+    @Test
+    public void shouldExecuteUpdate() {
+        // given
+        final String name = "testFindWithNativeQuery";
+        final String newName = "testFindWithNativeQueryUpdated" + System.currentTimeMillis();
+        Simple s = createSimple(name);
+
+        // when
+        int count = dao.updateNameForId(newName, s.getId());
+
+        // then
+        assertEquals(1, count);
+    }
 
     private Simple createSimple(String name) {
         Simple result = new Simple(name);

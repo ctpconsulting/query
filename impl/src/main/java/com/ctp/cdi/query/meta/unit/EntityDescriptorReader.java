@@ -21,31 +21,36 @@ public class EntityDescriptorReader extends DescriptorReader {
             Descriptor desc = read(baseUrl, PersistenceUnit.DEFAULT_ORM_PATH);
             return readFromDocument(desc.getDocument());
         } catch (IllegalArgumentException e) {
-            return new MappingFile(Collections.<EntityDescriptor>emptyList(), Collections.<MappedSuperclassDescriptor>emptyList());
+            return new MappingFile(Collections.<EntityDescriptor>emptyList(),
+                    Collections.<MappedSuperclassDescriptor>emptyList());
         }
     }
     
     public MappingFile readFromDocument(Document doc) {
         List<EntityDescriptor> entities = new EntityBuilder<EntityDescriptor>() {
             @Override
-            EntityDescriptor instance(String name, String packageName, String className, String idClass, String id) {
+            EntityDescriptor instance(String name, String packageName, String className,
+                    String idClass, String id) {
                 return new EntityDescriptor(name, packageName, className, idClass, id);
             }
             @Override
             String tagName() {
                 return "entity";
             }
-        }.build(doc);
+        }
+        .build(doc);
         List<MappedSuperclassDescriptor> superClasses = new EntityBuilder<MappedSuperclassDescriptor>() {
             @Override
-            MappedSuperclassDescriptor instance(String name, String packageName, String className, String idClass, String id) {
+            MappedSuperclassDescriptor instance(String name, String packageName, String className, 
+                    String idClass, String id) {
                 return new MappedSuperclassDescriptor(name, packageName, className, idClass, id);
             }
             @Override
             String tagName() {
                 return "mapped-superclass";
             }
-        }.build(doc);
+        }
+        .build(doc);
         return new MappingFile(entities, superClasses);
     }
 

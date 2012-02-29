@@ -8,6 +8,7 @@ import javax.persistence.LockModeType;
 import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.FirstResult;
 import com.ctp.cdi.query.MaxResults;
+import com.ctp.cdi.query.Modifying;
 import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.QueryParam;
 import com.ctp.cdi.query.test.domain.Simple;
@@ -54,6 +55,9 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
     
     @Query(sql = "SELECT * from SIMPLE_TABLE s WHERE s.name = ?1")
     public abstract List<Simple> findWithNative(String name);
+
+    @Modifying @Query("update Simple as s set s.name = ?1 where s.id = ?2")
+    public abstract int updateNameForId(String name, Long id);
     
     @Override
     protected abstract EntityManager getEntityManager();
