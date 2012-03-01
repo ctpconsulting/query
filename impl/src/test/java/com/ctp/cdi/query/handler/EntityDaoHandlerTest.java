@@ -136,6 +136,19 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
+    public void shouldFindByAllWithStartAndMax() {
+        // given
+        createSimple("testFindAll1");
+        createSimple("testFindAll2");
+
+        // when
+        List<Simple> find = dao.findAll(0,1);
+
+        // then
+        Assert.assertEquals(1, find.size());
+    }
+
+    @Test
     public void shouldCountAll() {
         // given
         createSimple("testCountAll");
