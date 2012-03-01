@@ -195,20 +195,30 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void shouldOrderResultByMethodOrderBy() {
         // given
         final String name = "testFindWithNativeQuery";
-        builder.createSimple(name);
-        builder.createSimple(name);
-        builder.createSimple(name);
+        builder.createSimple(name, Integer.valueOf(33));
+        builder.createSimple(name, Integer.valueOf(66));
+        builder.createSimple(name, Integer.valueOf(66));
+        builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(55));
         
         // when
-        List<Simple> result = dao.findByOrderByIdDesc();
+        List<Simple> result = dao.findByOrderByCounterAscIdDesc();
         
         // then
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        long last = Long.MAX_VALUE;
+        long lastId = Long.MAX_VALUE;
+        int lastCounter = Integer.MIN_VALUE;
         for (Simple simple : result) {
-            assertTrue(simple.getId().longValue() < last);
-            last = simple.getId().longValue();
+            long currentId = simple.getId().longValue();
+            int currentCounter = simple.getCounter().intValue();
+            if (currentCounter == lastCounter) {
+                assertTrue(currentId < lastId);                
+            } else {
+                assertTrue(currentCounter > lastCounter);
+            }
+            lastId = currentId;
+            lastCounter = currentCounter;
         }
     }
     

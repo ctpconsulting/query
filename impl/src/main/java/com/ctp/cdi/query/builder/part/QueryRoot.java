@@ -54,7 +54,7 @@ public class QueryRoot extends QueryPart {
             }
         }
         if (orderByParts.length > 1) {
-            OrderByPart orderByPart = new OrderByPart();
+            OrderByQueryPart orderByPart = new OrderByQueryPart();
             children.add(orderByPart.build(orderByParts[1]));
         }
         return this;
@@ -80,7 +80,7 @@ public class QueryRoot extends QueryPart {
     
     private Set<Class<? extends QueryPart>> excludedForWhereCheck() {
         Set<Class<? extends QueryPart>> excluded = new HashSet<Class<? extends QueryPart>>();
-        excluded.add(OrderByPart.class);
+        excluded.add(OrderByQueryPart.class);
         return excluded;
     }
     

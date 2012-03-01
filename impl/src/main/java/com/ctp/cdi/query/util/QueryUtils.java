@@ -17,6 +17,15 @@ public final class QueryUtils {
         return query.split(MessageFormat.format(KEYWORD_SPLITTER, keyword));
     }
     
+    public static String[] splitByKeywordPreserve(String query, String keyword) {
+        String[] splitted = splitByKeyword(query, keyword);
+        String[] result = new String[splitted.length];
+        for (int i = 0; i < splitted.length; i++) {
+            result[i] = splitted[i] + (i + 1 == splitted.length ? keyword : "");
+        }
+        return result;
+    }
+    
     public static String uncapitalize(String value) {
         if (value == null) {
             return null;
