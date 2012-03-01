@@ -123,6 +123,19 @@ public interface PersonDao extends EntityDao<Person, Long> {
         </para>
     </section>
     
+    <section id="methodexpressions-ordering">
+        <title>Query Ordering</title>
+        <para>
+            Beside comparators it's also possible to sort queries by using the <literal>OrderBy</literal> keyword, followed
+            by the attribute name and the direction (<literal>Asc</literal> or <literal>Desc</literal>).
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+
+    List<Person> findByLastNameLikeOrderByAgeAscLastNameDesc(String lastName);
+
+}]]>    </programlisting>
+    </section>
+    
     <section id="methodexpressions-options">
         <title>Query Options</title>
         <para>

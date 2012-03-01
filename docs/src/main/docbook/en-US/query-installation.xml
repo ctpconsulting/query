@@ -21,7 +21,7 @@
         <title>Maven dependency configuration</title>
         <para>
             If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool, you can add the
-            following dependencies to your pom.xml file to include the CDI Query module (NOT YET RELEASED):
+            following dependencies to your pom.xml file to include the CDI Query module:
         </para>
         <programlisting role="XML"><![CDATA[<dependency>
     <groupId>com.ctp.cdi.query</groupId>
@@ -41,8 +41,7 @@
             <para>
                 Substitute the expression ${cdi.query.version} with the most recent or appropriate version of the CDI Query module.
                 Alternatively, you can create a
-                <ulink
-                    href="http://www.sonatype.com/books/mvnref-book/reference/resource-filtering-sect-properties.html#resource-filtering-sect-user-defined">Maven
+                <ulink href="http://www.sonatype.com/books/mvnref-book/reference/resource-filtering-sect-properties.html">Maven
                     user-defined property
                 </ulink>
                 to satisfy this substitution so you can centrally manage the version.
