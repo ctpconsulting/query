@@ -47,22 +47,32 @@ public class QueryResultTest extends TransactionalTestCase {
         final String name = "testSortResult";
         builder.createSimple(name, Integer.valueOf(99));
         builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(22));
         builder.createSimple(name, Integer.valueOf(56));
         builder.createSimple(name, Integer.valueOf(123));
         
         // when
         List<Simple> result = dao.findByName(name)
                 .orderDesc(Simple_.counter)
+                .orderAsc(Simple_.id)
                 .getResultList();
         
         // then
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        int last = Integer.MAX_VALUE;
+        int lastCounter = Integer.MAX_VALUE;
+        long lastId = Long.MIN_VALUE;
         for (Simple simple : result) {
-            int current = simple.getCounter().intValue();
-            assertTrue(current < last);
-            last = current;
+            int currentCounter = simple.getCounter().intValue();
+            long currentId = simple.getId().longValue();
+            if (currentCounter == lastCounter) {
+                assertTrue(currentId > lastId);
+            } else {
+                assertTrue(currentCounter < lastCounter);
+            }
+            lastCounter = currentCounter;
+            lastId = currentId;
         }
     }
     

@@ -25,9 +25,21 @@ public class DefaultQueryResult<T> implements QueryResult<T> {
         context.addPostProcessor(new OrderByQueryStringPostProcessor(order, "asc"));
         return this;
     }
+    
+    @Override
+    public <X> QueryResult<T> orderAsc(String order) {
+        context.addPostProcessor(new OrderByQueryStringPostProcessor(order, "asc"));
+        return this;
+    }
 
     @Override
     public <X> QueryResult<T> orderDesc(SingularAttribute<T, X> order) {
+        context.addPostProcessor(new OrderByQueryStringPostProcessor(order, "desc"));
+        return this;
+    }
+    
+    @Override
+    public <X> QueryResult<T> orderDesc(String order) {
         context.addPostProcessor(new OrderByQueryStringPostProcessor(order, "desc"));
         return this;
     }
