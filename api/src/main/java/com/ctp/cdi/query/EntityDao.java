@@ -58,6 +58,14 @@ public interface EntityDao<E, PK extends Serializable> {
      * @return                  List of entities, empty if none found.
      */
     List<E> findAll();
+
+    /**
+     * Lookup a range of existing entities of entity class {@code <E>} with support for pagination.
+     * @param start             The starting position.
+     * @param max               The maximum number of results to return
+     * @return                  List of entities, empty if none found.
+     */
+    List<E> findAll(int start, int max);
     
     /**
      * Query by example - for a given object and a specific set of properties.

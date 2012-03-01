@@ -103,6 +103,11 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
     }
 
     @Override
+    public List<E> findAll(int start, int max) {
+        return entityManager.createQuery(allQuery()).setFirstResult(start).setMaxResults(max).getResultList();
+    }
+
+    @Override
     public Long count() {
         return entityManager.createQuery(countQuery(), Long.class).getSingleResult();
     }
