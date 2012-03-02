@@ -15,7 +15,11 @@ public interface QueryResult<T> {
 
     <X> QueryResult<T> orderAsc(SingularAttribute<T, X> order);
     
+    <X> QueryResult<T> orderAsc(String order);
+    
     <X> QueryResult<T> orderDesc(SingularAttribute<T, X> order);
+    
+    <X> QueryResult<T> orderDesc(String order);
     
     List<T> getResultList();
     

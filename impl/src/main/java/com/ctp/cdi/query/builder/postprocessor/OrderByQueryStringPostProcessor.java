@@ -25,13 +25,13 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
 
     @Override
     public String postProcess(String queryString) {
-        String base = queryString;
-        if (base.contains(ORDER_BY)) {
-            base = base.substring(0, base.indexOf(ORDER_BY));
+        StringBuilder builder = new StringBuilder(queryString);
+        if (queryString.contains(ORDER_BY)) {
+            builder.append(",");
+        } else {
+            builder.append(ORDER_BY);
         }
-        StringBuilder builder = new StringBuilder(base);
-        return builder.append(ORDER_BY)
-                .append(QueryBuilder.ENTITY_NAME).append(".").append(attribute)
+        return builder.append(QueryBuilder.ENTITY_NAME).append(".").append(attribute)
                 .append(" ").append(direction)
                 .toString();
     }

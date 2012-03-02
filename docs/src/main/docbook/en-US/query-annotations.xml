@@ -112,5 +112,33 @@ public interface PersonDao extends EntityDao<Person, Long> {
             Note that these options can also be applied to <xref linkend="methodexpressions"/>
         </para>
     </section>
+    
+    <section id="annotations-queryoptions">
+        <title>Query Options</title>
+        <para>
+            All the query options you have seen so far are more or less static.
+            But sometimes you might want to apply certain query options dynamically.
+            For example, sorting criterias could come from a user selection so they
+            cannot be know before. CDI query allows to apply query options at runtime
+            by using the <literal>QueryResult</literal> result type:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+    @Query(named = Person.BY_AGE_RANGE)
+    QueryResult<Person> findAllByAge(int minAge, int maxAge);
+}]]>    </programlisting>
+        <para>
+            Once you have obtained a <literal>QueryResult</literal>, you can apply further
+            options and restrictions to the query:
+        </para>
+        <programlisting role="JAVA"><![CDATA[List<Person> result = personDao.findAllByAge(18, 65)
+    .sortAsc(Person_.lastName)
+    .sortDesc(Person_.age).
+    .getResultList();
+}]]>    </programlisting>
+        <para>
+            Note that the <literal>QueryResult</literal> return type can also be used 
+            with <xref linkend="methodexpressions"/>.
+        </para>
+    </section>
 
 </chapter>
