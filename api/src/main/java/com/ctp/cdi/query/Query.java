@@ -20,9 +20,31 @@ import javax.persistence.LockModeType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Query {
+    
+    /**
+     * Defines the Query to execute. Can be left empty for method expression queries
+     * or when referencing a {@link #named()} query.
+     */
     String value() default "";
+    
+    /**
+     * References a named query.
+     */
     String named() default "";
+    
+    /**
+     * Defines a native SQL query.
+     */
     String sql() default "";
+    
+    /**
+     * Limits the number of results the query returns.
+     */
     int max() default 0;
+    
+    /**
+     * Defines a lock mode for the query.
+     */
     LockModeType lock() default LockModeType.NONE;
+    
 }

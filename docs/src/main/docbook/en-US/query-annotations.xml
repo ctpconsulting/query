@@ -123,7 +123,7 @@ public interface PersonDao extends EntityDao<Person, Long> {
             by using the <literal>QueryResult</literal> result type:
         </para>
         <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
-    @Query(named = Person.BY_AGE_RANGE)
+    @Query("select p from Person p where p.age between ?1 and ?2")
     QueryResult<Person> findAllByAge(int minAge, int maxAge);
 }]]>    </programlisting>
         <para>
@@ -133,8 +133,16 @@ public interface PersonDao extends EntityDao<Person, Long> {
         <programlisting role="JAVA"><![CDATA[List<Person> result = personDao.findAllByAge(18, 65)
     .sortAsc(Person_.lastName)
     .sortDesc(Person_.age).
+    .firstResult(10)
+    .maxResults(10)
     .getResultList();
 }]]>    </programlisting>
+        <warning>
+            <para>
+                Note that sorting is only applicable to method expressions or non-named
+                queries.
+            </para>
+        </warning>
         <para>
             Note that the <literal>QueryResult</literal> return type can also be used 
             with <xref linkend="methodexpressions"/>.

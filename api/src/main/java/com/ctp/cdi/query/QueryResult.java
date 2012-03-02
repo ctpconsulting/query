@@ -19,6 +19,9 @@ public interface QueryResult<T> {
      * Sort the query result ascending by the given entity singular attribute.
      * This is the typesafe version, alternatively a {@link #orderAsc(String)} 
      * String can be used.
+     * 
+     * Note that this is not applicable to named queries.
+     * 
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
@@ -26,6 +29,9 @@ public interface QueryResult<T> {
     
     /**
      * Sort the query result ascending by the given entity attribute.
+     * 
+     * Note that this is not applicable to named queries.
+     * 
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
@@ -35,6 +41,9 @@ public interface QueryResult<T> {
      * Sort the query result descending by the given entity singular attribute.
      * This is the typesafe version, alternatively a {@link #orderDesc(String)} 
      * String can be used.
+     * 
+     * Note that this is not applicable to named queries.
+     * 
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
@@ -42,6 +51,9 @@ public interface QueryResult<T> {
     
     /**
      * Sort the query result descending by the given entity attribute.
+     * 
+     * Note that this is not applicable to named queries.
+     * 
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
