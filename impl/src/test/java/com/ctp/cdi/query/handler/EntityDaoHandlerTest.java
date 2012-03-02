@@ -6,6 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
@@ -17,10 +18,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
 
 public class EntityDaoHandlerTest extends TransactionalTestCase {
 
@@ -123,6 +121,39 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindByExampleWithStartAndMax() throws Exception {
+        // given
+        Simple simple = createSimple("testFindByExample1");
+        createSimple("testFindByExample1");
+
+        // when
+        List<Simple> find = dao.findBy(simple,0,1, Simple_.name);
+
+        // then
+        assertNotNull(find);
+        assertFalse(find.isEmpty());
+        assertEquals(1,find.size());
+        assertEquals(simple.getName(), find.get(0).getName());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindByExampleWithNoAttributes() throws Exception {
+        // given
+        Simple simple = createSimple("testFindByExample");
+        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+
+        // when
+        List<Simple> find = dao.findBy(simple, attributes);
+
+        // then
+        assertNotNull(find);
+        assertFalse(find.isEmpty());
+        assertEquals(simple.getName(), find.get(0).getName());
+    }
+
+    @Test
     public void shouldFindByAll() {
         // given
         createSimple("testFindAll1");
@@ -158,6 +189,33 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
         // then
         assertEquals(Long.valueOf(1), result);
+    }
+
+    @Test
+    public void shouldCountWithAttributes() {
+        // given
+        Simple simple = createSimple("testFindAll1");
+        createSimple("testFindAll2");
+
+        // when
+        Long result = dao.count(simple,Simple_.name);
+
+        // then
+        assertEquals(Long.valueOf(1), result);
+    }
+
+    @Test
+    public void shouldCountWithNoAttributes() {
+        // given
+        Simple simple = createSimple("testFindAll1");
+        createSimple("testFindAll2");
+        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+
+        // when
+        Long result = dao.count(simple,attributes);
+
+        // then
+        assertEquals(Long.valueOf(2), result);
     }
 
     @Test
