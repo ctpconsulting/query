@@ -161,6 +161,19 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
+    public void shouldCountWithAttributes() {
+        // given
+        Simple simple = createSimple("testFindAll1");
+        createSimple("testFindAll2");
+
+        // when
+        Long result = dao.count(simple,Simple_.name);
+
+        // then
+        assertEquals(Long.valueOf(1), result);
+    }
+
+    @Test
     public void shouldRemove() {
         // given
         Simple simple = createSimple("testRemove");

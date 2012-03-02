@@ -83,4 +83,14 @@ public interface EntityDao<E, PK extends Serializable> {
      */
     Long count();
 
+    /**
+     * Count existing entities of entity class {@code <E>}
+     * with for a given object and a specific set of properties..
+     * @param example           Sample entity. Query all like.
+     * @param attributes        Which attributes to consider for the query.
+     *
+     * @return                  Counter.
+     */
+    Long count(E example, SingularAttribute<E, ?>... attributes);
+
 }
