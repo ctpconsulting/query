@@ -1,5 +1,10 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
@@ -8,17 +13,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.SingularAttribute;
 
+import junit.framework.Assert;
+
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
+
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple_;
 import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
 import com.ctp.cdi.query.test.util.Deployments;
-import junit.framework.Assert;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-
-import static junit.framework.Assert.*;
 
 public class EntityDaoHandlerTest extends TransactionalTestCase {
 
@@ -124,11 +129,11 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     @SuppressWarnings("unchecked")
     public void shouldFindByExampleWithStartAndMax() throws Exception {
         // given
-        Simple simple = createSimple("testFindByExample1");
-        createSimple("testFindByExample1");
+        Simple simple = createSimple("testFindByExample1", Integer.valueOf(10));
+        createSimple("testFindByExample1", Integer.valueOf(10));
 
         // when
-        List<Simple> find = dao.findBy(simple,0,1, Simple_.name);
+        List<Simple> find = dao.findBy(simple, 0, 1, Simple_.name, Simple_.counter);
 
         // then
         assertNotNull(find);
@@ -142,7 +147,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     public void shouldFindByExampleWithNoAttributes() throws Exception {
         // given
         Simple simple = createSimple("testFindByExample");
-        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+        SingularAttribute<Simple, ?>[] attributes = new SingularAttribute[] {};
 
         // when
         List<Simple> find = dao.findBy(simple, attributes);
@@ -173,7 +178,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         createSimple("testFindAll2");
 
         // when
-        List<Simple> find = dao.findAll(0,1);
+        List<Simple> find = dao.findAll(0, 1);
 
         // then
         Assert.assertEquals(1, find.size());
@@ -192,27 +197,29 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldCountWithAttributes() {
         // given
-        Simple simple = createSimple("testFindAll1");
-        createSimple("testFindAll2");
+        Simple simple = createSimple("testFindAll1", Integer.valueOf(55));
+        createSimple("testFindAll2", Integer.valueOf(55));
 
         // when
-        Long result = dao.count(simple,Simple_.name);
+        Long result = dao.count(simple, Simple_.name, Simple_.counter);
 
         // then
         assertEquals(Long.valueOf(1), result);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldCountWithNoAttributes() {
         // given
         Simple simple = createSimple("testFindAll1");
         createSimple("testFindAll2");
-        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+        SingularAttribute<Simple, Object>[] attributes = new SingularAttribute[] {};
 
         // when
-        Long result = dao.count(simple,attributes);
+        Long result = dao.count(simple, attributes);
 
         // then
         assertEquals(Long.valueOf(2), result);
@@ -231,9 +238,14 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         // then
         assertNull(lookup);
     }
-
+    
     private Simple createSimple(String name) {
+        return createSimple(name, null);
+    }
+
+    private Simple createSimple(String name, Integer counter) {
         Simple result = new Simple(name);
+        result.setCounter(counter);
         entityManager.persist(result);
         entityManager.flush();
         return result;

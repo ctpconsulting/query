@@ -1,5 +1,7 @@
 package com.ctp.cdi.query.handler;
 
+import static com.ctp.cdi.query.util.QueryUtils.isEmpty;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -86,15 +88,16 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
-        return findBy(example,-1,-1,attributes);
+        return findBy(example, -1, -1, attributes);
     }
 
+    @Override
     public List<E> findBy(E example, int start, int max, SingularAttribute<E, ?>... attributes) {
         //Not sure if this should be the intended behaviour
         //when we don't get any attributes maybe we should
         //return a empty list instead of all results
-        if(attributes == null || attributes.length == 0) {
-            return findAll(start,max);
+        if (isEmpty(attributes)) {
+            return findAll(start, max);
         }
 
         List<Property<Object>> properties = extractProperties(attributes);
@@ -102,13 +105,13 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         log.debugv("findBy: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
 
-        //set starting position
-        if(start > 0) {
+        // set starting position
+        if (start > 0) {
             query.setFirstResult(start);
         }
 
-        //set maximum results
-        if(max > 0) {
+        // set maximum results
+        if (max > 0) {
             query.setMaxResults(max);
         }
 
@@ -124,11 +127,10 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
     @Override
     public List<E> findAll(int start, int max) {
         TypedQuery<E> query = entityManager.createQuery(allQuery(),entityClass);
-        if(start > 0) {
+        if (start > 0) {
             query.setFirstResult(start);
         }
-
-        if(max > 0) {
+        if (max > 0) {
             query.setMaxResults(max);
         }
         return query.getResultList();
@@ -141,11 +143,9 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public Long count(E example, SingularAttribute<E, ?>... attributes) {
-
-        if(attributes == null || attributes.length == 0) {
+        if (isEmpty(attributes)) {
             return count();
         }
-
         List<Property<Object>> properties = extractProperties(attributes);
         String jpqlQuery = exampleQuery(countQuery(),properties);
         log.debugv("count: Created query {0}", jpqlQuery);
@@ -225,7 +225,7 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         return result;
     }
     
-    private  List<Property<Object>> extractProperties(SingularAttribute...attributes) {
+    private  List<Property<Object>> extractProperties(SingularAttribute<E, ?>... attributes) {
         List<String> names = extractPropertyNames(attributes);
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
                 .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
