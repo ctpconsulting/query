@@ -86,13 +86,32 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
-        StringBuilder jpqlQuery = new StringBuilder(allQuery()).append(" where ");
-        List<String> names = extractPropertyNames(attributes);
-        List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
-                .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
-        jpqlQuery.append(prepareWhere(properties));
+        return findBy(example,-1,-1,attributes);
+    }
+
+    public List<E> findBy(E example, int start, int max, SingularAttribute<E, ?>... attributes) {
+        //Not sure if this should be the intended behaviour
+        //when we don't get any attributes maybe we should
+        //return a empty list instead of all results
+        if(attributes == null || attributes.length == 0) {
+            return findAll(start,max);
+        }
+
+        List<Property<Object>> properties = extractProperties(attributes);
+        String jpqlQuery = exampleQuery(allQuery(),properties);
         log.debugv("findBy: Created query {0}", jpqlQuery);
-        TypedQuery<E> query = entityManager.createQuery(jpqlQuery.toString(), entityClass);
+        TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+
+        //set starting position
+        if(start > 0) {
+            query.setFirstResult(start);
+        }
+
+        //set maximum results
+        if(max > 0) {
+            query.setMaxResults(max);
+        }
+
         addParameters(query, example, properties);
         return query.getResultList();
     }
@@ -104,12 +123,35 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findAll(int start, int max) {
-        return entityManager.createQuery(allQuery()).setFirstResult(start).setMaxResults(max).getResultList();
+        TypedQuery<E> query = entityManager.createQuery(allQuery(),entityClass);
+        if(start > 0) {
+            query.setFirstResult(start);
+        }
+
+        if(max > 0) {
+            query.setMaxResults(max);
+        }
+        return query.getResultList();
     }
 
     @Override
     public Long count() {
         return entityManager.createQuery(countQuery(), Long.class).getSingleResult();
+    }
+
+    @Override
+    public Long count(E example, SingularAttribute<E, ?>... attributes) {
+
+        if(attributes == null || attributes.length == 0) {
+            return count();
+        }
+
+        List<Property<Object>> properties = extractProperties(attributes);
+        String jpqlQuery = exampleQuery(countQuery(),properties);
+        log.debugv("count: Created query {0}", jpqlQuery);
+        TypedQuery<Long> query = entityManager.createQuery(jpqlQuery, Long.class);
+        addParameters(query, example, properties);
+        return query.getSingleResult();
     }
 
     @Override
@@ -151,7 +193,13 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         return QueryBuilder.countQuery(entityName);
     }
 
-    private void addParameters(TypedQuery<E> query, E example, List<Property<Object>> properties) {
+    private String exampleQuery(String queryBase, List<Property<Object>> properties) {
+        StringBuilder jpqlQuery = new StringBuilder(queryBase).append(" where ");
+        jpqlQuery.append(prepareWhere(properties));
+        return jpqlQuery.toString();
+    }
+
+    private void addParameters(TypedQuery<?> query, E example, List<Property<Object>> properties) {
         for (Property<Object> property : properties) {
             property.setAccessible();
             query.setParameter(property.getName(), property.getValue(example));
@@ -175,6 +223,13 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
             result.add(attribute.getName());
         }
         return result;
+    }
+    
+    private  List<Property<Object>> extractProperties(SingularAttribute...attributes) {
+        List<String> names = extractPropertyNames(attributes);
+        List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
+                .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
+        return properties;
     }
 
 }
