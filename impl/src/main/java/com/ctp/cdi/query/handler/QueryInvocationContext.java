@@ -18,7 +18,8 @@ public class QueryInvocationContext {
     private final InvocationContext invocation;
     private final Class<?> entityClass;
     private final DaoMethod daoMethod;
-    private final List<QueryStringPostProcessor> postProcessors;
+    private final List<QueryStringPostProcessor> queryPostProcessors;
+    private final List<JpaQueryPostProcessor> jpaPostProcessors;
     
     public QueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -26,19 +27,31 @@ public class QueryInvocationContext {
         this.invocation = invocation;
         this.daoMethod = daoMethod;
         this.entityClass = daoMethod.getDao().getEntityClass();
-        this.postProcessors = new LinkedList<QueryStringPostProcessor>();
+        this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
+        this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
     }
     
-    public void addPostProcessor(QueryStringPostProcessor postProcessor) {
-        postProcessors.add(postProcessor);
+    public void addQueryStringPostProcessor(QueryStringPostProcessor postProcessor) {
+        queryPostProcessors.add(postProcessor);
     }
     
-    public String applyPostProcessors(String queryString) {
+    public void addJpaQueryPostProcessor(JpaQueryPostProcessor postProcessor) {
+        jpaPostProcessors.add(postProcessor);
+    }
+    
+    public String applyQueryStringPostProcessors(String queryString) {
         String result = queryString;
-        for (QueryStringPostProcessor processor : postProcessors) {
+        for (QueryStringPostProcessor processor : queryPostProcessors) {
             result = processor.postProcess(result);
         }
         return result;
+    }
+    
+    public Query applyJpaQueryPostProcessors(Query query) {
+        for (JpaQueryPostProcessor processor : jpaPostProcessors) {
+            processor.postProcess(query);
+        }
+        return query;
     }
     
     public Object executeQuery(Query jpaQuery) {

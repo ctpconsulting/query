@@ -11,9 +11,8 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
     
     private final String attribute;
     private final String direction;
-    
-    @SuppressWarnings("rawtypes")
-    public OrderByQueryStringPostProcessor(SingularAttribute attribute, String direction) {
+
+    public OrderByQueryStringPostProcessor(SingularAttribute<?, ?> attribute, String direction) {
         this.attribute = attribute.getName();
         this.direction = direction;
     }

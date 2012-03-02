@@ -17,20 +17,14 @@ public class MethodQueryBuilder extends QueryBuilder {
     
     @Override
     public Object execute(QueryInvocationContext context) {
-        try {
-            Query jpaQuery = createJpaQuery(context);
-            return context.executeQuery(jpaQuery);
-        } catch (RuntimeException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw e;
-        }
+        Query jpaQuery = createJpaQuery(context);
+        return context.executeQuery(jpaQuery);
     }
     
     private Query createJpaQuery(QueryInvocationContext context) {
         Parameters params = context.getParams();
         QueryRoot root = context.getDaoMethod().getQueryRoot();
-        String jpqlQuery = context.applyPostProcessors(root.getJpqlQuery());
+        String jpqlQuery = context.applyQueryStringPostProcessors(root.getJpqlQuery());
         Query result = params.applyTo(context.getEntityManager().createQuery(jpqlQuery));
         return applyRestrictions(context, result);
     }
