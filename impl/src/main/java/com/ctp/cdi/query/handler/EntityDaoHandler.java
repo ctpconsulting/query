@@ -86,6 +86,14 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
+
+        //Not sure if this should be the intended behaviour
+        //when we don't get any attributes maybe we should
+        //return a empty list instead of all results
+        if(attributes == null || attributes.length == 0) {
+            return findAll();
+        }
+
         List<Property<Object>> properties = extractProperties(attributes);
         String jpqlQuery = exampleQuery(allQuery(),properties);
         log.debugv("findBy: Created query {0}", jpqlQuery);
@@ -111,6 +119,11 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public Long count(E example, SingularAttribute<E, ?>... attributes) {
+
+        if(attributes == null || attributes.length == 0) {
+            return count();
+        }
+
         List<Property<Object>> properties = extractProperties(attributes);
         String jpqlQuery = exampleQuery(countQuery(),properties);
         log.debugv("count: Created query {0}", jpqlQuery);

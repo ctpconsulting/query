@@ -6,6 +6,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
@@ -123,6 +124,22 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindByExampleWithNoAttributes() throws Exception {
+        // given
+        Simple simple = createSimple("testFindByExample");
+        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+
+        // when
+        List<Simple> find = dao.findBy(simple, attributes);
+
+        // then
+        assertNotNull(find);
+        assertFalse(find.isEmpty());
+        assertEquals(simple.getName(), find.get(0).getName());
+    }
+
+    @Test
     public void shouldFindByAll() {
         // given
         createSimple("testFindAll1");
@@ -171,6 +188,20 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
         // then
         assertEquals(Long.valueOf(1), result);
+    }
+
+    @Test
+    public void shouldCountWithNoAttributes() {
+        // given
+        Simple simple = createSimple("testFindAll1");
+        createSimple("testFindAll2");
+        SingularAttribute<Simple,?> [] attributes = new SingularAttribute[]{};
+
+        // when
+        Long result = dao.count(simple,attributes);
+
+        // then
+        assertEquals(Long.valueOf(2), result);
     }
 
     @Test
