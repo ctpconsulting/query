@@ -86,7 +86,10 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
+        return findBy(example,-1,-1,attributes);
+    }
 
+    public List<E> findBy(E example, int start, int max, SingularAttribute<E, ?>... attributes) {
         //Not sure if this should be the intended behaviour
         //when we don't get any attributes maybe we should
         //return a empty list instead of all results
@@ -98,6 +101,17 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         String jpqlQuery = exampleQuery(allQuery(),properties);
         log.debugv("findBy: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+
+        //set starting position
+        if(start > 0) {
+            query.setFirstResult(start);
+        }
+
+        //set maximum results
+        if(max > 0) {
+            query.setMaxResults(max);
+        }
+
         addParameters(query, example, properties);
         return query.getResultList();
     }
@@ -109,7 +123,7 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findAll(int start, int max) {
-        return entityManager.createQuery(allQuery()).setFirstResult(start).setMaxResults(max).getResultList();
+        return entityManager.createQuery(allQuery(),entityClass).setFirstResult(start).setMaxResults(max).getResultList();
     }
 
     @Override

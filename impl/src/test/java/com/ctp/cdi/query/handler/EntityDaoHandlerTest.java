@@ -18,10 +18,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
 
 public class EntityDaoHandlerTest extends TransactionalTestCase {
 
@@ -120,6 +117,23 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         // then
         assertNotNull(find);
         assertFalse(find.isEmpty());
+        assertEquals(simple.getName(), find.get(0).getName());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldFindByExampleWithStartAndMax() throws Exception {
+        // given
+        Simple simple = createSimple("testFindByExample1");
+        createSimple("testFindByExample1");
+
+        // when
+        List<Simple> find = dao.findBy(simple,0,1, Simple_.name);
+
+        // then
+        assertNotNull(find);
+        assertFalse(find.isEmpty());
+        assertEquals(1,find.size());
         assertEquals(simple.getName(), find.get(0).getName());
     }
 
