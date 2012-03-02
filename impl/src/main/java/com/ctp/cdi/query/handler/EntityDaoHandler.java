@@ -94,7 +94,7 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         //when we don't get any attributes maybe we should
         //return a empty list instead of all results
         if(attributes == null || attributes.length == 0) {
-            return findAll();
+            return findAll(start,max);
         }
 
         List<Property<Object>> properties = extractProperties(attributes);
@@ -123,7 +123,15 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
 
     @Override
     public List<E> findAll(int start, int max) {
-        return entityManager.createQuery(allQuery(),entityClass).setFirstResult(start).setMaxResults(max).getResultList();
+        TypedQuery<E> query = entityManager.createQuery(allQuery(),entityClass);
+        if(start > 0) {
+            query.setFirstResult(start);
+        }
+
+        if(max > 0) {
+            query.setMaxResults(max);
+        }
+        return query.getResultList();
     }
 
     @Override
