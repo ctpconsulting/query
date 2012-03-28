@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.processor;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

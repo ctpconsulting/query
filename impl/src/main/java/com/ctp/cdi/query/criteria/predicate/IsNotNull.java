@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,15 +8,15 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class IsNull<E, V> extends NoValueBuilder<E, V> {
+public class IsNotNull<E, V> extends NoValueBuilder<E, V> {
     
-    IsNull(SingularAttribute<? super E, V> att) {
+    public IsNotNull(SingularAttribute<? super E, V> att) {
         super(att);
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path) {
-        return Arrays.asList(builder.isNull(path.get(att)));
+        return Arrays.asList(builder.isNotNull(path.get(att)));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,9 +8,10 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class Like<E> extends SingleValueBuilder<E, String> {
+
+public class Like<E> extends SingleValueBuilder<E, String> {
     
-    Like(SingularAttribute<? super E, String> att, String value) {
+    public Like(SingularAttribute<? super E, String> att, String value) {
         super(att, value);
     }
 

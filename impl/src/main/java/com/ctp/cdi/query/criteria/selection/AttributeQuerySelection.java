@@ -1,10 +1,12 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.selection;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Selection;
 import javax.persistence.metamodel.SingularAttribute;
+
+import com.ctp.cdi.query.criteria.QuerySelection;
 
 
 public class AttributeQuerySelection<P, X> implements QuerySelection<P, X> {

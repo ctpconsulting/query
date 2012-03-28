@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,15 +8,16 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class NotLike<E> extends SingleValueBuilder<E, String> {
+
+public class Eq<E, V> extends SingleValueBuilder<E, V> {
     
-    NotLike(SingularAttribute<? super E, String> att, String value) {
+    public Eq(SingularAttribute<? super E, V> att, V value) {
         super(att, value);
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path) {
-        return Arrays.asList(builder.notLike(path.get(att), value));
+        return Arrays.asList(builder.equal(path.get(att), value));
     }
 
 }

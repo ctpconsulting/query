@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,9 +8,10 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class LessThanOrEqual<E, V extends Comparable<? super V>> extends SingleValueBuilder<E, V> {
+
+public class LessThanOrEqual<E, V extends Comparable<? super V>> extends SingleValueBuilder<E, V> {
     
-    LessThanOrEqual(SingularAttribute<? super E, V> att, V value) {
+    public LessThanOrEqual(SingularAttribute<? super E, V> att, V value) {
         super(att, value);
     }
 

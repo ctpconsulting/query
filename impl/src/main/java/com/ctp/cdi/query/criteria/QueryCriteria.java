@@ -22,7 +22,27 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
-import com.ctp.cdi.query.criteria.OrderBy.OrderDirection;
+import com.ctp.cdi.query.criteria.predicate.Between;
+import com.ctp.cdi.query.criteria.predicate.Eq;
+import com.ctp.cdi.query.criteria.predicate.FetchBuilder;
+import com.ctp.cdi.query.criteria.predicate.GreaterThan;
+import com.ctp.cdi.query.criteria.predicate.GreaterThanOrEqual;
+import com.ctp.cdi.query.criteria.predicate.In;
+import com.ctp.cdi.query.criteria.predicate.IsEmpty;
+import com.ctp.cdi.query.criteria.predicate.IsNotEmpty;
+import com.ctp.cdi.query.criteria.predicate.IsNotNull;
+import com.ctp.cdi.query.criteria.predicate.IsNull;
+import com.ctp.cdi.query.criteria.predicate.JoinBuilder;
+import com.ctp.cdi.query.criteria.predicate.LessThan;
+import com.ctp.cdi.query.criteria.predicate.LessThanOrEqual;
+import com.ctp.cdi.query.criteria.predicate.Like;
+import com.ctp.cdi.query.criteria.predicate.NotEq;
+import com.ctp.cdi.query.criteria.predicate.NotLike;
+import com.ctp.cdi.query.criteria.predicate.OrBuilder;
+import com.ctp.cdi.query.criteria.predicate.PredicateBuilder;
+import com.ctp.cdi.query.criteria.processor.OrderBy;
+import com.ctp.cdi.query.criteria.processor.OrderBy.OrderDirection;
+import com.ctp.cdi.query.criteria.processor.QueryProcessor;
 
 public class QueryCriteria<C, R> implements Criteria<C, R> {
 
@@ -174,11 +194,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
         return result;
     }
     
-    // --------------------------------------------------------------------
-    // Package criteria methods
-    // --------------------------------------------------------------------
-    
-    List<Predicate> collectPredicates(CriteriaBuilder builder, Path<C> path) {
+    public List<Predicate> collectPredicates(CriteriaBuilder builder, Path<C> path) {
         List<Predicate> predicates = new LinkedList<Predicate>();
         for (PredicateBuilder<C> pbuilder : builders) {
             List<Predicate> p = pbuilder.build(builder, path);
@@ -186,6 +202,10 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
         }
         return predicates;
     }
+    
+    // --------------------------------------------------------------------
+    // Package criteria methods
+    // --------------------------------------------------------------------
     
     void applyProcessors(CriteriaQuery<R> query, CriteriaBuilder builder, From<C, C> from) {
         for (QueryProcessor<C> proc : processors) {

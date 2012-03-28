@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.List;
 
@@ -14,7 +14,9 @@ import javax.persistence.metamodel.MapAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
-class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
+import com.ctp.cdi.query.criteria.QueryCriteria;
+
+public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     
     final QueryCriteria<R, R> criteria;
     final JoinType joinType;
@@ -25,32 +27,32 @@ class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     SetAttribute<? super P, R> set;
     MapAttribute<? super P, E, R> map;
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType) {
         this.criteria = criteria;
         this.joinType = joinType;
     }
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
         this(criteria, joinType);
         this.singular = singular;
     }
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
         this(criteria, joinType);
         this.list = list;
     }
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
         this(criteria, joinType);
         this.collection = collection;
     }
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
         this(criteria, joinType);
         this.set = set;
     }
     
-    JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
+    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
         this(criteria, joinType);
         this.map = map;
     }

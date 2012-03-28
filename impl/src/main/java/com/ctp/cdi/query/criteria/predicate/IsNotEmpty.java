@@ -1,6 +1,7 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -8,15 +9,15 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class GreaterThan<E, V extends Number> extends SingleValueBuilder<E, V> {
+public class IsNotEmpty<E, V extends Collection<?>> extends NoValueBuilder<E, V> {
     
-    GreaterThan(SingularAttribute<? super E, V> att, V value) {
-        super(att, value);
+    public IsNotEmpty(SingularAttribute<? super E, V> att) {
+        super(att);
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path) {
-        return Arrays.asList(builder.gt(path.get(att), value));
+        return Arrays.asList(builder.isNotEmpty(path.get(att)));
     }
 
 }

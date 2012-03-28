@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+
+import com.ctp.cdi.query.criteria.QueryCriteria;
 
 public class OrBuilder<P> implements PredicateBuilder<P> {
     

@@ -1,4 +1,4 @@
-package com.ctp.cdi.query.criteria;
+package com.ctp.cdi.query.criteria.predicate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,15 +8,16 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 
-class GreaterThanOrEqual<E, V extends Comparable<? super V>> extends SingleValueBuilder<E, V> {
+
+public class GreaterThan<E, V extends Number> extends SingleValueBuilder<E, V> {
     
-    GreaterThanOrEqual(SingularAttribute<? super E, V> att, V value) {
+    public GreaterThan(SingularAttribute<? super E, V> att, V value) {
         super(att, value);
     }
 
     @Override
     public List<Predicate> build(CriteriaBuilder builder, Path<E> path) {
-        return Arrays.asList(builder.greaterThanOrEqualTo(path.get(att), value));
+        return Arrays.asList(builder.gt(path.get(att), value));
     }
 
 }
