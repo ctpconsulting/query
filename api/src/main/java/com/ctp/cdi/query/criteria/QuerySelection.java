@@ -7,6 +7,6 @@ import javax.persistence.criteria.Selection;
 
 public interface QuerySelection<P, X> {
 
-    <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path);
+    <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path);
     
 }

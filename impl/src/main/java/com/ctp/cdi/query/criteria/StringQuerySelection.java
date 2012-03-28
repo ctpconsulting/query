@@ -6,6 +6,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Selection;
 import javax.persistence.metamodel.SingularAttribute;
 
+
 public class StringQuerySelection<P> implements QuerySelection<P, String> {
     
     private final SingularAttribute<P, String> attribute;
@@ -30,7 +31,7 @@ public class StringQuerySelection<P> implements QuerySelection<P, String> {
     }
 
     @Override
-    public <R> Selection<String> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path) {
+    public <R> Selection<String> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path) {
         switch (operation) {
             case SUBSTRING:
                 if (length == -1)

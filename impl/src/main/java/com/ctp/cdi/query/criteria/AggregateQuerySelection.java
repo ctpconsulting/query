@@ -6,6 +6,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Selection;
 import javax.persistence.metamodel.SingularAttribute;
 
+
 public class AggregateQuerySelection<P, X extends Number> implements QuerySelection<P, X> {
     
     private final Operator operator;
@@ -17,7 +18,7 @@ public class AggregateQuerySelection<P, X extends Number> implements QuerySelect
     }
 
     @Override
-    public <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path) {
+    public <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path) {
         Path<X> expression = path.get(attribute);
         return toSelection(expression, builder);
     }

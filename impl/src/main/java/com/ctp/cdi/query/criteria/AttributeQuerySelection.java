@@ -6,16 +6,17 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Selection;
 import javax.persistence.metamodel.SingularAttribute;
 
+
 public class AttributeQuerySelection<P, X> implements QuerySelection<P, X> {
     
-    private final SingularAttribute<P, X> attribute;
+    private final SingularAttribute<? super P, X> attribute;
     
     public AttributeQuerySelection(SingularAttribute<P, X> attribute) {
         this.attribute = attribute;
     }
 
     @Override
-    public <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path) {
+    public <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path) {
         return path.get(attribute);
     }
 

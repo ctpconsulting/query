@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.jboss.solder.logging.Logger;
@@ -19,8 +20,15 @@ import org.jboss.solder.properties.Property;
 import org.jboss.solder.properties.query.NamedPropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
 
+import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.criteria.AggregateQuerySelection;
+import com.ctp.cdi.query.criteria.AggregateQuerySelection.Operator;
+import com.ctp.cdi.query.criteria.AttributeQuerySelection;
+import com.ctp.cdi.query.criteria.QueryCriteria;
+import com.ctp.cdi.query.criteria.Criteria;
+import com.ctp.cdi.query.criteria.QuerySelection;
 import com.ctp.cdi.query.util.EntityUtils;
 
 /**
@@ -31,7 +39,7 @@ import com.ctp.cdi.query.util.EntityUtils;
  * @param <E>   Entity type.
  * @param <PK>  Primary key type, must be a serializable.
  */
-public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E, PK> {
+public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntityDao<E, PK> {
 
     private final Logger log = Logger.getLogger(EntityDaoHandler.class);
 
@@ -164,16 +172,54 @@ public class EntityDaoHandler<E, PK extends Serializable> implements EntityDao<E
         entityManager.flush();
     }
 
+    @Override
     public EntityManager getEntityManager() {
         return entityManager;
     }
 
+    @Override
     public CriteriaQuery<E> criteriaQuery() {
         return entityManager.getCriteriaBuilder().createQuery(entityClass);
     }
 
+    @Override
     public Class<E> entityClass() {
         return entityClass;
+    }
+    
+    @Override
+    public Criteria<E, E> criteria() {
+        return new QueryCriteria<E, E>(entityClass, entityClass, entityManager);
+    }
+    
+    @Override
+    public <T> Criteria<T, T> where(Class<T> clazz) {
+        return new QueryCriteria<T, T>(clazz, clazz, entityManager);
+    }
+    
+    @Override
+    public <T> Criteria<T, T> where(Class<T> clazz, JoinType joinType) {
+        return new QueryCriteria<T, T>(clazz, clazz, getEntityManager(), joinType);
+    }
+    
+    @Override
+    public <X> QuerySelection<E, X> attribute(SingularAttribute<E, X> attribute) {
+        return new AttributeQuerySelection<E, X>(attribute);
+    }
+    
+    @Override
+    public <N extends Number> QuerySelection<E, N> abs(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.ABS, attribute);
+    }
+    
+    @Override
+    public <N extends Number> QuerySelection<E, N> avg(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.AVG, attribute);
+    }
+    
+    @Override
+    public <N extends Number> QuerySelection<E, N> count(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.COUNT, attribute);
     }
 
     private static Method extract(Method method) {
