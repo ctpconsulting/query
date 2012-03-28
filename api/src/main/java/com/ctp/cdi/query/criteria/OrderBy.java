@@ -20,7 +20,7 @@ class OrderBy<P, V> implements QueryProcessor<P> {
     }
 
     @Override
-    public void process(CriteriaQuery<P> query, CriteriaBuilder builder, Path<P> path) {
+    public <R> void process(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path) {
         switch (dir) {
             case ASC:
                 query.orderBy(builder.asc(path.get(att)));

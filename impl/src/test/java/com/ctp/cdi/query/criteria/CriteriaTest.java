@@ -1,11 +1,18 @@
 package com.ctp.cdi.query.criteria;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.OneToMany;
@@ -14,13 +21,8 @@ import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.ParentDao;
 import com.ctp.cdi.query.test.service.SimpleDao;
+import com.ctp.cdi.query.test.service.Statistics;
 import com.ctp.cdi.query.test.util.Deployments;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 /**
  *
@@ -199,6 +201,24 @@ public class CriteriaTest extends TransactionalTestCase {
         // then
         assertNotNull(result);
         assertEquals(3, result.size());
+    }
+    
+    @Test
+    public void shouldCreateSelectCriteria() {
+        // given
+        final String name = "testCreateSelectCriteria";
+        createSimple(name, 1);
+        createSimple(name, 2);
+        createSimple(name, 3);
+        createSimple(name, 4);
+        createSimple(name, 99);
+        
+        // when
+        Statistics result = dao.queryWithSelect();
+        
+        // then
+        assertEquals(Double.valueOf(21.0d), result.getAverage());
+        assertEquals(Long.valueOf(5l), result.getCount());
     }
 
     private Simple createSimple(String name, Integer counter) {

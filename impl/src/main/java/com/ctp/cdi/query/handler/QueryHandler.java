@@ -13,6 +13,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 
+import org.jboss.solder.logging.Logger;
+
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.builder.QueryBuilderFactory;
 import com.ctp.cdi.query.meta.DaoComponent;
@@ -27,6 +29,8 @@ import com.ctp.cdi.query.meta.Initialized;
  */
 public class QueryHandler {
     
+    private final Logger log = Logger.getLogger(getClass());
+    
     @Inject @Any
     private Instance<EntityManager> entityManager;
     
@@ -38,11 +42,16 @@ public class QueryHandler {
     
     @AroundInvoke
     public Object handle(InvocationContext context) throws Exception {
-        Class<?> daoClass = extractFromProxy(context);
-        DaoComponent dao = components.lookupComponent(daoClass);
-        DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
-        QueryBuilder builder = queryBuilder.build(method);
-        return builder.execute(new QueryInvocationContext(context, method, resolveEntityManager(dao)));
+        try {
+            Class<?> daoClass = extractFromProxy(context);
+            DaoComponent dao = components.lookupComponent(daoClass);
+            DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
+            QueryBuilder builder = queryBuilder.build(method);
+            return builder.execute(new QueryInvocationContext(context, method, resolveEntityManager(dao)));
+        } catch (Exception e) {
+            log.error("Query execution error", e);
+            throw e;
+        }
     }
     
     protected Class<?> extractFromProxy(InvocationContext ctx) {

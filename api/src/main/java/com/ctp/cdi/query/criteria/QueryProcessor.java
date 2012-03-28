@@ -6,6 +6,6 @@ import javax.persistence.criteria.Path;
 
 public interface QueryProcessor<P> {
 
-    void process(CriteriaQuery<P> query, CriteriaBuilder builder, Path<P> path);
+    <R> void process(CriteriaQuery<R> query, CriteriaBuilder builder, Path<P> path);
 
 }

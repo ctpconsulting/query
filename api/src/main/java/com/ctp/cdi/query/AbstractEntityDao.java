@@ -5,8 +5,13 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.metamodel.SingularAttribute;
 
+import com.ctp.cdi.query.criteria.AttributeQuerySelection;
 import com.ctp.cdi.query.criteria.Criteria;
+import com.ctp.cdi.query.criteria.AggregateQuerySelection;
+import com.ctp.cdi.query.criteria.AggregateQuerySelection.Operator;
+import com.ctp.cdi.query.criteria.QuerySelection;
 
 
 /**
@@ -45,8 +50,8 @@ public abstract class AbstractEntityDao<E, PK extends Serializable> implements E
      * Create a {@link Criteria} instance.
      * @return          Criteria instance related to the DAO entity class.
      */
-    protected Criteria<E> criteria() {
-        return new Criteria<E>(entityClass(), getEntityManager());
+    protected Criteria<E, E> criteria() {
+        return new Criteria<E, E>(entityClass(), entityClass(), getEntityManager());
     }
     
     /**
@@ -55,8 +60,8 @@ public abstract class AbstractEntityDao<E, PK extends Serializable> implements E
      * @param clazz     Class other than the current entity class.
      * @return          Criteria instance related to a join type of the current entity class.
      */
-    protected <T> Criteria<T> where(Class<T> clazz) {
-        return new Criteria<T>(clazz, getEntityManager());
+    protected <T> Criteria<T, T> where(Class<T> clazz) {
+        return new Criteria<T, T>(clazz, clazz, getEntityManager());
     }
     
     /**
@@ -66,8 +71,24 @@ public abstract class AbstractEntityDao<E, PK extends Serializable> implements E
      * @param joinType  Join type to apply.
      * @return          Criteria instance related to a join type of the current entity class.
      */
-    protected <T> Criteria<T> where(Class<T> clazz, JoinType joinType) {
-        return new Criteria<T>(clazz, getEntityManager(), joinType);
+    protected <T> Criteria<T, T> where(Class<T> clazz, JoinType joinType) {
+        return new Criteria<T, T>(clazz, clazz, getEntityManager(), joinType);
+    }
+    
+    protected <X> QuerySelection<E, X> att(SingularAttribute<E, X> attribute) {
+        return new AttributeQuerySelection<E, X>(attribute);
+    }
+    
+    protected <N extends Number> QuerySelection<E, N> abs(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.ABS, attribute);
+    }
+    
+    protected <N extends Number> QuerySelection<E, N> avg(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.AVG, attribute);
+    }
+    
+    protected <N extends Number> QuerySelection<E, N> count(SingularAttribute<E, N> attribute) {
+        return new AggregateQuerySelection<E, N>(Operator.COUNT, attribute);
     }
 
 }

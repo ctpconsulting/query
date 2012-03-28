@@ -16,7 +16,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     
-    final Criteria<R> criteria;
+    final Criteria<R, R> criteria;
     final JoinType joinType;
     
     SingularAttribute<? super P, R> singular;
@@ -25,32 +25,32 @@ class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     SetAttribute<? super P, R> set;
     MapAttribute<? super P, E, R> map;
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType) {
         this.criteria = criteria;
         this.joinType = joinType;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
         this(criteria, joinType);
         this.singular = singular;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
         this(criteria, joinType);
         this.list = list;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
         this(criteria, joinType);
         this.collection = collection;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
         this(criteria, joinType);
         this.set = set;
     }
     
-    JoinBuilder(Criteria<R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
+    JoinBuilder(Criteria<R, R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
         this(criteria, joinType);
         this.map = map;
     }

@@ -33,6 +33,14 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
                 .getResultList();
     }
     
+    @SuppressWarnings("unchecked")
+    public Statistics queryWithSelect() {
+        return criteria()
+                 .select(Statistics.class, avg(Simple_.counter), count(Simple_.counter))
+                 .createQuery()
+                 .getSingleResult();
+    }
+    
     @Query(named = Simple.BY_NAME, max = 1)
     public abstract List<Simple> findByNamedQueryIndexed(String name, Boolean enabled);
     
