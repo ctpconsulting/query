@@ -14,11 +14,11 @@ import javax.persistence.metamodel.MapAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
-import com.ctp.cdi.query.criteria.QueryCriteria;
+import com.ctp.cdi.query.criteria.Criteria;
 
 public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     
-    final QueryCriteria<R, R> criteria;
+    final Criteria<R, R> criteria;
     final JoinType joinType;
     
     SingularAttribute<? super P, R> singular;
@@ -27,32 +27,32 @@ public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     SetAttribute<? super P, R> set;
     MapAttribute<? super P, E, R> map;
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType) {
         this.criteria = criteria;
         this.joinType = joinType;
     }
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType, SingularAttribute<? super P, R> singular) {
         this(criteria, joinType);
         this.singular = singular;
     }
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType, ListAttribute<? super P, R> list) {
         this(criteria, joinType);
         this.list = list;
     }
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType, CollectionAttribute<? super P, R> collection) {
         this(criteria, joinType);
         this.collection = collection;
     }
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType, SetAttribute<? super P, R> set) {
         this(criteria, joinType);
         this.set = set;
     }
     
-    public JoinBuilder(QueryCriteria<R, R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
+    public JoinBuilder(Criteria<R, R> criteria, JoinType joinType, MapAttribute<? super P, E, R> map) {
         this(criteria, joinType);
         this.map = map;
     }
@@ -72,7 +72,7 @@ public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
         } else {
             join = joinMap((From) path);
         }
-        return criteria.collectPredicates(builder, join);
+        return criteria.predicates(builder, join);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

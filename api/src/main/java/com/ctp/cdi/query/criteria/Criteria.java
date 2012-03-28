@@ -1,9 +1,13 @@
 package com.ctp.cdi.query.criteria;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.MapAttribute;
@@ -78,5 +82,7 @@ public interface Criteria<C, R> {
     <P extends Collection<?>> Criteria<C, R> notEmpty(SingularAttribute<? super C, P> att);
 
     <P> Criteria<C, R> in(SingularAttribute<? super C, P> att, P... values);
+    
+    List<Predicate> predicates(CriteriaBuilder builder, Path<C> path);
 
 }

@@ -22,6 +22,8 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.jboss.solder.logging.Logger;
+
 import com.ctp.cdi.query.criteria.predicate.Between;
 import com.ctp.cdi.query.criteria.predicate.Eq;
 import com.ctp.cdi.query.criteria.predicate.FetchBuilder;
@@ -45,6 +47,8 @@ import com.ctp.cdi.query.criteria.processor.OrderBy.OrderDirection;
 import com.ctp.cdi.query.criteria.processor.QueryProcessor;
 
 public class QueryCriteria<C, R> implements Criteria<C, R> {
+    
+    private final Logger log = Logger.getLogger(QueryCriteria.class);
 
     private EntityManager entityManager;
     private Class<C> entityClass;
@@ -81,7 +85,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
             if (!selections.isEmpty()) {
                 query.multiselect(prepareSelections(query, builder, root));
             }
-            List<Predicate> predicates = collectPredicates(builder, root);
+            List<Predicate> predicates = predicates(builder, root);
             query.distinct(distinct);
             if (!predicates.isEmpty()) {
                 query.where(predicates.toArray(new Predicate[0]));
@@ -89,7 +93,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
             applyProcessors(query, builder, root);
             return entityManager.createQuery(query);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            log.error("Exception while creating JPA query", e);
             throw e;
         }
     }
@@ -114,31 +118,31 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     
     @Override
     public <P, E> Criteria<C, R> join(SingularAttribute<? super C, P> att, Criteria<P, P> criteria) {
-        add(new JoinBuilder<C, P, E>((QueryCriteria<P, P>) criteria, joinType, att));
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
 
     @Override
     public <P, E> Criteria<C, R> join(ListAttribute<? super C, P> att, Criteria<P, P> criteria) {
-        add(new JoinBuilder<C, P, E>((QueryCriteria<P, P>) criteria, joinType, att));
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
     @Override
     public <P, E> Criteria<C, R> join(CollectionAttribute<? super C, P> att, Criteria<P, P> criteria) {
-        add(new JoinBuilder<C, P, E>((QueryCriteria<P, P>) criteria, joinType, att));
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
     @Override
     public <P, E> Criteria<C, R> join(SetAttribute<? super C, P> att, Criteria<P, P> criteria) {
-        add(new JoinBuilder<C, P, E>((QueryCriteria<P, P>) criteria, joinType, att));
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
     @Override
     public <P, E> Criteria<C, R> join(MapAttribute<? super C, E, P> att, Criteria<P, P> criteria) {
-        add(new JoinBuilder<C, P, E>((QueryCriteria<P, P>) criteria, joinType, att));
+        add(new JoinBuilder<C, P, E>(criteria, joinType, att));
         return this;
     }
     
@@ -194,7 +198,8 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
         return result;
     }
     
-    public List<Predicate> collectPredicates(CriteriaBuilder builder, Path<C> path) {
+    @Override
+    public List<Predicate> predicates(CriteriaBuilder builder, Path<C> path) {
         List<Predicate> predicates = new LinkedList<Predicate>();
         for (PredicateBuilder<C> pbuilder : builders) {
             List<Predicate> p = pbuilder.build(builder, path);
@@ -215,11 +220,9 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     
     @SuppressWarnings("unchecked")
     Criteria<C, R> internalOr(Criteria<C, R>... others) {
-        List<QueryCriteria<C, R>> list = new LinkedList<QueryCriteria<C, R>>();
-        for (Criteria<C, R> other : others) {
-            list.add((QueryCriteria<C, R>) other);
-        }
-        add(new OrBuilder<C>(list.toArray(new QueryCriteria[0])));
+        List<Criteria<C, R>> list = new LinkedList<Criteria<C, R>>();
+        list.addAll(Arrays.asList(others));
+        add(new OrBuilder<C>(list.toArray(new Criteria[0])));
         return this;
     }
     
