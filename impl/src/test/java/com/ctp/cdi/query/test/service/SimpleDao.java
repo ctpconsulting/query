@@ -13,7 +13,6 @@ import com.ctp.cdi.query.Query;
 import com.ctp.cdi.query.QueryParam;
 import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.domain.Simple_;
 
 public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
@@ -22,23 +21,6 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
         return getEntityManager().createQuery(query, Simple.class)
                 .setParameter("name", name)
                 .getResultList();
-    }
-    
-    public List<Simple> queryByCriteria(String name, Boolean enabled, Integer from, Integer to) {
-        return criteria()
-                .eq(Simple_.name, name)
-                .eq(Simple_.enabled, enabled)
-                .between(Simple_.counter, from, to)
-                .createQuery()
-                .getResultList();
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Statistics queryWithSelect() {
-        return criteria()
-                 .select(Statistics.class, avg(Simple_.counter), count(Simple_.counter))
-                 .createQuery()
-                 .getSingleResult();
     }
     
     @Query(named = Simple.BY_NAME, max = 1)

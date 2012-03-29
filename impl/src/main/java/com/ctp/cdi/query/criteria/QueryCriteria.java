@@ -199,6 +199,11 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     }
     
     @Override
+    public Criteria<C, Object[]> select(QuerySelection<? super C, ?>... selection) {
+        return select(Object[].class, selection);
+    }
+    
+    @Override
     public List<Predicate> predicates(CriteriaBuilder builder, Path<C> path) {
         List<Predicate> predicates = new LinkedList<Predicate>();
         for (PredicateBuilder<C> pbuilder : builders) {

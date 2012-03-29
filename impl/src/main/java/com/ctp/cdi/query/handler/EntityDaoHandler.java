@@ -5,6 +5,9 @@ import static com.ctp.cdi.query.util.QueryUtils.isEmpty;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,12 +26,25 @@ import org.jboss.solder.properties.query.PropertyQueries;
 import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
-import com.ctp.cdi.query.criteria.selection.AggregateQuerySelection;
-import com.ctp.cdi.query.criteria.selection.AttributeQuerySelection;
-import com.ctp.cdi.query.criteria.selection.AggregateQuerySelection.Operator;
-import com.ctp.cdi.query.criteria.QueryCriteria;
 import com.ctp.cdi.query.criteria.Criteria;
+import com.ctp.cdi.query.criteria.QueryCriteria;
 import com.ctp.cdi.query.criteria.QuerySelection;
+import com.ctp.cdi.query.criteria.selection.AttributeQuerySelection;
+import com.ctp.cdi.query.criteria.selection.numeric.Abs;
+import com.ctp.cdi.query.criteria.selection.numeric.Avg;
+import com.ctp.cdi.query.criteria.selection.numeric.Count;
+import com.ctp.cdi.query.criteria.selection.numeric.Max;
+import com.ctp.cdi.query.criteria.selection.numeric.Min;
+import com.ctp.cdi.query.criteria.selection.numeric.Modulo;
+import com.ctp.cdi.query.criteria.selection.numeric.Neg;
+import com.ctp.cdi.query.criteria.selection.numeric.Sum;
+import com.ctp.cdi.query.criteria.selection.strings.Lower;
+import com.ctp.cdi.query.criteria.selection.strings.SubstringFrom;
+import com.ctp.cdi.query.criteria.selection.strings.SubstringFromTo;
+import com.ctp.cdi.query.criteria.selection.strings.Upper;
+import com.ctp.cdi.query.criteria.selection.temporal.CurrentDate;
+import com.ctp.cdi.query.criteria.selection.temporal.CurrentTime;
+import com.ctp.cdi.query.criteria.selection.temporal.CurrentTimestamp;
 import com.ctp.cdi.query.util.EntityUtils;
 
 /**
@@ -207,20 +223,96 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return new AttributeQuerySelection<E, X>(attribute);
     }
     
+    // ----------------------------------------------------------------------------
+    // NUMERIC QUERY SELECTION
+    // ----------------------------------------------------------------------------
+    
     @Override
     public <N extends Number> QuerySelection<E, N> abs(SingularAttribute<E, N> attribute) {
-        return new AggregateQuerySelection<E, N>(Operator.ABS, attribute);
+        return new Abs<E, N>(attribute);
     }
     
     @Override
     public <N extends Number> QuerySelection<E, N> avg(SingularAttribute<E, N> attribute) {
-        return new AggregateQuerySelection<E, N>(Operator.AVG, attribute);
+        return new Avg<E, N>(attribute);
     }
     
     @Override
     public <N extends Number> QuerySelection<E, N> count(SingularAttribute<E, N> attribute) {
-        return new AggregateQuerySelection<E, N>(Operator.COUNT, attribute);
+        return new Count<E, N>(attribute);
     }
+
+    @Override
+    public <N extends Number> QuerySelection<E, N> max(SingularAttribute<E, N> attribute) {
+        return new Max<E, N>(attribute);
+    }
+
+    @Override
+    public <N extends Number> QuerySelection<E, N> min(SingularAttribute<E, N> attribute) {
+        return new Min<E, N>(attribute);
+    }
+
+    @Override
+    public <N extends Number> QuerySelection<E, N> neg(SingularAttribute<E, N> attribute) {
+        return new Neg<E, N>(attribute);
+    }
+
+    @Override
+    public <N extends Number> QuerySelection<E, N> sum(SingularAttribute<E, N> attribute) {
+        return new Sum<E, N>(attribute);
+    }
+    
+    @Override
+    public QuerySelection<E, Integer> modulo(SingularAttribute<E, Integer> attribute, Integer modulo) {
+        return new Modulo<E>(attribute, modulo);
+    }
+    
+    // ----------------------------------------------------------------------------
+    // STRING QUERY SELECTION
+    // ----------------------------------------------------------------------------
+    
+    @Override
+    public QuerySelection<E, String> upper(SingularAttribute<E, String> attribute) {
+        return new Upper<E>(attribute);
+    }
+
+    @Override
+    public QuerySelection<E, String> lower(SingularAttribute<E, String> attribute) {
+        return new Lower<E>(attribute);
+    }
+    
+    @Override
+    public QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from) {
+        return new SubstringFrom<E>(attribute, from);
+    }
+
+    @Override
+    public QuerySelection<E, String> substring(SingularAttribute<E, String> attribute, int from, int length) {
+        return new SubstringFromTo<E>(attribute, from, length);
+    }
+    
+    // ----------------------------------------------------------------------------
+    // TEMPORAL QUERY SELECTION
+    // ----------------------------------------------------------------------------
+    
+    @Override
+    public QuerySelection<E, Date> currDate() {
+        return new CurrentDate<E>();
+    }
+    
+    @Override
+    public QuerySelection<E, Time> currTime() {
+        return new CurrentTime<E>();
+    }
+    
+    @Override
+    public QuerySelection<E, Timestamp> currTStamp() {
+        return new CurrentTimestamp<E>();
+    }
+    
+    // ----------------------------------------------------------------------------
+    // PRIVATE
+    // ----------------------------------------------------------------------------
 
     private static Method extract(Method method) {
         try {

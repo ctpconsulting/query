@@ -2,6 +2,7 @@ package com.ctp.cdi.query.criteria;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.ctp.cdi.query.test.domain.OneToOne;
 import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.ParentDao;
+import com.ctp.cdi.query.test.service.SimpleCriteriaDao;
 import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.Statistics;
 import com.ctp.cdi.query.test.util.Deployments;
@@ -38,7 +40,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Inject
-    private SimpleDao dao;
+    private SimpleCriteriaDao dao;
 
     @Inject
     private ParentDao parentDao;
@@ -204,9 +206,9 @@ public class CriteriaTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCreateSelectCriteria() {
+    public void shouldCreateSelectCriteriaWithResultType() {
         // given
-        final String name = "testCreateSelectCriteria";
+        final String name = "testCreateSelectCriteriaWithResultType";
         createSimple(name, 1);
         createSimple(name, 2);
         createSimple(name, 3);
@@ -214,11 +216,49 @@ public class CriteriaTest extends TransactionalTestCase {
         createSimple(name, 99);
         
         // when
-        Statistics result = dao.queryWithSelect();
+        Statistics result = dao.queryWithSelect(name);
         
         // then
         assertEquals(Double.valueOf(21.0d), result.getAverage());
         assertEquals(Long.valueOf(5l), result.getCount());
+    }
+    
+    @Test
+    public void shouldCreateSelectCriteriaWithoutResultType() {
+        // given
+        final String name = "testCreateSelectCriteriaWithoutResultType";
+        createSimple(name, 10);
+        createSimple(name, 99);
+        
+        // when
+        Object[] result = dao.queryWithSelectAggregateReturnArray(name);
+
+        // then
+        assertEquals(Integer.valueOf(10), result[0]);
+        assertEquals(Integer.valueOf(99), result[1]);
+        assertTrue(result[2] instanceof java.sql.Date);
+        assertTrue(result[3] instanceof java.sql.Time);
+        assertTrue(result[4] instanceof java.sql.Timestamp);
+    }
+    
+    @Test
+    public void shouldCreateSelectCriteriaWithAttributes() {
+        // given
+        final String name = "testCreateSelectCriteriaWithAttributes";
+        createSimple(name, 10);
+        createSimple(name, 99);
+        
+        // when
+        List<Object[]> results = dao.queryWithSelectAttributes(name);
+
+        // then
+        for (Object[] result : results) {
+            assertEquals(name, result[0]);
+            assertEquals(name.toUpperCase(), result[1]);
+            assertEquals(name.toLowerCase(), result[2]);
+            assertEquals(name.substring(1), result[3]);
+            assertEquals(name.substring(1, 1+2), result[4]);
+        }
     }
 
     private Simple createSimple(String name, Integer counter) {

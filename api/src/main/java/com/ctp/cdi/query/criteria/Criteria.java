@@ -52,6 +52,8 @@ public interface Criteria<C, R> {
     <P> Criteria<C, R> orderDesc(SingularAttribute<? super C, P> att);
 
     <N> Criteria<C, N> select(Class<N> resultClass, QuerySelection<? super C, ?>... selection);
+    
+    Criteria<C, Object[]> select(QuerySelection<? super C, ?>... selection);
 
     Criteria<C, R> distinct();
 
