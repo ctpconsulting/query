@@ -152,6 +152,72 @@
             <properties>
                 <datasource>java:app/jdbc/test-ds</datasource>
                 <deploy.libs>false</deploy.libs>
+                <default.glassfish>true</default.glassfish>
+                <default.jboss>false</default.jboss>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>arq-glassfish-31-managed</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <extensions>false</extensions>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals><goal>unpack</goal></goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.distributions</groupId>
+                                            <artifactId>glassfish</artifactId>
+                                            <version>3.1.1</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-glassfish-managed-3.1</artifactId>
+                    <version>1.0.0.CR3</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>javax.transaction</artifactId>
+                    <version>3.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-bundle</artifactId>
+                    <version>${version.jersey}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.jersey.contribs</groupId>
+                    <artifactId>jersey-multipart</artifactId>
+                    <version>${version.jersey}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <properties>
+                <datasource>java:app/jdbc/test-ds</datasource>
+                <deploy.libs>true</deploy.libs>
+                <version.jersey>1.12</version.jersey>
+                <default.glassfish>true</default.glassfish>
+                <default.jboss>false</default.jboss>
             </properties>
         </profile>
 
@@ -194,6 +260,8 @@
             <properties>
                 <datasource>java:jboss/datasources/ExampleDS</datasource>
                 <deploy.libs>true</deploy.libs>
+                <default.glassfish>false</default.glassfish>
+                <default.jboss>true</default.jboss>
             </properties>
         </profile>
     

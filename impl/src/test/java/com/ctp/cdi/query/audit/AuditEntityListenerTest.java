@@ -23,7 +23,7 @@ import com.ctp.cdi.query.test.util.TestDeployments;
 public class AuditEntityListenerTest extends TransactionalTestCase {
     
     @Deployment
-    public static Archive<?> deploymentWithLibs() {
+    public static Archive<?> deployment() {
         return TestDeployments.initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
                 .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
