@@ -24,13 +24,13 @@ import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.SimpleBuilder;
 import com.ctp.cdi.query.test.domain.Simple_;
 import com.ctp.cdi.query.test.service.SimpleDao;
-import com.ctp.cdi.query.test.util.Deployments;
+import com.ctp.cdi.query.test.util.TestDeployments;
 
 public class QueryResultTest extends TransactionalTestCase {
     
     @Deployment
     public static Archive<?> deployment() {
-        return Deployments.initDeployment()
+        return TestDeployments.initDeployment()
                 .addClasses(SimpleDao.class)
                 .addPackage(Simple.class.getPackage());
     }

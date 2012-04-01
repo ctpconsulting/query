@@ -17,14 +17,14 @@ import org.junit.runner.RunWith;
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.test.domain.Principal;
-import com.ctp.cdi.query.test.util.Deployments;
+import com.ctp.cdi.query.test.util.TestDeployments;
 
 @RunWith(Arquillian.class)
 public class AuditEntityListenerTest extends TransactionalTestCase {
-
+    
     @Deployment
-    public static Archive<?> deployment() {
-        return Deployments.initDeployment()
+    public static Archive<?> deploymentWithLibs() {
+        return TestDeployments.initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
                 .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
                 .addPackage(AuditedEntity.class.getPackage());

@@ -1,5 +1,9 @@
 package com.ctp.cdi.query.meta.unit;
 
+import static com.ctp.cdi.query.test.util.TestDeployments.TEST_FILTER;
+import static com.ctp.cdi.query.test.util.TestDeployments.addDependencies;
+import static com.ctp.cdi.query.test.util.TestDeployments.createApiArchive;
+import static com.ctp.cdi.query.test.util.TestDeployments.createImplPackages;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -15,30 +19,41 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.ctp.cdi.query.QueryExtension;
 import com.ctp.cdi.query.meta.DaoEntity;
+import com.ctp.cdi.query.test.TransactionalTestCase;
+import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.TeeId;
 import com.ctp.cdi.query.test.domain.mapped.MappedOne;
 import com.ctp.cdi.query.test.domain.mapped.MappedThree;
 import com.ctp.cdi.query.test.domain.mapped.MappedTwo;
+import com.ctp.cdi.query.test.service.MappedOneDao;
+import com.ctp.cdi.query.test.util.Logging;
 
 @RunWith(Arquillian.class)
 public class PersistenceUnitsTest {
 
-    @Deployment(order = 2)
+    @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
+        Logging.reconfigure();
+        return addDependencies(ShrinkWrap.create(WebArchive.class, "test.war")
+                .addAsLibrary(createApiArchive())
+                .addPackages(true, TEST_FILTER, createImplPackages())
+                .addPackages(true, Parent.class.getPackage())
+                .addClasses(QueryExtension.class, TransactionalTestCase.class, MappedOneDao.class)
                 .addAsWebInfResource("test-mapped-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
                 .addAsWebInfResource("test-custom-orm.xml", ArchivePaths.create("classes/META-INF/custom-orm.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
-                .addAsWebInfResource("glassfish-resources.xml");
+                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension", 
+                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
+                .addAsWebInfResource("glassfish-resources.xml"));
     }
     
     @Test
     public void shouldRecognizeEntityData() {
         // given
-        PersistenceUnits.instance().init();
-        
+  
         // when
         boolean positive1 = PersistenceUnits.instance().isEntity(MappedOne.class);
         boolean positive2 = PersistenceUnits.instance().isEntity(MappedTwo.class);
@@ -55,7 +70,6 @@ public class PersistenceUnitsTest {
     @Test
     public void shouldRecognizeIds() {
         // given
-        PersistenceUnits.instance().init();
         
         // when
         String idField1 = PersistenceUnits.instance().primaryKeyField(MappedOne.class);
@@ -69,7 +83,6 @@ public class PersistenceUnitsTest {
     @Test
     public void shouldRecognizeName() {
         // given
-        PersistenceUnits.instance().init();
         
         // when
         String name = PersistenceUnits.instance().entityName(MappedOne.class);
@@ -81,7 +94,6 @@ public class PersistenceUnitsTest {
     @Test
     public void shouldRecognizeIdClass() {
         // given
-        PersistenceUnits.instance().init();
         
         // when
         Class<?> idClass = PersistenceUnits.instance().primaryKeyIdClass(MappedTwo.class);
@@ -93,7 +105,6 @@ public class PersistenceUnitsTest {
     @Test
     public void shouldPrepareDaoEntity() {
         // given
-        PersistenceUnits.instance().init();
         
         // when
         DaoEntity entity1 = PersistenceUnits.instance().lookupMetadata(MappedOne.class);

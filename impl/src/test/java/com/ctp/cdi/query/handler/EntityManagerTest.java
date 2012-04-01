@@ -1,31 +1,32 @@
 package com.ctp.cdi.query.handler;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.service.SimpleDaoWithEntityManager;
-import com.ctp.cdi.query.test.service.SimpleDaoWithOverriddenEntityManager;
-import com.ctp.cdi.query.test.util.Deployments;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.service.SimpleDaoWithEntityManager;
+import com.ctp.cdi.query.test.service.SimpleDaoWithOverriddenEntityManager;
+import com.ctp.cdi.query.test.util.TestDeployments;
 
 @RunWith(Arquillian.class)
 public class EntityManagerTest {
 
     @Deployment
     public static Archive<?> deployment() {
-        return Deployments.initDeployment()
+        return TestDeployments.initDeployment()
                 .addClasses(SimpleDaoWithEntityManager.class,
                             SimpleDaoWithOverriddenEntityManager.class,
-                            EntityManagerProducer.class)
+                            EntityManagerTestProducer.class)
                 .addPackage(Simple.class.getPackage());
     }
 

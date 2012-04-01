@@ -11,38 +11,29 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 
-import com.ctp.cdi.query.QueryExtension;
-import com.ctp.cdi.query.builder.QueryBuilder;
-import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.mapped.MappedOne;
 import com.ctp.cdi.query.test.domain.mapped.MappedThree;
 import com.ctp.cdi.query.test.domain.mapped.MappedTwo;
 import com.ctp.cdi.query.test.service.MappedOneDao;
+import com.ctp.cdi.query.test.util.TestDeployments;
 
 public class OrmXmlBasedDaoTest extends TransactionalTestCase {
 
     @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addClasses(QueryExtension.class)
-                .addPackage(DaoComponents.class.getPackage())
-                .addPackage(QueryBuilder.class.getPackage())
-                .addClass(MappedOne.class)
+        return TestDeployments.initDeployment(".*mapped.*")
                 .addClasses(MappedOneDao.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
-                            .addClasses(MappedTwo.class, MappedThree.class)
+                            .addClasses(MappedOne.class, MappedTwo.class, MappedThree.class)
                             .addAsResource("test-custom-orm.xml", ArchivePaths.create("META-INF/custom-orm.xml"))
                  )
                 .addAsWebInfResource("test-mapped-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsWebInfResource("glassfish-resources.xml");
     }
     

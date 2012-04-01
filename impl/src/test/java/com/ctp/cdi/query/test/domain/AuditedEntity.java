@@ -3,16 +3,16 @@ package com.ctp.cdi.query.test.domain;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.ctp.cdi.query.audit.ModifiedBy;
 import com.ctp.cdi.query.audit.CreatedOn;
+import com.ctp.cdi.query.audit.ModifiedBy;
 import com.ctp.cdi.query.audit.ModifiedOn;
 
 @Entity
@@ -22,7 +22,7 @@ public class AuditedEntity implements Serializable {
     @Id @GeneratedValue
     private Long id;
     
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedOn
     private Calendar created;
     
@@ -32,6 +32,7 @@ public class AuditedEntity implements Serializable {
     private String changer;
     
     @ModifiedBy
+    @ManyToOne(targetEntity = Principal.class)
     private Principal principal;
     
     @Temporal(TemporalType.TIME)
@@ -40,9 +41,9 @@ public class AuditedEntity implements Serializable {
     
     private java.sql.Date sqlModified;
     
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.DATE)
     @ModifiedOn
-    private GregorianCalendar gregorianModified;
+    private Calendar gregorianModified;
     
     @ModifiedOn
     private Timestamp timestamp;
@@ -75,7 +76,7 @@ public class AuditedEntity implements Serializable {
         return modified;
     }
 
-    public GregorianCalendar getGregorianModified() {
+    public Calendar getGregorianModified() {
         return gregorianModified;
     }
 

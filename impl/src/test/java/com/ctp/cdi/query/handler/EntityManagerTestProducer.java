@@ -6,7 +6,7 @@ import javax.persistence.PersistenceContext;
 
 import com.ctp.cdi.query.test.service.Simplistic;
 
-public class EntityManagerProducer {
+public class EntityManagerTestProducer {
 
     @SuppressWarnings("unused")
     @Produces @Simplistic
