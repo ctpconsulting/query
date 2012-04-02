@@ -8,18 +8,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.test.domain.Principal;
 import com.ctp.cdi.query.test.util.TestDeployments;
 
-@RunWith(Arquillian.class)
 public class AuditEntityListenerTest extends TransactionalTestCase {
     
     @Deployment

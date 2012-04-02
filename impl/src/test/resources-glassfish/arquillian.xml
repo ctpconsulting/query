@@ -6,29 +6,17 @@
         http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <defaultProtocol type="Servlet 3.0" />
-
+    
     <engine>
-        <property name="deploymentExportPath">target</property>
+        <property name="deploymentExportPath">target/arquillian</property>
     </engine>
-    
-    <container qualifier="glassfish-31-embedded">
-        <configuration>
-            <property name="sunResourcesXml">src/test/resources-glassfish/glassfish-resources.xml</property>
-        </configuration>
-    </container>
-    
-    <container qualifier="glassfish-31-managed" default="${default.glassfish}">
+
+    <container qualifier="glassfish-31-managed" default="true">
         <configuration>
             <property name="glassFishHome">target/glassfish3</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="outputToConsole">true</property>
             <property name="sunResourcesXml">src/test/resources-glassfish/glassfish-resources.xml</property>
-        </configuration>
-    </container>
-    
-    <container qualifier="jbossas-7-managed" default="${default.jboss}">
-        <configuration>
-            <property name="jbossHome">target/jboss-as-7.1.1.Final</property>
         </configuration>
     </container>
 

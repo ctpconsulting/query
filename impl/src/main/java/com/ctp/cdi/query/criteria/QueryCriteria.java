@@ -88,7 +88,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
             List<Predicate> predicates = predicates(builder, root);
             query.distinct(distinct);
             if (!predicates.isEmpty()) {
-                query.where(predicates.toArray(new Predicate[0]));
+                query.where(predicates.toArray(new Predicate[predicates.size()]));
             }
             applyProcessors(query, builder, root);
             return entityManager.createQuery(query);
@@ -113,7 +113,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     @Override
     @SuppressWarnings("unchecked")
     public Criteria<C, R> or(Collection<Criteria<C, R>> criteria) {
-        return internalOr(criteria.toArray(new Criteria[0]));
+        return internalOr(criteria.toArray(new Criteria[criteria.size()]));
     }
     
     @Override
@@ -227,7 +227,7 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     Criteria<C, R> internalOr(Criteria<C, R>... others) {
         List<Criteria<C, R>> list = new LinkedList<Criteria<C, R>>();
         list.addAll(Arrays.asList(others));
-        add(new OrBuilder<C>(list.toArray(new Criteria[0])));
+        add(new OrBuilder<C>(list.toArray(new Criteria[list.size()])));
         return this;
     }
     
