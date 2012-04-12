@@ -52,7 +52,7 @@
     <properties>
         <seam.version>3.1.0.Final</seam.version>
         <emma.version>2.0.5312</emma.version>
-        <arquillian.version>1.0.0.CR7</arquillian.version>
+        <arquillian.version>1.0.0.Final</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
     </properties>
 
@@ -197,13 +197,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.jboss.jbossas</groupId>
-                <artifactId>jboss-as-client</artifactId>
-                <version>6.0.0.Final</version>
-                <type>pom</type>
-            </dependency>
-
-            <dependency>
                 <groupId>org.glassfish.extras</groupId>
                 <artifactId>glassfish-embedded-all</artifactId>
                 <version>3.1</version>
@@ -211,9 +204,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derby</artifactId>
-                <version>10.4.2.0</version>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>2.2.8</version>
                 <scope>test</scope>
             </dependency>
 
@@ -221,18 +214,6 @@
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>distribution</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-            <modules>
-                <module>dist</module>
-                <module>docs</module>
-            </modules>
-        </profile>
         <profile>
             <id>jboss-public-repository</id>
             <activation>
@@ -374,6 +355,12 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
+        </profile>
+        <profile>
+            <id>arq-glassfish-31-embedded</id>
+        </profile>
+        <profile>
+            <id>arq-jbossas-7-managed</id>
         </profile>
     </profiles>
 

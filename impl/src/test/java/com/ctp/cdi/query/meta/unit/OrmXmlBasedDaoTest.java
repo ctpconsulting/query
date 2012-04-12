@@ -25,7 +25,7 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
 
     @Deployment
     public static Archive<?> deployment() {
-        return TestDeployments.addOptionals(TestDeployments.initDeployment(".*mapped.*")
+        return TestDeployments.initDeployment(".*mapped.*")
                 .addClasses(MappedOneDao.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
@@ -33,7 +33,7 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
                             .addAsResource("test-custom-orm.xml", ArchivePaths.create("META-INF/custom-orm.xml"))
                  )
                 .addAsWebInfResource("test-mapped-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml")));
+                .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"));
     }
     
     @Produces

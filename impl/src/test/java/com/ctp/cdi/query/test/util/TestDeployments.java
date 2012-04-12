@@ -1,7 +1,6 @@
 package com.ctp.cdi.query.test.util;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -42,11 +41,7 @@ import com.ctp.cdi.query.util.EntityUtils;
 public abstract class TestDeployments {
 
     public static Filter<ArchivePath> TEST_FILTER = new ExcludeRegExpPaths(".*Test.*class");
-    
-    // TODO: Adding the datasource was somehow refusing to work with arquillian.xml.
-    // Switched to web deployment for the time being.
-    private static final List<String> OPTIONAL_WEB_INF = Arrays.asList("glassfish-resources.xml");
-    
+ 
     public static MavenDependencyResolver resolver() {
         return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
     }
@@ -73,7 +68,7 @@ public abstract class TestDeployments {
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
         
-        return addDependencies(addOptionals(archive));
+        return addDependencies(archive);
     }
 
     public static Package[] createImplPackages() {
@@ -95,15 +90,6 @@ public abstract class TestDeployments {
                 .addClasses(Criteria.class, QuerySelection.class);
     }
     
-    public static WebArchive addOptionals(WebArchive archive) {
-        for (String optional : OPTIONAL_WEB_INF) {
-            if (resourceExists(optional)) {
-                archive.addAsWebInfResource(optional);
-            }
-        }
-        return archive;
-    }
-    
     public static WebArchive addDependencies(WebArchive archive) {
         if (includeLibs()) {
             archive.addAsLibraries(resolver()
@@ -116,10 +102,6 @@ public abstract class TestDeployments {
     private static boolean includeLibs() {
         ResourceBundle bundle = ResourceBundle.getBundle("test-settings");
         return Boolean.valueOf(bundle.getString("arquillian.deploy.libs"));
-    }
-    
-    private static boolean resourceExists(String name) {
-        return TestDeployments.class.getClassLoader().getResource(name) != null;
     }
 
 }

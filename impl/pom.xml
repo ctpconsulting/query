@@ -152,8 +152,8 @@
                     <artifactId>glassfish-embedded-all</artifactId>
                 </dependency>
                 <dependency>
-                    <groupId>org.apache.derby</groupId>
-                    <artifactId>derby</artifactId>
+                    <groupId>org.hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
                 </dependency>
             </dependencies>
             <properties>
@@ -161,7 +161,7 @@
             </properties>
         </profile>
         
-        <profile>
+        <!-- profile>
             <id>arq-glassfish-31-managed</id>
             <build>
                 <testResources>
@@ -202,7 +202,7 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-glassfish-managed-3.1</artifactId>
-                    <version>1.0.0.CR3</version>
+                    <version>${version.arq.glassfish}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
@@ -227,8 +227,9 @@
             <properties>
                 <deploy.libs>true</deploy.libs>
                 <version.jersey>1.12</version.jersey>
+                <version.arq.glassfish>1.0.0.CR3</version.arq.glassfish>
             </properties>
-        </profile>
+        </profile -->
 
         <profile>
             <id>arq-jbossas-7-managed</id>

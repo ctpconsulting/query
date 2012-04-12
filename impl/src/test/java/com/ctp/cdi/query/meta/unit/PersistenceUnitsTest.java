@@ -29,7 +29,6 @@ import com.ctp.cdi.query.test.domain.mapped.MappedThree;
 import com.ctp.cdi.query.test.domain.mapped.MappedTwo;
 import com.ctp.cdi.query.test.service.MappedOneDao;
 import com.ctp.cdi.query.test.util.Logging;
-import com.ctp.cdi.query.test.util.TestDeployments;
 
 @RunWith(Arquillian.class)
 public class PersistenceUnitsTest {
@@ -37,7 +36,7 @@ public class PersistenceUnitsTest {
     @Deployment
     public static Archive<?> deployment() {
         Logging.reconfigure();
-        return TestDeployments.addOptionals(addDependencies(ShrinkWrap.create(WebArchive.class, "test.war")
+        return addDependencies(ShrinkWrap.create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, Parent.class.getPackage())
@@ -47,7 +46,7 @@ public class PersistenceUnitsTest {
                 .addAsWebInfResource("test-custom-orm.xml", ArchivePaths.create("classes/META-INF/custom-orm.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension", 
-                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))));
+                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension")));
     }
     
     @Test
