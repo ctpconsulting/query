@@ -15,6 +15,14 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 
+/**
+ * Criteria API utilities.
+ * 
+ * @author thomashug
+ *
+ * @param <C>   Entity type.
+ * @param <R>   Result type.
+ */
 public interface Criteria<C, R> {
 
     /**

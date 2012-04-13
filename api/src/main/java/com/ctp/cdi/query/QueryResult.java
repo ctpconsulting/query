@@ -11,9 +11,9 @@ import javax.persistence.metamodel.SingularAttribute;
  * Allows some post processing like defining query ordering.
  * 
  * @author thomashug
- * @param <T> Entity type
+ * @param <E> Entity type
  */
-public interface QueryResult<T> {
+public interface QueryResult<E> {
 
     /**
      * Sort the query result ascending by the given entity singular attribute.
@@ -25,7 +25,7 @@ public interface QueryResult<T> {
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
-    <X> QueryResult<T> orderAsc(SingularAttribute<T, X> order);
+    <X> QueryResult<E> orderAsc(SingularAttribute<E, X> order);
     
     /**
      * Sort the query result ascending by the given entity attribute.
@@ -35,7 +35,7 @@ public interface QueryResult<T> {
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> orderAsc(String order);
+    QueryResult<E> orderAsc(String order);
     
     /**
      * Sort the query result descending by the given entity singular attribute.
@@ -47,7 +47,7 @@ public interface QueryResult<T> {
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
-    <X> QueryResult<T> orderDesc(SingularAttribute<T, X> order);
+    <X> QueryResult<E> orderDesc(SingularAttribute<E, X> order);
     
     /**
      * Sort the query result descending by the given entity attribute.
@@ -57,35 +57,35 @@ public interface QueryResult<T> {
      * @param order             Sort attribute.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> orderDesc(String order);
+    QueryResult<E> orderDesc(String order);
     
     /**
      * Limit the number of results returned by the query.
      * @param max               Max number of results.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> maxResults(int max);
+    QueryResult<E> maxResults(int max);
     
     /**
      * Pagination: Set the result start position.
      * @param first             Result start position.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> firstResult(int first);
+    QueryResult<E> firstResult(int first);
     
     /**
      * Sets the query lock mode.
      * @param lockMode          Query lock mode to use in the query.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> lockMode(LockModeType lockMode);
+    QueryResult<E> lockMode(LockModeType lockMode);
     
     /**
      * Sets the query flush mode.
      * @param flushMode         Query flush mode to use in the query.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> flushMode(FlushModeType flushMode);
+    QueryResult<E> flushMode(FlushModeType flushMode);
     
     /**
      * Apply a query hint to the query to execute.
@@ -93,18 +93,18 @@ public interface QueryResult<T> {
      * @param value             Hint value.
      * @return                  Fluent API: the result instance.
      */
-    QueryResult<T> hint(String hint, Object value);
+    QueryResult<E> hint(String hint, Object value);
     
     /**
      * Fetch the result set.
      * @return                  List of entities retrieved by the query.
      */
-    List<T> getResultList();
+    List<E> getResultList();
     
     /**
      * Fetch a single result entity.
      * @return                  Entity retrieved by the query.
      */
-    T getSingleResult();
+    E getSingleResult();
 
 }
