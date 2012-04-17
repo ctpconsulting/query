@@ -1,29 +1,22 @@
 package com.ctp.cdi.query.handler;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-
-import java.util.List;
+import com.ctp.cdi.query.test.TransactionalTestCase;
+import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.domain.Simple_;
+import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
+import com.ctp.cdi.query.test.util.TestDeployments;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Test;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.SingularAttribute;
+import java.util.List;
 
-import junit.framework.Assert;
-
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Test;
-
-import com.ctp.cdi.query.test.TransactionalTestCase;
-import com.ctp.cdi.query.test.domain.Simple;
-import com.ctp.cdi.query.test.domain.Simple_;
-import com.ctp.cdi.query.test.service.ExtendedDaoInterface;
-import com.ctp.cdi.query.test.util.TestDeployments;
+import static junit.framework.Assert.*;
 
 public class EntityDaoHandlerTest extends TransactionalTestCase {
 
@@ -168,7 +161,7 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         List<Simple> find = dao.findAll();
 
         // then
-        Assert.assertEquals(2, find.size());
+        assertEquals(2, find.size());
     }
 
     @Test
@@ -181,7 +174,50 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         List<Simple> find = dao.findAll(0, 1);
 
         // then
-        Assert.assertEquals(1, find.size());
+        assertEquals(1, find.size());
+    }
+    
+    @Test
+    public void shouldFindByLike() {
+        // given
+        createSimple("testFindAll1");
+        createSimple("testFindAll2");
+        Simple example = new Simple("test");
+
+        // when
+        List<Simple> find = dao.findByLike(example,Simple_.name);
+
+        // then
+        assertEquals(2, find.size());
+    }
+
+    @Test
+    public void shouldFindByLikeWithStartAndMax() {
+        // given
+        createSimple("testFindAll1");
+        createSimple("testFindAll2");
+        Simple example = new Simple("test");
+
+        // when
+        List<Simple> find = dao.findByLike(example,1,10,Simple_.name);
+
+        // then
+        assertEquals(1, find.size());
+    }
+
+    @Test
+    public void shouldFindByLikeNonString() {
+        // given
+        createSimple("testFindAll1",1);
+        createSimple("testFindAll2",2);
+        Simple example = new Simple("test");
+        example.setCounter(1);
+
+        // when
+        List<Simple> find = dao.findByLike(example,Simple_.name,Simple_.counter);
+
+        // then
+        assertEquals(1, find.size());
     }
 
     @Test
@@ -223,6 +259,20 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
         // then
         assertEquals(Long.valueOf(2), result);
+    }
+
+    @Test
+    public void shouldCountByLike() {
+        // given
+        createSimple("testFindAll1");
+        createSimple("testFindAll2");
+        Simple example = new Simple("test");
+
+        // when
+        Long count = dao.countLike(example,Simple_.name);
+
+        // then
+        assertEquals(Long.valueOf(2), count);
     }
 
     @Test
