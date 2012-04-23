@@ -117,30 +117,17 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
 
     @Override
     public List<E> findBy(E example, int start, int max, SingularAttribute<E, ?>... attributes) {
-        //Not sure if this should be the intended behaviour
-        //when we don't get any attributes maybe we should
-        //return a empty list instead of all results
-        if (isEmpty(attributes)) {
-            return findAll(start, max);
-        }
+        return executeExampleQuery(example,start,max,false,attributes);
+    }
 
-        List<Property<Object>> properties = extractProperties(attributes);
-        String jpqlQuery = exampleQuery(allQuery(),properties);
-        log.debugv("findBy: Created query {0}", jpqlQuery);
-        TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+    @Override
+    public List<E> findByLike(E example, SingularAttribute<E, ?>... attributes) {
+        return findByLike(example, -1, -1, attributes);
+    }
 
-        // set starting position
-        if (start > 0) {
-            query.setFirstResult(start);
-        }
-
-        // set maximum results
-        if (max > 0) {
-            query.setMaxResults(max);
-        }
-
-        addParameters(query, example, properties);
-        return query.getResultList();
+    @Override
+    public List<E> findByLike(E example, int start, int max, SingularAttribute<E, ?>... attributes) {
+        return executeExampleQuery(example,start,max,true,attributes);
     }
 
     @Override
@@ -167,15 +154,12 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
 
     @Override
     public Long count(E example, SingularAttribute<E, ?>... attributes) {
-        if (isEmpty(attributes)) {
-            return count();
-        }
-        List<Property<Object>> properties = extractProperties(attributes);
-        String jpqlQuery = exampleQuery(countQuery(),properties);
-        log.debugv("count: Created query {0}", jpqlQuery);
-        TypedQuery<Long> query = entityManager.createQuery(jpqlQuery, Long.class);
-        addParameters(query, example, properties);
-        return query.getSingleResult();
+        return executeCountQuery(example,false,attributes);
+    }
+
+    @Override
+    public Long countLike(E example, SingularAttribute<E, ?>... attributes) {
+        return executeCountQuery(example,true,attributes);
     }
 
     @Override
@@ -331,9 +315,9 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return QueryBuilder.countQuery(entityName);
     }
 
-    private String exampleQuery(String queryBase, List<Property<Object>> properties) {
+    private String exampleQuery(String queryBase, List<Property<Object>> properties, boolean useLikeOperator) {
         StringBuilder jpqlQuery = new StringBuilder(queryBase).append(" where ");
-        jpqlQuery.append(prepareWhere(properties));
+        jpqlQuery.append(prepareWhere(properties, useLikeOperator));
         return jpqlQuery.toString();
     }
 
@@ -344,13 +328,17 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         }
     }
 
-    private String prepareWhere(List<Property<Object>> properties) {
+    private String prepareWhere(List<Property<Object>> properties, boolean useLikeOperator) {
         Iterator<Property<Object>> iterator = properties.iterator();
         StringBuilder result = new StringBuilder();
         while (iterator.hasNext()) {
-            String name = iterator.next().getName();
-            result.append("e.").append(name).append(" = :").append(name).append(iterator.hasNext() ? " and " : "");
-
+            Property<Object> property = iterator.next();
+            String name = property.getName();
+            if(useLikeOperator && property.getJavaClass().getName().equals(String.class.getName())) {
+                result.append("UPPER(e.").append(name).append(") like UPPER(concat('%',:").append(name).append(iterator.hasNext() ? ",'%')) and " : ",'%'))");
+            } else {
+                result.append("e.").append(name).append(" = :").append(name).append(iterator.hasNext() ? " and " : "");
+            }
         }
         return result.toString();
     }
@@ -368,6 +356,45 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass)
                 .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
         return properties;
+    }
+    
+    private List<E> executeExampleQuery(E example, int start, int max, boolean useLikeOperator, SingularAttribute...attributes) {
+        //Not sure if this should be the intended behaviour
+        //when we don't get any attributes maybe we should
+        //return a empty list instead of all results
+        if (isEmpty(attributes)) {
+            return findAll(start, max);
+        }
+
+        List<Property<Object>> properties = extractProperties(attributes);
+        String jpqlQuery = exampleQuery(allQuery(),properties,useLikeOperator);
+        log.debugv("findBy|findByLike: Created query {0}", jpqlQuery);
+        TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
+
+        // set starting position
+        if (start > 0) {
+            query.setFirstResult(start);
+        }
+
+        // set maximum results
+        if (max > 0) {
+            query.setMaxResults(max);
+        }
+
+        addParameters(query, example, properties);
+        return query.getResultList();
+    }
+    
+    private Long executeCountQuery(E example, boolean useLikeOperator, SingularAttribute...attributes) {
+        if (isEmpty(attributes)) {
+            return count();
+        }
+        List<Property<Object>> properties = extractProperties(attributes);
+        String jpqlQuery = exampleQuery(countQuery(),properties,useLikeOperator);
+        log.debugv("count: Created query {0}", jpqlQuery);
+        TypedQuery<Long> query = entityManager.createQuery(jpqlQuery, Long.class);
+        addParameters(query, example, properties);
+        return query.getSingleResult();
     }
 
 }
