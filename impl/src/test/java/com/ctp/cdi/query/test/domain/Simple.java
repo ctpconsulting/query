@@ -13,15 +13,18 @@ import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = Simple.BY_NAME,
+    @NamedQuery(name = Simple.BY_NAME_LIKE,
+            query = "select e from Simple e where e.name like ?1"),
+    @NamedQuery(name = Simple.BY_NAME_ENABLED,
                 query = "select s from Simple s where s.name = ?1 and s.enabled = ?2 order by s.id asc"),
     @NamedQuery(name = Simple.BY_ID,
                 query = "select s from Simple s where s.id = :id and s.enabled = :enabled")
 })
 @Table(name = "SIMPLE_TABLE")
 public class Simple {
-    
-    public static final String BY_NAME = "simple.byName";
+
+    public static final String BY_NAME_LIKE = "simple.byNameLike";
+    public static final String BY_NAME_ENABLED = "simple.byNameAndEnabled";
     public static final String BY_ID = "simple.byId";
 
     @Id

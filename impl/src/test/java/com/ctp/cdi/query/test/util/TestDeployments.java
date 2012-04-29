@@ -33,6 +33,7 @@ import com.ctp.cdi.query.criteria.Criteria;
 import com.ctp.cdi.query.criteria.QueryCriteria;
 import com.ctp.cdi.query.criteria.QuerySelection;
 import com.ctp.cdi.query.handler.QueryHandler;
+import com.ctp.cdi.query.home.DefaultNavigationProvider;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.param.Parameters;
 import com.ctp.cdi.query.test.TransactionalTestCase;
@@ -79,7 +80,9 @@ public abstract class TestDeployments {
                 QueryHandler.class.getPackage(),
                 DaoComponents.class.getPackage(),
                 Parameters.class.getPackage(),
-                EntityUtils.class.getPackage()).toArray(new Package[0]);
+                EntityUtils.class.getPackage(),
+                DefaultNavigationProvider.class.getPackage()
+            ).toArray(new Package[8]);
     }
 
     public static Archive<?> createApiArchive() {

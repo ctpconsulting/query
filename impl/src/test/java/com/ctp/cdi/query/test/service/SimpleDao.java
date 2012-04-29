@@ -23,10 +23,10 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
                 .getResultList();
     }
     
-    @Query(named = Simple.BY_NAME, max = 1)
+    @Query(named = Simple.BY_NAME_ENABLED, max = 1)
     public abstract List<Simple> findByNamedQueryIndexed(String name, Boolean enabled);
     
-    @Query(named = Simple.BY_NAME)
+    @Query(named = Simple.BY_NAME_ENABLED)
     public abstract List<Simple> findByNamedQueryRestricted(String name, Boolean enabled, 
             @MaxResults int max, @FirstResult Integer first);
     
@@ -49,6 +49,9 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
     @Modifying @Query("update Simple as s set s.name = ?1 where s.id = ?2")
     public abstract int updateNameForId(String name, Long id);
+    
+    @Query(named = Simple.BY_NAME_LIKE)
+    public abstract QueryResult<Simple> queryResultWithNamed(String name);
     
     public abstract QueryResult<Simple> findByName(String name);
     

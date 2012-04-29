@@ -39,6 +39,10 @@ public class QueryInvocationContext {
         jpaPostProcessors.add(postProcessor);
     }
     
+    public boolean hasQueryStringPostProcessors() {
+        return !queryPostProcessors.isEmpty();
+    }
+    
     public String applyQueryStringPostProcessors(String queryString) {
         String result = queryString;
         for (QueryStringPostProcessor processor : queryPostProcessors) {

@@ -99,6 +99,36 @@
             <artifactId>solder-logging</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <!-- Persistence Providers -->
+        
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-persistence-jdbc</artifactId>
+            <version>2.2.0</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Tests -->
 
@@ -148,7 +178,7 @@
                     <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
                 </dependency>
                 <dependency>
-                    <groupId>org.glassfish.extras</groupId>
+                    <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
                 </dependency>
                 <dependency>
@@ -160,76 +190,6 @@
                 <deploy.libs>false</deploy.libs>
             </properties>
         </profile>
-        
-        <!-- profile>
-            <id>arq-glassfish-31-managed</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-glassfish</directory>
-                    </testResource>
-                </testResources>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <extensions>false</extensions>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals><goal>unpack</goal></goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.distributions</groupId>
-                                            <artifactId>glassfish</artifactId>
-                                            <version>3.1.1</version>
-                                            <type>zip</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>target</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-managed-3.1</artifactId>
-                    <version>${version.arq.glassfish}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish</groupId>
-                    <artifactId>javax.transaction</artifactId>
-                    <version>3.1</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.sun.jersey</groupId>
-                    <artifactId>jersey-bundle</artifactId>
-                    <version>${version.jersey}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.sun.jersey.contribs</groupId>
-                    <artifactId>jersey-multipart</artifactId>
-                    <version>${version.jersey}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <properties>
-                <deploy.libs>true</deploy.libs>
-                <version.jersey>1.12</version.jersey>
-                <version.arq.glassfish>1.0.0.CR3</version.arq.glassfish>
-            </properties>
-        </profile -->
 
         <profile>
             <id>arq-jbossas-7-managed</id>

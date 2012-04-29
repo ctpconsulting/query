@@ -45,6 +45,11 @@ public final class EntityUtils {
         Property<Serializable> property = primaryKey(entityClass);
         return property.getJavaClass();
     }
+    
+    public static Object primaryKeyValue(Object entity) {
+        Property<Serializable> property = primaryKey(entity.getClass());
+        return property.getValue(entity);
+    }
 
     public static String entityName(Class<?> entityClass) {
         String result = null;

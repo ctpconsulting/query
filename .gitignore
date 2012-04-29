@@ -33,3 +33,8 @@
 /checkstyle-cachefile
 .DS_Store
 .externalToolBuilders
+/faces/target/
+/faces/.classpath
+/faces/.project
+/faces/.settings/
+

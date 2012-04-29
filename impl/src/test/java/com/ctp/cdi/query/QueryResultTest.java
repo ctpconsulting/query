@@ -108,6 +108,26 @@ public class QueryResultTest extends TransactionalTestCase {
         assertEquals(56, result.get(0).getCounter().intValue());
     }
     
+    @Test
+    public void shouldModifyNamedQuery() {
+        // given
+        final String name = "testModifyNamedQuery";
+        builder.createSimple(name + 0);
+        builder.createSimple(name + 1);
+        builder.createSimple(name + 2);
+        builder.createSimple(name + 3);
+        
+        // when
+        List<Simple> result = dao.queryResultWithNamed(name + "%")
+                 .orderDesc(Simple_.name)
+                 .getResultList();
+        
+        // then
+        assertEquals(4, result.size());
+        assertEquals(name + 3, result.get(0).getName());
+        assertEquals(name + 2, result.get(1).getName());
+    }
+    
     @Before
     public void setup() {
         builder = new SimpleBuilder(entityManager);
