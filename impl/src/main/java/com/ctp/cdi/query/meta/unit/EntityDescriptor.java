@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 class EntityDescriptor extends PersistentClassDescriptor {
     
-    private MappedSuperclassDescriptor superClass;
+    
 
     EntityDescriptor(String name, String packageName, String className, String idClass, String id) {
         super(name, packageName, className, idClass, id);
@@ -19,30 +19,18 @@ class EntityDescriptor extends PersistentClassDescriptor {
     
     @Override
     public Class<? extends Serializable> getIdClass() {
-        if (idClass == null && superClass != null) {
-            return superClass.getIdClass();
+        if (idClass == null && getParent() != null) {
+            return getParent().getIdClass();
         }
         return super.getIdClass();
     }
 
     @Override
     public String getId() {
-        if (isEmpty(id) && superClass != null) {
-            return superClass.getId();
+        if (isEmpty(id) && getParent() != null) {
+            return getParent().getId();
         }
         return super.getId();
-    }
-
-    public boolean assignSuperclassIfMatching(MappedSuperclassDescriptor superClass) {
-        MappedSuperclassDescriptor current = superClass;
-        while (current != null) {
-            if (current.getEntityClass().isAssignableFrom(entityClass)) {
-                this.superClass = current;
-                return true;
-            }
-            current = current.getParent();
-        }
-        return false;
     }
 
     @Override
@@ -53,17 +41,11 @@ class EntityDescriptor extends PersistentClassDescriptor {
                 .append(", name=").append(name)
                 .append(", idClass=").append(className(idClass))
                 .append(", id=").append(id)
-                .append(", superClass=").append(superClass)
+                .append(", superClass=").append(getParent())
                 .append("]");
         return builder.toString();
     }
 
-    public MappedSuperclassDescriptor getSuperClass() {
-        return superClass;
-    }
 
-    public void setSuperClass(MappedSuperclassDescriptor superClass) {
-        this.superClass = superClass;
-    }
     
 }
