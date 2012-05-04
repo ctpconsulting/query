@@ -12,6 +12,7 @@ abstract class PersistentClassDescriptor {
     final Class<?> entityClass;
     final Class<? extends Serializable> idClass;
     final String id;
+    private PersistentClassDescriptor parent;
 
     PersistentClassDescriptor(String name, String packageName, String className, String idClass, String id) {
         Class<?> clazz = entityClass(className, packageName);
@@ -79,4 +80,14 @@ abstract class PersistentClassDescriptor {
     private boolean isClassNameQualified(String name) {
         return name.contains(".");
     }
+
+    public PersistentClassDescriptor getParent() {
+        return parent;
+    }
+
+    public void setParent(PersistentClassDescriptor parent) {
+        this.parent = parent;
+    }
+
+
 }
