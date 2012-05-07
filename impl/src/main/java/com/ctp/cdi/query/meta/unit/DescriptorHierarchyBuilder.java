@@ -1,9 +1,6 @@
 package com.ctp.cdi.query.meta.unit;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class DescriptorHierarchyBuilder {
 
@@ -29,16 +26,16 @@ public class DescriptorHierarchyBuilder {
 
     private void buildHierarchy(PersistentClassDescriptor descriptor) {
         Class<?> superClass = descriptor.getEntityClass().getSuperclass();
-        while(superClass!=null){
+        while (superClass != null) {
             PersistentClassDescriptor superDescriptor = findPersistentClassDescriptor(superClass);
-            if (superDescriptor!=null){
-                if (descriptor.getParent()==null){
+            if (superDescriptor != null) {
+                if (descriptor.getParent() == null) {
                     buildHierarchy(superDescriptor);
                 }
                 descriptor.setParent(superDescriptor);
                 return;
             }
-            superClass=superClass.getSuperclass();
+            superClass = superClass.getSuperclass();
         }
     }
 

@@ -6,13 +6,10 @@ import java.io.Serializable;
 
 
 class MappedSuperclassDescriptor extends PersistentClassDescriptor {
-    
-    
 
     MappedSuperclassDescriptor(String name, String packageName, String className, String idClass, String id) {
         super(name, packageName, className, idClass, id);
     }
-
     
     @Override
     public Class<? extends Serializable> getIdClass() {
@@ -42,7 +39,5 @@ class MappedSuperclassDescriptor extends PersistentClassDescriptor {
                 .append("]");
         return builder.toString();
     }
-
-
 
 }

@@ -6,8 +6,6 @@ import java.io.Serializable;
 
 
 class EntityDescriptor extends PersistentClassDescriptor {
-    
-    
 
     EntityDescriptor(String name, String packageName, String className, String idClass, String id) {
         super(name, packageName, className, idClass, id);
@@ -45,7 +43,5 @@ class EntityDescriptor extends PersistentClassDescriptor {
                 .append("]");
         return builder.toString();
     }
-
-
     
 }

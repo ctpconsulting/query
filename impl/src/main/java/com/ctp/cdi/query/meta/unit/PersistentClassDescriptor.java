@@ -89,5 +89,4 @@ abstract class PersistentClassDescriptor {
         this.parent = parent;
     }
 
-
 }
