@@ -60,7 +60,7 @@ public abstract class QueryBuilder {
         if (hasLockMode(method)) {
             query.setLockMode(extractLockMode(method));
         }
-        context.applyJpaQueryPostProcessors(query);
+        query = context.applyJpaQueryPostProcessors(query);
         return query;
     }
     

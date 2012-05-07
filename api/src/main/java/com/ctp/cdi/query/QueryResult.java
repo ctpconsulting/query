@@ -106,5 +106,11 @@ public interface QueryResult<E> {
      * @return                  Entity retrieved by the query.
      */
     E getSingleResult();
+    
+    /**
+     * Count the result set.
+     * @return                  Result count.
+     */
+    long count();
 
 }

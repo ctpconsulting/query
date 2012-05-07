@@ -3,6 +3,7 @@ package com.ctp.cdi.query.builder.postprocessor;
 import javax.persistence.Query;
 
 import com.ctp.cdi.query.handler.JpaQueryPostProcessor;
+import com.ctp.cdi.query.handler.QueryInvocationContext;
 
 public class MaxResultPostProcessor implements JpaQueryPostProcessor {
     
@@ -13,8 +14,9 @@ public class MaxResultPostProcessor implements JpaQueryPostProcessor {
     }
 
     @Override
-    public void postProcess(Query query) {
+    public Query postProcess(QueryInvocationContext context, Query query) {
         query.setMaxResults(max);
+        return query;
     }
 
 }

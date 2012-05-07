@@ -12,6 +12,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.home.EntityMessage.HomeOperation;
 
 public abstract class EntityHome<E, PK> implements Serializable {
@@ -92,7 +93,17 @@ public abstract class EntityHome<E, PK> implements Serializable {
         this.page = 0;
     }
     
+    public void paginate() {
+        QueryResult<E> query = getQueryResult();
+        count = query.count();
+        query.firstResult(page * pageSize)
+             .maxResults(pageSize);
+        pageItems = query.getResultList();
+    }
+    
     protected abstract EntityManager getEntityManager();
+    
+    protected abstract QueryResult<E> getQueryResult();
     
     @PostConstruct
     @SuppressWarnings("unchecked")

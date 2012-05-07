@@ -128,6 +128,34 @@ public class QueryResultTest extends TransactionalTestCase {
         assertEquals(name + 2, result.get(1).getName());
     }
     
+    @Test
+    public void shouldCountWithMethodQuery() {
+        // given
+        final String name = "testCountWithMethodQuery";
+        builder.createSimple(name);
+        builder.createSimple(name);
+        
+        // when
+        long result = dao.findByName(name).count();
+        
+        // then
+        assertEquals(2L, result);
+    }
+    
+    @Test
+    public void shouldCountWithNamedQuery() {
+        // given
+        final String name = "testCountWithNamedQuery";
+        builder.createSimple(name);
+        builder.createSimple(name);
+        
+        // when
+        long result = dao.queryResultWithNamed(name).count();
+        
+        // then
+        assertEquals(2L, result);
+    }
+    
     @Before
     public void setup() {
         builder = new SimpleBuilder(entityManager);

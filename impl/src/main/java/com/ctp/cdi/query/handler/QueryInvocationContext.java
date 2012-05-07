@@ -39,6 +39,10 @@ public class QueryInvocationContext {
         jpaPostProcessors.add(postProcessor);
     }
     
+    public void removeJpaQueryPostProcessor(JpaQueryPostProcessor postProcessor) {
+        jpaPostProcessors.remove(postProcessor);
+    }
+    
     public boolean hasQueryStringPostProcessors() {
         return !queryPostProcessors.isEmpty();
     }
@@ -52,10 +56,11 @@ public class QueryInvocationContext {
     }
     
     public Query applyJpaQueryPostProcessors(Query query) {
+        Query result = query;
         for (JpaQueryPostProcessor processor : jpaPostProcessors) {
-            processor.postProcess(query);
+            result = processor.postProcess(this, result);
         }
-        return query;
+        return result;
     }
     
     public Object executeQuery(Query jpaQuery) {

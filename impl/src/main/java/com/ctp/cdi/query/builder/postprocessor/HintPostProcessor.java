@@ -3,6 +3,7 @@ package com.ctp.cdi.query.builder.postprocessor;
 import javax.persistence.Query;
 
 import com.ctp.cdi.query.handler.JpaQueryPostProcessor;
+import com.ctp.cdi.query.handler.QueryInvocationContext;
 
 public class HintPostProcessor implements JpaQueryPostProcessor {
 
@@ -15,8 +16,9 @@ public class HintPostProcessor implements JpaQueryPostProcessor {
     }
 
     @Override
-    public void postProcess(Query query) {
+    public Query postProcess(QueryInvocationContext context, Query query) {
         query.setHint(hintName, hintValue);
+        return query;
     }
 
 }

@@ -4,7 +4,10 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -26,6 +29,10 @@ public class EntityHomeTest extends TransactionalTestCase {
 
     @Inject
     private HomeEntityHome home;
+    
+    @Produces
+    @PersistenceContext
+    private EntityManager entityManager;
     
     @Test
     public void shouldRetrieve() {
@@ -74,7 +81,7 @@ public class EntityHomeTest extends TransactionalTestCase {
         // then
         assertEquals("testUpdate_updated", home.getEntity().getName());
     }
-    
+
     @Test
     public void shouldDelete() {
         // given
@@ -88,5 +95,32 @@ public class EntityHomeTest extends TransactionalTestCase {
         
         // then
         assertNull(home.getEntityManager().find(Home.class, entity.getId()));
+    }
+    
+    @Test
+    public void shouldPaginate() {
+        // given
+        String name = "testPaginate";
+        createHome(name);
+        createHome(name);
+        createHome(name);
+        createHome(name);
+        home.setName(name);
+        home.setPage(1);
+        home.setPageSize(2);
+        
+        // when
+        home.paginate();
+        
+        // then
+        assertNotNull(home.getPageItems());
+        assertEquals(2, home.getPageItems().size());
+    }
+    
+    private Home createHome(String name) {
+        Home entity = new Home();
+        entity.setName("testPaginate");
+        entityManager.persist(entity);
+        return entity;
     }
 }

@@ -9,6 +9,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.builder.postprocessor.CountQueryPostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.FirstResultPostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.FlushModePostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.HintPostProcessor;
@@ -102,6 +103,22 @@ public class DefaultQueryResult<T> implements QueryResult<T> {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long count() {
+        CountQueryPostProcessor counter = new CountQueryPostProcessor();
+        context.addJpaQueryPostProcessor(counter);
+        try {
+            Long result = (Long) ((Query) builder.execute(context)).getSingleResult();
+            return result.intValue();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            context.removeJpaQueryPostProcessor(counter);
         }
     }
 
