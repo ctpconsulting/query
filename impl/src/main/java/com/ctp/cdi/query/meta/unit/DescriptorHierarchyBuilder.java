@@ -22,41 +22,42 @@ public class DescriptorHierarchyBuilder {
     }
     
     public void buildHierarchy() {
-        Set<MappedSuperclassDescriptor> filtered = buildSuperclassHierarchy();
         for (EntityDescriptor descriptor : entities) {
-            assign(descriptor, filtered);
+            buildHierarchy(descriptor);
         }
     }
 
-    private void assign(EntityDescriptor entity, Set<MappedSuperclassDescriptor> filtered) {
-        for (MappedSuperclassDescriptor superClass : filtered) {
-            if (entity.assignSuperclassIfMatching(superClass)) {
+    private void buildHierarchy(PersistentClassDescriptor descriptor) {
+        Class<?> superClass = descriptor.getEntityClass().getSuperclass();
+        while(superClass!=null){
+            PersistentClassDescriptor superDescriptor = findPersistentClassDescriptor(superClass);
+            if (superDescriptor!=null){
+                if (descriptor.getParent()==null){
+                    buildHierarchy(superDescriptor);
+                }
+                descriptor.setParent(superDescriptor);
                 return;
             }
+            superClass=superClass.getSuperclass();
         }
     }
 
-    private Set<MappedSuperclassDescriptor> buildSuperclassHierarchy() {
-        Set<MappedSuperclassDescriptor> result = new HashSet<MappedSuperclassDescriptor>();
+    private PersistentClassDescriptor findPersistentClassDescriptor(Class<?> superClass) {
         for (MappedSuperclassDescriptor descriptor : superClasses) {
-            addToSet(descriptor, result);
+            if (descriptor.getEntityClass().equals(superClass)){
+                return descriptor;
+            }
         }
-        return result;
+        for (EntityDescriptor descriptor : entities) {
+            if (descriptor.getEntityClass().equals(superClass)){
+                return descriptor;
+            }
+        }
+        return null;
     }
 
-    private void addToSet(MappedSuperclassDescriptor descriptor, Set<MappedSuperclassDescriptor> result) {
-        for (Iterator<MappedSuperclassDescriptor> it = result.iterator(); it.hasNext();) {
-            MappedSuperclassDescriptor current = it.next();
-            if (descriptor.getEntityClass().isAssignableFrom(current.getEntityClass())) {
-                current.insert(descriptor);
-                return;
-            }
-            if (current.getEntityClass().isAssignableFrom(descriptor.getEntityClass())) {
-                descriptor.insert(current);
-                it.remove();
-            }
-        }
-        result.add(descriptor);
-    }
+
+
+
     
 }

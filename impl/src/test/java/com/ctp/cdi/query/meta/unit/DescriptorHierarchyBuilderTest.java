@@ -37,12 +37,12 @@ public class DescriptorHierarchyBuilderTest {
         assertEquals(entities.size(), 2);
         assertEquals(EntityLevel3.class, entities.get(0).getEntityClass());
         assertEquals(EntityLevel5.class, entities.get(1).getEntityClass());
-        assertEquals(MappedLevel2.class, entities.get(0).getSuperClass().getEntityClass());
-        assertEquals(MappedLevel4.class, entities.get(1).getSuperClass().getEntityClass());
+        assertEquals(MappedLevel2.class, entities.get(0).getParent().getEntityClass());
+        assertEquals(MappedLevel4.class, entities.get(1).getParent().getEntityClass());
         
         assertEquals(superClasses.size(), 4);
         assertNull(superClasses.get(0).getParent());
-        assertEquals(MappedLevel2.class, superClasses.get(1).getParent().getEntityClass());
+        assertEquals(EntityLevel3.class, superClasses.get(1).getParent().getEntityClass());
         assertNull(superClasses.get(2).getParent());
         assertEquals(MappedLevel1.class, superClasses.get(3).getParent().getEntityClass());
     }
