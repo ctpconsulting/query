@@ -44,24 +44,23 @@ public class QueryExtension extends ServiceHandlerExtension {
     }
     
     //FIX for https://issues.jboss.org/browse/SOLDER-327
-    protected <X> void buildBean(AnnotatedType<X> annotatedType, BeanManager beanManager, final Class<?> handlerClass)
-        {
-           try
-           {
-              final BeanBuilder<X> builder = new BeanBuilder<X>(beanManager);
-    
-              builder.readFromType(annotatedType);
-              builder.types(annotatedType.getTypeClosure());
-              builder.beanLifecycle(new ServiceHandlerBeanLifecycle(annotatedType.getJavaClass(), handlerClass, beanManager));
-              builder.toString("Generated @ServiceHandler for [" + builder.getBeanClass() + "] with qualifiers [" + builder.getQualifiers() +"] handled by " + handlerClass);
-              beans.add(builder.create());
-              log.debug("Adding @ServiceHandler bean for [" + builder.getBeanClass() + "] with qualifiers [" + builder.getQualifiers() + "] handled by " + handlerClass);
-           }
-           catch (IllegalArgumentException e)
-           {
-              throw new RuntimeException(e);
-           }
+    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected <X> void buildBean(AnnotatedType<X> annotatedType, BeanManager beanManager, final Class<?> handlerClass) {
+        try {
+            final BeanBuilder<X> builder = new BeanBuilder<X>(beanManager);
+            builder.readFromType(annotatedType);
+            builder.types(annotatedType.getTypeClosure());
+            builder.beanLifecycle(new ServiceHandlerBeanLifecycle(
+                    annotatedType.getJavaClass(), handlerClass, beanManager));
+            builder.toString("Generated @ServiceHandler for [" + builder.getBeanClass() + "] with qualifiers ["
+                    + builder.getQualifiers() + "] handled by " + handlerClass);
+            beans.add(builder.create());
+            log.debug("Adding @ServiceHandler bean for [" + builder.getBeanClass() + "] with qualifiers ["
+                    + builder.getQualifiers() + "] handled by " + handlerClass);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
         }
-
+    }
 
 }
