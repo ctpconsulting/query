@@ -1,10 +1,14 @@
 package com.ctp.cdi.query;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
+import org.jboss.solder.bean.BeanBuilder;
 import org.jboss.solder.logging.Logger;
+import org.jboss.solder.serviceHandler.ServiceHandlerBeanLifecycle;
 import org.jboss.solder.serviceHandler.ServiceHandlerExtension;
 
 import com.ctp.cdi.query.handler.QueryHandler;
@@ -38,5 +42,26 @@ public class QueryExtension extends ServiceHandlerExtension {
         }
         return null;
     }
+    
+    //FIX for https://issues.jboss.org/browse/SOLDER-327
+    protected <X> void buildBean(AnnotatedType<X> annotatedType, BeanManager beanManager, final Class<?> handlerClass)
+        {
+           try
+           {
+              final BeanBuilder<X> builder = new BeanBuilder<X>(beanManager);
+    
+              builder.readFromType(annotatedType);
+              builder.types(annotatedType.getTypeClosure());
+              builder.beanLifecycle(new ServiceHandlerBeanLifecycle(annotatedType.getJavaClass(), handlerClass, beanManager));
+              builder.toString("Generated @ServiceHandler for [" + builder.getBeanClass() + "] with qualifiers [" + builder.getQualifiers() +"] handled by " + handlerClass);
+              beans.add(builder.create());
+              log.debug("Adding @ServiceHandler bean for [" + builder.getBeanClass() + "] with qualifiers [" + builder.getQualifiers() + "] handled by " + handlerClass);
+           }
+           catch (IllegalArgumentException e)
+           {
+              throw new RuntimeException(e);
+           }
+        }
+
 
 }
