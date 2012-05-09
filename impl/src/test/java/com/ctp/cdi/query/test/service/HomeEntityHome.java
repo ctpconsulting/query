@@ -3,8 +3,8 @@ package com.ctp.cdi.query.test.service;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 
+import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.home.EntityHome;
 import com.ctp.cdi.query.test.domain.Home;
@@ -22,8 +22,8 @@ public class HomeEntityHome extends EntityHome<Home, Long> {
     private String name;
 
     @Override
-    public EntityManager getEntityManager() {
-        return dao.getEntityManager();
+    public EntityDao<Home, Long> getEntityDao() {
+        return dao;
     }
 
     @Override

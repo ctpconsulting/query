@@ -10,12 +10,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
+import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.home.EntityMessage.HomeOperation;
 
-public abstract class EntityHome<E, PK> implements Serializable {
+public abstract class EntityHome<E, PK extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final int DEFAULT_PAGE_SIZE = 10;
@@ -50,7 +50,7 @@ public abstract class EntityHome<E, PK> implements Serializable {
         if (id == null) {
             entity = this.search;
         } else {
-            entity = getEntityManager().find(entityClass, getId());
+            entity = getEntityDao().findBy(getId());
         }
     }
     
@@ -59,14 +59,13 @@ public abstract class EntityHome<E, PK> implements Serializable {
         conversation.end();
         HomeOperation ops = null;
         try {
+            getEntityDao().save(entity);
             if (id == null) {
                 ops = CREATE;
-                getEntityManager().persist(entity);
                 event.fire(EntityMessage.created(entity));
                 return navigation.search();
             } else {
                 ops = UPDATE;
-                getEntityManager().merge(entity);
                 event.fire(EntityMessage.updated(entity));
                 PK entityId = (PK) utils.primaryKeyValue(entity);
                 return navigation.view(entityId);
@@ -80,8 +79,8 @@ public abstract class EntityHome<E, PK> implements Serializable {
     public Object delete() {
         conversation.end();
         try {
-            getEntityManager().remove(getEntityManager().find(entityClass, getId()));
-            getEntityManager().flush();
+            getEntityDao().remove(getEntityDao().findBy(getId()));
+            getEntityDao().flush();
             return navigation.search();
         } catch (Exception e) {
             event.fire(EntityMessage.failed(entity, DELETE, e));
@@ -101,7 +100,7 @@ public abstract class EntityHome<E, PK> implements Serializable {
         pageItems = query.getResultList();
     }
     
-    protected abstract EntityManager getEntityManager();
+    protected abstract EntityDao<E, PK> getEntityDao();
     
     protected abstract QueryResult<E> getQueryResult();
     

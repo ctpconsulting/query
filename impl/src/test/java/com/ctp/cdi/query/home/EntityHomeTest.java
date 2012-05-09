@@ -39,7 +39,7 @@ public class EntityHomeTest extends TransactionalTestCase {
         // given
         Home entity = new Home();
         entity.setName("testRetrieve");
-        home.getEntityManager().persist(entity);
+        home.getEntityDao().save(entity);
         
         // when
         home.setId(entity.getId());
@@ -68,7 +68,7 @@ public class EntityHomeTest extends TransactionalTestCase {
         // given
         Home entity = new Home();
         entity.setName("testUpdate");
-        home.getEntityManager().persist(entity);
+        home.getEntityDao().save(entity);
         home.setEntity(entity);
         entity.setName("testUpdate_updated");
         
@@ -87,14 +87,14 @@ public class EntityHomeTest extends TransactionalTestCase {
         // given
         Home entity = new Home();
         entity.setName("testDelete");
-        home.getEntityManager().persist(entity);
+        home.getEntityDao().save(entity);
         home.setId(entity.getId());
         
         // when
         home.delete();
         
         // then
-        assertNull(home.getEntityManager().find(Home.class, entity.getId()));
+        assertNull(home.getEntityDao().findBy(entity.getId()));
     }
     
     @Test
