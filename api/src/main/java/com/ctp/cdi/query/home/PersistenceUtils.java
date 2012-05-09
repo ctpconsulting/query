@@ -2,10 +2,10 @@ package com.ctp.cdi.query.home;
 
 import java.io.Serializable;
 
-interface PersistenceUtils extends Serializable {
+interface PersistenceUtils<E, PK> extends Serializable {
 
-    Class<?> entityClass(Class<?> homeClass);
+    Class<E> entityClass(Class<?> homeClass);
     
-    Object primaryKeyValue(Object entity);
+    PK primaryKeyValue(E entity);
 
 }

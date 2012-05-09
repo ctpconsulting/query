@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.QueryResult;
-import com.ctp.cdi.query.home.EntityMessage.HomeOperation;
 
 public abstract class EntityHome<E, PK extends Serializable> implements Serializable {
 
@@ -27,7 +26,7 @@ public abstract class EntityHome<E, PK extends Serializable> implements Serializ
     private @Inject NavigationProvider navigation;
     private @Inject ConversationProvider conversation;
     private @Inject Event<EntityMessage> event;
-    private @Inject PersistenceUtils utils;
+    private @Inject PersistenceUtils<E, PK> utils;
 
     private E search;
     private int page;
@@ -54,24 +53,20 @@ public abstract class EntityHome<E, PK extends Serializable> implements Serializ
         }
     }
     
-    @SuppressWarnings("unchecked")
     public Object update() {
         conversation.end();
-        HomeOperation ops = null;
         try {
             getEntityDao().save(entity);
             if (id == null) {
-                ops = CREATE;
                 event.fire(EntityMessage.created(entity));
                 return navigation.search();
             } else {
-                ops = UPDATE;
                 event.fire(EntityMessage.updated(entity));
-                PK entityId = (PK) utils.primaryKeyValue(entity);
+                PK entityId = utils.primaryKeyValue(entity);
                 return navigation.view(entityId);
             }
         } catch (Exception e) {
-            event.fire(EntityMessage.failed(entity, ops, e));
+            event.fire(EntityMessage.failed(entity, id == null ? CREATE : UPDATE, e));
             return navigation.exception();
         }
     }
@@ -105,10 +100,9 @@ public abstract class EntityHome<E, PK extends Serializable> implements Serializ
     protected abstract QueryResult<E> getQueryResult();
     
     @PostConstruct
-    @SuppressWarnings("unchecked")
     void init() {
         try {
-            entityClass = (Class<E>) utils.entityClass(getClass());
+            entityClass = utils.entityClass(getClass());
             search = entityClass.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Failed initializing EntityHome", e);
