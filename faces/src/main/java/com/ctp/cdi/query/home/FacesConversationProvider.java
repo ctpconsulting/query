@@ -1,10 +1,9 @@
 package com.ctp.cdi.query.home;
 
 import javax.enterprise.context.Conversation;
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-@Alternative
+@FacesHome
 public class FacesConversationProvider implements ConversationProvider {
 
     private static final long serialVersionUID = 1L;

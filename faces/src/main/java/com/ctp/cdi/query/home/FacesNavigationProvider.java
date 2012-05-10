@@ -1,9 +1,8 @@
 package com.ctp.cdi.query.home;
 
-import javax.enterprise.inject.Alternative;
 import javax.faces.context.FacesContext;
 
-@Alternative
+@FacesHome
 public class FacesNavigationProvider implements NavigationProvider {
 
     private static final long serialVersionUID = 1L;
