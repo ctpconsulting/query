@@ -5,14 +5,16 @@ import static com.ctp.cdi.query.home.EntityMessage.HomeOperation.DELETE;
 import static com.ctp.cdi.query.home.EntityMessage.HomeOperation.UPDATE;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.QueryResult;
 
 public abstract class EntityHome<E, PK extends Serializable> implements Serializable {
 
@@ -87,26 +89,61 @@ public abstract class EntityHome<E, PK extends Serializable> implements Serializ
         this.page = 0;
     }
     
+    @SuppressWarnings("unchecked")
     public void paginate() {
-        QueryResult<E> query = getQueryResult();
-        count = query.count();
-        query.firstResult(page * pageSize)
-             .maxResults(pageSize);
-        pageItems = query.getResultList();
+        List<SingularAttribute<E, ?>> attributes = searchAttributes();
+        if (attributes == null) {
+            attributes = Collections.emptyList();
+        }
+        SingularAttribute<E, Object>[] attArray = attributes.toArray(new SingularAttribute[attributes.size()]);
+        count = getEntityDao().countLike(search, attArray);
+        pageItems = getEntityDao().findByLike(search, page * pageSize, pageSize, attArray);
     }
     
     protected abstract EntityDao<E, PK> getEntityDao();
     
-    protected abstract QueryResult<E> getQueryResult();
+    protected abstract List<SingularAttribute<E, ?>> searchAttributes();
     
     @PostConstruct
-    void init() {
+    protected void init() {
         try {
             entityClass = utils.entityClass(getClass());
             search = entityClass.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Failed initializing EntityHome", e);
         }
+    }
+    
+    protected SingularAttributes<E> singularAttributes() {
+        return new SingularAttributes<E>();
+    }
+    
+    protected static class SingularAttributes<E> {
+        
+        private final List<SingularAttribute<E, ?>> attributes = new LinkedList<SingularAttribute<E,?>>();
+
+        public SingularAttributes<E> add(Object value, SingularAttribute<E, ?> attribute) {
+            attributes.add(attribute);
+            return this;
+        }
+        
+        public SingularAttributes<E> addIfNotEmpty(Object value, SingularAttribute<E, ?> attribute) {
+            if (value instanceof String && isNotEmpty((String) value)) {
+                attributes.add(attribute);
+            } else if (value != null) {
+                attributes.add(attribute);
+            }
+            return this;
+        }
+        
+        private boolean isNotEmpty(String value) {
+            return value != null && !"".equals(value);
+        }
+        
+        public List<SingularAttribute<E, ?>> getAttributes() {
+            return attributes;
+        }
+        
     }
     
     // ------------------------------------------------------------------------

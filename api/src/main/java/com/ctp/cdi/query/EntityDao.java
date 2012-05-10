@@ -69,8 +69,6 @@ public interface EntityDao<E, PK extends Serializable> {
     
     /**
      * Query by example - for a given object and a specific set of properties.
-     * TODO: Can we put something like that in a producer and have queries restricted by example?
-     * TODO: As far as I remember Hibernate does this by all non-null properties.
      * @param example           Sample entity. Query all like.
      * @param attributes        Which attributes to consider for the query.
      * @return                  List of entities matching the example, or empty if none found.
@@ -79,8 +77,6 @@ public interface EntityDao<E, PK extends Serializable> {
 
     /**
      * Query by example - for a given object and a specific set of properties with support for pagination.
-     * TODO: Can we put something like that in a producer and have queries restricted by example?
-     * TODO: As far as I remember Hibernate does this by all non-null properties.
      * @param example           Sample entity. Query all like.
      * @param start             The starting position.
      * @param max               The maximum number of results to return
@@ -91,8 +87,6 @@ public interface EntityDao<E, PK extends Serializable> {
 
     /**
      * Query by example - for a given object and a specific set of properties using a like operator for Strings.
-     * TODO: Can we put something like that in a producer and have queries restricted by example?
-     * TODO: As far as I remember Hibernate does this by all non-null properties.
      * @param example           Sample entity. Query all like.
      * @param attributes        Which attributes to consider for the query.
      * @return                  List of entities matching the example, or empty if none found.

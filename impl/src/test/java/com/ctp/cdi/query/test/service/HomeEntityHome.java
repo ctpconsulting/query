@@ -1,13 +1,16 @@
 package com.ctp.cdi.query.test.service;
 
+import java.util.List;
+
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.QueryResult;
 import com.ctp.cdi.query.home.EntityHome;
 import com.ctp.cdi.query.test.domain.Home;
+import com.ctp.cdi.query.test.domain.Home_;
 
 @Named
 @Stateful
@@ -18,8 +21,6 @@ public class HomeEntityHome extends EntityHome<Home, Long> {
 
     @Inject
     private HomeDao dao;
-    
-    private String name;
 
     @Override
     public EntityDao<Home, Long> getEntityDao() {
@@ -27,16 +28,10 @@ public class HomeEntityHome extends EntityHome<Home, Long> {
     }
 
     @Override
-    protected QueryResult<Home> getQueryResult() {
-        return dao.findByName(name);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    protected List<SingularAttribute<Home, ?>> searchAttributes() {
+        return singularAttributes()
+                .addIfNotEmpty(getSearch().getName(), Home_.name)
+                .getAttributes();
     }
 
 }

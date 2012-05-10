@@ -358,7 +358,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return properties;
     }
     
-    private List<E> executeExampleQuery(E example, int start, int max, boolean useLikeOperator, SingularAttribute...attributes) {
+    private List<E> executeExampleQuery(E example, int start, int max, boolean useLikeOperator, SingularAttribute<E, ?>... attributes) {
         //Not sure if this should be the intended behaviour
         //when we don't get any attributes maybe we should
         //return a empty list instead of all results
@@ -385,7 +385,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return query.getResultList();
     }
     
-    private Long executeCountQuery(E example, boolean useLikeOperator, SingularAttribute...attributes) {
+    private Long executeCountQuery(E example, boolean useLikeOperator, SingularAttribute<E, ?>... attributes) {
         if (isEmpty(attributes)) {
             return count();
         }

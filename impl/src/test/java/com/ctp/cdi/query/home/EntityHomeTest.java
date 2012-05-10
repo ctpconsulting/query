@@ -105,7 +105,7 @@ public class EntityHomeTest extends TransactionalTestCase {
         createHome(name);
         createHome(name);
         createHome(name);
-        home.setName(name);
+        home.getSearch().setName(name);
         home.setPage(1);
         home.setPageSize(2);
         
