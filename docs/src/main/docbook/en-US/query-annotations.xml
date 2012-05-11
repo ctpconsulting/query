@@ -140,12 +140,31 @@ public interface PersonDao extends EntityDao<Person, Long> {
         <warning>
             <para>
                 Note that sorting is only applicable to method expressions or non-named
-                queries.
+                queries. For named queries it might be possible, but is currently only
+                supported for Hibernate, EclipseLink and OpenJPA.
             </para>
         </warning>
         <para>
             Note that the <literal>QueryResult</literal> return type can also be used 
             with <xref linkend="methodexpressions"/>.
+        </para>
+    </section>
+    
+    <section id="annotations-bulk">
+        <title>Bulk Operations</title>
+        <para>
+            While reading entities and updating them one by one might be fine for many use cases,
+            applying bulk updates or deletes is also a common usage scenario for DAOs. CDI query supports
+            this with a special marking annotation <literal>@Modifying</literal>:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+    @Modifying
+    @Query("update Person as p set p.classifyer = ?1 where p.classifyer = ?2")
+    int updateClassifyer(Classifier current, Classifier next);
+}]]>    </programlisting>
+	    <para>
+            Bulk operation query methods can either return <literal>void</literal> or <literal>int</literal>,
+            which counts the number of entities affected by the bulk operation.
         </para>
     </section>
 

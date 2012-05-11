@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="home">
+    <title>EntityHome</title>
+    <para>
+        In the first chapters we have laid a solid ground for querying entities.
+        Connecting those entities to a user interface can be a tedious task - 
+        implementing common CRUD operations often include similar but still 
+        repetitive boilerplate code. CDI Query supports you here with the 
+        <literal>EntityHome</literal> API.
+    </para>
+    
+    <section id="home-prerequisites">
+        <title>Prerequisites</title>
+        <para>
+            <literal>EntityHome</literal> requires a JPA 2 metamodel of the entities
+            used with it. The metamodel can be generated with tools from 
+            <ulink url="http://docs.jboss.org/hibernate/jpamodelgen/1.2/reference/en-US/html/">Hibernate</ulink> or 
+            <ulink url="http://wiki.eclipse.org/UserGuide/JPA/Using_the_Canonical_Model_Generator_%28ELUG%29">EclipseLink</ulink>,
+            or typically almost any JPA 2 persistence provider of your choice. 
+        </para>
+    </section>
+    
+    <section id="home-usage">
+        <title>EntityHome Usage</title>
+        <para>
+            A typical <literal>EntityHome</literal> looks like the following:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Named
+@Stateful
+@ConversationScoped
+public class BookHome extends EntityHome<Book, Long> {
+    
+    @Inject
+    private BookDao bookDao;
+
+    @Override
+    protected EntityDao<Book, Long> getEntityDao() {
+        return bookDao;
+    }
+
+    @Override
+    protected List<SingularAttribute<Book, ?>> searchAttributes() {
+        return singularAttributes()
+                .addIfNotEmpty(getSearch().getName(), Book_.name)
+                .getAttributes();
+    }
+
+}]]>    </programlisting>
+        <para>
+            As you see, there is nothing more than overriding two simple methods:
+            <itemizedlist>
+                <listitem>
+                    <literal>EntityDao getEntityDao()</literal> returns an instance of a DAO
+                    extending the <literal>EntityDao</literal> interface. The
+                    <literal>EntityDao</literal> provides all necessary methods
+                    for CRUD operations and pagination.
+                </listitem>
+                <listitem>
+                    <literal>List searchAttributes()</literal> returns a list of attributes
+                    that a search screen provides and the user has entered to lookup
+                    entities. Note that this requires a JPA 2 metamodel to be available.
+                </listitem>
+            </itemizedlist>
+            A utility API supports creating the list of search attributes with
+            fluent calls to a helper class.
+        </para>
+        <section id="home-overview">
+            <title>Inspecting the EntityHome class</title>
+            <para>
+                Diving into the <literal>EntityHome</literal> class itself gives some
+                insights in how it will connect to the frontend:
+            </para>
+            <programlisting role="JAVA"><![CDATA[public abstract class EntityHome<E, PK> {
+    // ACCESSORS AND MUTATORS
+    public PK getId() { ... }
+    public void setId(PK id) { ... }
+
+    public E getEntity() { ... }
+    public E getSearch() { ... }
+    
+    // METHODS
+    public Object create() { ... }
+    public void retrieve() { ... }
+    public Object update() { ... }
+    public Object delete() { ... }
+
+    // PAGINATION
+    public void search() { ... }
+    public void paginate() { ... }
+
+    public int getPage() { ...}
+    public void setPage(int page) { ... }
+
+    public long getCount() { ... }
+    public int getPageSize() { ... }
+    public List<E> getPageItems() { ... }
+
+}]]>        </programlisting>
+            <section id="home-overview-attributes">
+                <title>EntityHome Attributes</title>
+                <para>
+                    All Home instances are able to store following attributes:
+                    <informaltable>
+                        <tgroup cols="2">
+                            <thead>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody  valign="top">
+                                <row>
+                                    <entry><literal>id</literal></entry>
+                                    <entry>
+                                        <literal>PK id</literal> stores the primary key of the entity. This can be
+                                        used with a page parameter identifying e.g. the entity to view, update or delete.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>entity</literal></entry>
+                                    <entry>
+                                        <literal>E entity</literal> holds an entity instance, e.g. on edit or 
+                                        create screens. The entity can be bound to UI components and getting populated
+                                        with user input.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>search</literal></entry>
+                                    <entry>
+                                        <literal>E search</literal> holds also entity instance, but mainly to hold search 
+                                        parameters for querying page items. Changing to a create screen is assigning
+                                        the search entity to the <literal>entity</literal> attribute to prepopulate the screen.
+                                        This entity is never <literal>null</literal>.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                </para>
+            </section>
+            <section id="home-overview-methods">
+                <title>EntityHome Methods</title>
+                <para>
+                    In order to populate attributes and to actually do something with the data, following methods
+                    are available in the <literal>EntityHome</literal> class:
+                    
+                    <informaltable>
+                        <tgroup cols="2">
+                            <thead>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody  valign="top">
+                                <row>
+                                    <entry><literal>create</literal></entry>
+                                    <entry>
+                                        <literal>create()</literal> initializes a conversation. This is not necessarily
+                                        a JSF conversation, this is a UI specific concern.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>retrieve</literal></entry>
+                                    <entry>
+                                        <literal>retrieve()</literal> checks whether an <literal>id</literal> has been provided
+                                        and retrieves the corresponding entity. Otherwise, the <literal>entity</literal>
+                                        attribute is populated with the <literal>search</literal> entity.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>update</literal></entry>
+                                    <entry>
+                                        <literal>update()</literal> persists the current <literal>entity</literal>. Also used
+                                        for new entities. It also ends the current conversation.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>delete</literal></entry>
+                                    <entry>
+                                        <literal>delete()</literal> deletes an entity identified by the <literal>id</literal>
+                                        attribute. It also ends the current conversation.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                    Note that the return parameters are of type <literal>Object</literal> (resp. <literal>null</literal> by default) or void.
+                    This is overridden by specific UI framework modules, which we will show in the next chapter.
+                </para>
+            </section>
+            <section id="home-overview-pagination">
+                <title>Pagination</title>
+                <para>
+                    Other attributes and methods are concerned with entity search and pagination through the search results:
+                    <informaltable>
+                        <tgroup cols="2" colsep="1" rowsep="1">
+                            <colspec colname="c1"/>
+                            <colspec colname="c2"/>
+                            <thead>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody  valign="top">
+                                <row>
+                                    <entry namest="c1" nameend="c2"><literallayout>
+<emphasis role="bold">Paging Attributes</emphasis></literallayout>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>page</literal></entry>
+                                    <entry>
+                                        <literal>int page</literal> holds the current page the user is on with regards to the
+                                        current search result.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>pageSize</literal></entry>
+                                    <entry>
+                                        <literal>int pageSize</literal> corresponds to the max items displayed per page. This
+                                        defaults to 10.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>count</literal></entry>
+                                    <entry>
+                                        <literal>long count</literal> counts the current number of search result entities.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>pageItems</literal></entry>
+                                    <entry>
+                                        <literal>List pageItems</literal> contains all entities which the current page holds.
+                                        This is limited to <literal>pageSize</literal> items.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry namest="c1" nameend="c2"><literallayout>
+<emphasis role="bold">Paging Methods</emphasis></literallayout>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>search</literal></entry>
+                                    <entry>
+                                        <literal>void search()</literal> initializes the search screen, which is just resetting
+                                        the current page to 0.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry><literal>paginate</literal></entry>
+                                    <entry>
+                                        <literal>void paginate()</literal> does the lookup of the page items for the current page,
+                                        also with recalculating the search result size.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </informaltable>
+                </para>
+            </section>
+        </section>
+    </section>
+    
+    <section id="home-jsf">
+        <title>Using EntityHome with JavaServer Faces</title>
+        
+        <section id="home-jsf-installation">
+            <title>Installing EntityHome for JSF</title>
+            <para>
+                In order to keep the CDI query core module free from any UI specific
+                code, we have separated these concerns into dedicated modules.
+                Currently only JSF is supported.
+            </para>
+            <para>
+                To install <literal>EntityHome</literal> for JSF, add following dependency
+                to your POM:
+            </para>
+            <programlisting role="XML"><![CDATA[<dependency>
+    <groupId>com.ctp.cdi.query</groupId>
+    <artifactId>cdi-query-faces</artifactId>
+    <version>${cdi.query.version}</version>
+    <scope>runtime</scope>
+</dependency>]]>
+            </programlisting>
+        </section>
+        
+        <section id="home-jsf-configuration">
+            <title>Configuring EntityHome for JSF</title>
+            <para>
+                Once the JSF module JAR file is part of the runtime classpath, the JSF specific
+                beans also have to be activated to override the default beans part of the core
+                module. This can be done by updating your projects <literal>beans.xml</literal>
+                with the following alternatives:
+            </para>
+            <programlisting role="XML"><![CDATA[<alternatives>
+    <stereotype>com.ctp.cdi.query.home.FacesHome</stereotype>
+</alternatives>]]>
+            </programlisting>
+        </section>
+        
+        <section id="home-jsf-view">
+            <title>Integrating EntityHome with JSF</title>
+            <para>
+                JSF uses mainly <literal>String</literal> outcomes to determine navigation rules.
+                Following methods produce these outcomes:
+                
+                <informaltable>
+                    <tgroup cols="2" colsep="1" rowsep="1">
+                        <colspec colname="c1"/>
+                        <colspec colname="c2"/>
+                        <thead>
+                            <row>
+                                <entry>Method</entry>
+                                <entry>Outcome</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody valign="top">
+                            <row>
+                                <entry>create()</entry>
+                                <entry>create?faces-redirect=true</entry>
+                                <entry>
+                                    Redirects to a create page.
+                                    Starts a new conversation (<literal>javax.enterprise.context.Conversation</literal>).
+                                </entry>
+                            </row>
+                            <row>
+                                <entry morerows="2">update()</entry>
+                                <entry>search?faces-redirect=true</entry>
+                                <entry>
+                                    Redirects to a search page when the entity has been created.
+                                    Ends the current conversation.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><![CDATA[view?faces-redirect=true&id=PK]]></entry>
+                                <entry>
+                                    Redirects to a page the entity can be viewed after updating it.
+                                    Ends the current conversation.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><literal>null</literal></entry>
+                                <entry>
+                                    Returns <literal>null</literal> after an exception has occurred.
+                                    Ends the current conversation.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry morerows="1">delete()</entry>
+                                <entry>search?faces-redirect=true</entry>
+                                <entry>
+                                    Redirects to a search page when the entity has been deleted.
+                                    Ends the current conversation.
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    Returns <literal>null</literal> after an exception has occurred.
+                                    Ends the current conversation.
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </informaltable>
+            </para>
+            <para>
+                Typically CRUD screens require three XHTML facelet views, which might look like the
+                following snippets.
+            </para>
+            <para>
+                <emphasis role="bold">search.xhtml</emphasis>
+            </para>
+            <programlisting role="XML"><![CDATA[<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="...">
+
+    <!-- Reading URL parameters and reparing the page -->
+    
+	<f:metadata>
+		<f:viewParam name="page" value="#{bookHome.page}"/>
+		<f:event type="preRenderView" listener="#{bookHome.paginate}"/>
+	</f:metadata>
+    
+    <!-- Search form sample -->
+    
+    <h:inputText id="searchName" value="#{bookHome.search.name}"/>
+    
+    <!-- Commands -->
+    
+    <h:commandLink value="Search" action="#{bookHome.search}"/>
+    <h:commandLink value="Create New" action="#{bookHome.create}"/>
+    
+    <!-- Show search result -->
+    
+    <h:dataTable id="pageItems" value="#{bookHome.pageItems}" var="item">
+        <h:column>
+            <h:link outcome="/.../view">
+                <f:param name="id" value="#{item.id}"/>
+                <h:outputText id="itemName" value="#{item.name}"/>
+            </h:link>
+        </h:column>
+    </h:dataTable>
+    
+    <!-- Pagination -->
+    
+    <h:panelGroup rendered="#{bookHome.count gt bookHome.pageSize}">
+        <h:commandLink rendered="#{bookHome.page gt 0}">
+            <f:param name="page" value="#{bookHome.page - 1}"/>
+            Previous 
+        </h:commandLink>
+        <h:commandLink rendered="#{(bookHome.page + 1) * bookHome.pageSize lt bookHome.count}">
+            <f:param name="page" value="#{bookHome.page + 1}"/>
+            Next
+        </h:commandLink>
+    </h:panelGroup>
+    
+<ui:composition>]]>
+            </programlisting>
+            <para>
+                <emphasis role="bold">create.xhtml</emphasis>
+            </para>
+            <programlisting role="XML"><![CDATA[<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="...">
+    
+    <!-- Reading URL parameters and initializing the page -->
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{bookHome.id}" converter="javax.faces.Long"/>
+        <f:event type="preRenderView" listener="#{bookHome.retrieve}"/>
+    </f:metadata>
+    
+    <!-- Input Values -->
+    
+    <h:inputText id="bookName" value="#{bookHome.entity.name}"/>
+    
+    <!-- Commands -->
+    
+    <h:commandLink value="Save" action="#{bookHome.update}"/>
+    
+    <!-- Existing Entity -->
+    
+    <h:link value="Cancel" outcome="view">
+        <f:param name="id" value="#{bookHome.id}"/>
+    </h:link>
+    <h:commandLink value="Delete" action="#{bookHome.delete}"/>
+    
+<ui:composition>]]>
+            </programlisting>
+            <para>
+                <emphasis role="bold">view.xhtml</emphasis>
+            </para>
+            <programlisting role="XML"><![CDATA[<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="...">
+    
+    <!-- Reading URL parameters and initializing the page -->
+    
+    <f:metadata>
+        <f:viewParam name="id" value="#{bookHome.id}" converter="javax.faces.Long"/>
+        <f:event type="preRenderView" listener="#{bookHome.retrieve}"/>
+    </f:metadata>
+    
+    <!-- Display the entity -->
+    
+<ui:composition>]]>
+            </programlisting>
+            
+            <tip>
+                <para>
+                    Note the converters in the <![CDATA[<f:viewParam converter="javax.faces.Long" />]]>
+                    tags. The explicit converters are required due to Java type erasure - JSF cannot automatically detect the target
+                    property type. If you leave out the converter, the <literal>id</literal> property will not be populated.
+                    Select the converter according to your <literal>id</literal> type.
+                </para>
+            </tip>
+        </section>
+    </section>
+
+</chapter>

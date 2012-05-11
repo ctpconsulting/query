@@ -24,9 +24,21 @@ import javax.persistence.metamodel.SingularAttribute;
  * @param <R>   Result type.
  */
 public interface Criteria<C, R> {
+    
+    /**
+     * Executes the query and returns the result list.
+     * @return          List of entities matching the query.
+     */
+    List<R> getResultList();
 
     /**
-     * Last method call on a {@link Criteria} object, creates a JPA query object to be executed.
+     * Executes the query which has a single result.
+     * @return          Entity matching the search query.
+     */
+    R getSingleResult();
+
+    /**
+     * Creates a JPA query object to be executed.
      * @return          A {@link TypedQuery} object ready to return results.
      */
     TypedQuery<R> createQuery();

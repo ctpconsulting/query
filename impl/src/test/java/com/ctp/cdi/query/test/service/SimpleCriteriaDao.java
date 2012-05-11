@@ -13,7 +13,6 @@ public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long> 
                 .eq(Simple_.name, name)
                 .eq(Simple_.enabled, enabled)
                 .between(Simple_.counter, from, to)
-                .createQuery()
                 .getResultList();
     }
     
@@ -22,7 +21,6 @@ public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long> 
         return criteria()
                  .select(Statistics.class, avg(Simple_.counter), count(Simple_.counter))
                  .eq(Simple_.name, name)
-                 .createQuery()
                  .getSingleResult();
     }
     

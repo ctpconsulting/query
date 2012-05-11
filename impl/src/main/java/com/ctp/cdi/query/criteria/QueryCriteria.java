@@ -77,6 +77,16 @@ public class QueryCriteria<C, R> implements Criteria<C, R> {
     // --------------------------------------------------------------------
     
     @Override
+    public List<R> getResultList() {
+        return createQuery().getResultList();
+    }
+
+    @Override
+    public R getSingleResult() {
+        return createQuery().getSingleResult();
+    }
+    
+    @Override
     public TypedQuery<R> createQuery() {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();

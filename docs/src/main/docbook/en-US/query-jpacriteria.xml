@@ -33,8 +33,18 @@
                     .gtOrEq(Person_.age, minAge)
                     .eq(Person_.validated, Boolean.TRUE)
                     .orderDesc(Person_.age)
-                    .createQuery()
                     .getResultList();
+    }
+}]]>    </programlisting>
+        <para>
+            Note that extending <literal>AbstractEntityDao</literal> is the most convenient way to get 
+            support for the Criteria API, but it is enough to extend / implement the <literal>CriteriaSupport</literal>
+            interface.
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Dao(Person.class)
+public abstract class PersonDao implements CriteriaSupport {
+    public List<Person> findAdultFamilyMembers(String name, Integer minAge) {
+        return criteria()...;
     }
 }]]>    </programlisting>
         <para>
@@ -164,7 +174,6 @@
                             .eq(Company_.name, companyName)
                     )
                     .eq(Person_.validated, Boolean.TRUE)
-                    .createQuery()
                     .getResultList();
     }
 }]]>    </programlisting>
@@ -178,7 +187,6 @@
                     .fetch(Person_.familyMembers)
                     .eq(Person_.ssn, ssn)
                     .distinct()
-                    .createQuery()
                     .getSingleResult();
     }
 }]]>    </programlisting>
@@ -204,10 +212,138 @@
                             .gtOrEq(Person_.age, 21)
                             .eq(Person_.origin, Country.USA)
                     )
-                    .createQuery()
                     .getResultList();
     }
 }]]>    </programlisting>
+    </section>
+    
+    <section id="criteria-selects">
+        <title>Selections</title>
+        <para>
+            It might not always be appropriate to retrieve full entities - you might also be interested in scalar
+            values or by modified entity attributes. The <literal>Criteria</literal> interface allows this with 
+            the <literal>selection</literal> method:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public abstract class PersonDao extends AbstractEntityDao<Person, Long> {
+    public Statistics ageStatsFor(Segment segment) {
+        return criteria()
+                 .select(Statistics.class, avg(Person_.age), min(Person_.age), max(Person_.age))
+                 .eq(Person_.segment, segment)
+                 .getSingleResult();
+    }
+    
+    public List<Object[]> personViewForFamily(String name) {
+        return criteria()
+                 .select(upper(Person_.name), attribute(Person_.age), substring(Person_.firstname, 1))
+                 .like(Person_.name, name)
+                 .getResultList();
+    }
+}]]>    </programlisting>
+        <para>
+            There are also several functions supported which can be used in the selection clause:
+            <informaltable>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry><literal>abs(...)</literal></entry>
+                            <entry>
+                                Absolute value. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>avg(...)</literal></entry>
+                            <entry>
+                                Average value. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>count(...)</literal></entry>
+                            <entry>
+                                Count function. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>max(...)</literal></entry>
+                            <entry>
+                                Max value. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>min(...)</literal></entry>
+                            <entry>
+                                Min value. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>modulo(...)</literal></entry>
+                            <entry>
+                                Modulo function. Applicable to Integer attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>neg(...)</literal></entry>
+                            <entry>
+                                Negative value. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>sum(...)</literal></entry>
+                            <entry>
+                                Sum function. Applicable to Number attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>lower(...)</literal></entry>
+                            <entry>
+                                String to lowercase. Applicable to String attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>substring(int from, ...)</literal></entry>
+                            <entry>
+                                Substring starting from. Applicable to String attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>substring(int from, int to, ...)</literal></entry>
+                            <entry>
+                                Substring starting from ending to. Applicable to String attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>upper(...)</literal></entry>
+                            <entry>
+                                String to uppercase. Applicable to String attributes.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>currDate()</literal></entry>
+                            <entry>
+                                The DB sysdate. Returns a Date object.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>currTime()</literal></entry>
+                            <entry>
+                                The DB sysdate. Returns a Time object.
+                            </entry>
+                        </row>
+                        <row>
+                            <entry><literal>currTStamp()</literal></entry>
+                            <entry>
+                                The DB sysdate. Returns a Timestamp object.
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </informaltable>
+        </para>
     </section>
 
 </chapter>
