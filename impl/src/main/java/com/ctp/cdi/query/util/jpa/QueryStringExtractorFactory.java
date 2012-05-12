@@ -7,7 +7,7 @@ import javax.persistence.Query;
 
 public class QueryStringExtractorFactory {
 
-    private final List<QueryStringExtractor> extractors = Arrays.asList(
+    private final List<QueryStringExtractor> extractors = Arrays.<QueryStringExtractor>asList(
             new HibernateQueryStringExtractor(),
             new EclipseLinkEjbQueryStringExtractor(),
             new OpenJpaQueryStringExtractor());

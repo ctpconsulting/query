@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Home;
+import com.ctp.cdi.query.test.service.HomeDao;
 import com.ctp.cdi.query.test.service.HomeEntityHome;
 import com.ctp.cdi.query.test.util.TestDeployments;
 
@@ -23,7 +24,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return TestDeployments.initDeployment()
-                .addClasses(HomeEntityHome.class)
+                .addClasses(HomeEntityHome.class, HomeDao.class)
                 .addPackage(Home.class.getPackage());
     }
 

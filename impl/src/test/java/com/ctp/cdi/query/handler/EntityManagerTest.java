@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.SimpleDaoWithEntityManager;
 import com.ctp.cdi.query.test.service.SimpleDaoWithOverriddenEntityManager;
+import com.ctp.cdi.query.test.service.Simplistic;
 import com.ctp.cdi.query.test.util.TestDeployments;
 
 @RunWith(Arquillian.class)
@@ -26,8 +27,8 @@ public class EntityManagerTest {
         return TestDeployments.initDeployment()
                 .addClasses(SimpleDaoWithEntityManager.class,
                             SimpleDaoWithOverriddenEntityManager.class,
-                            EntityManagerTestProducer.class)
-                .addPackage(Simple.class.getPackage());
+                            EntityManagerTestProducer.class,
+                            Simplistic.class);
     }
 
     @Inject

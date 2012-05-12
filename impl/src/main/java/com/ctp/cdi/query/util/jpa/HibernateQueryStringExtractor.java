@@ -2,14 +2,13 @@ package com.ctp.cdi.query.util.jpa;
 
 import javax.persistence.Query;
 
-import org.hibernate.ejb.HibernateQuery;
-
 @ProviderSpecific("org.hibernate.ejb.HibernateQuery")
-public class HibernateQueryStringExtractor implements QueryStringExtractor {
+public class HibernateQueryStringExtractor extends BaseQueryStringExtractor {
 
     @Override
     public String extractFrom(Query query) {
-        return query.unwrap(HibernateQuery.class).getHibernateQuery().getQueryString();
+        Object hibernateQuery = invoke("getHibernateQuery", query);
+        return (String) invoke("getQueryString", hibernateQuery);
     }
 
 }

@@ -48,6 +48,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
             result = params.applyTo(entityManager.createNativeQuery(jpqlQuery));
         } else {
             String jpqlQuery = context.applyQueryStringPostProcessors(query.value());
+            context.setQueryString(jpqlQuery);
             result = params.applyTo(entityManager.createQuery(jpqlQuery));
         }
         return applyRestrictions(context, result);

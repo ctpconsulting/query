@@ -49,6 +49,35 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[2.3,)</versionRange>
+                                        <goals>
+                                            <goal>copy</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
@@ -98,36 +127,6 @@
             <groupId>org.jboss.solder</groupId>
             <artifactId>solder-logging</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        
-        <!-- Persistence Providers -->
-        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.main.extras</groupId>
-            <artifactId>glassfish-embedded-all</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>2.2.0</version>
-            <optional>true</optional>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Tests -->
@@ -237,6 +236,99 @@
             </dependencies>
             <properties>
                 <deploy.libs>true</deploy.libs>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>arq-tomee-10-embedded</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-tomee</directory>
+                    </testResource>
+                </testResources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.apache.openejb</groupId>
+                                            <artifactId>openejb-javaagent</artifactId>
+                                            <version>4.0.0</version>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <forkMode>pertest</forkMode>
+                                <argLine>-javaagent:${basedir}/target/openejb-javaagent-4.0.0.jar</argLine>
+                                <workingDirectory>${basedir}/target</workingDirectory>
+                            </configuration>
+                        </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>arquillian-tomee-embedded</artifactId>
+                    <version>1.0.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>openejb-core</artifactId>
+                    <version>4.0.0</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openjpa</groupId>
+                    <artifactId>openjpa-all</artifactId>
+                    <version>2.2.0</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-spi</artifactId>
+                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-impl</artifactId>
+                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-ejb</artifactId>
+                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openwebbeans</groupId>
+                    <artifactId>openwebbeans-ee</artifactId>
+                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
+                </dependency>
+                <dependency>
+                    <groupId>org.hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
+                </dependency>
+            </dependencies>
+            <properties>
+                <deploy.libs>false</deploy.libs>
+                <version.owb>1.1.4</version.owb>
             </properties>
         </profile>
     

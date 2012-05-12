@@ -25,6 +25,7 @@ public class MethodQueryBuilder extends QueryBuilder {
         Parameters params = context.getParams();
         QueryRoot root = context.getDaoMethod().getQueryRoot();
         String jpqlQuery = context.applyQueryStringPostProcessors(root.getJpqlQuery());
+        context.setQueryString(jpqlQuery);
         Query result = params.applyTo(context.getEntityManager().createQuery(jpqlQuery));
         return applyRestrictions(context, result);
     }

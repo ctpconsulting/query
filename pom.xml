@@ -52,6 +52,7 @@
 
     <properties>
         <seam.version>3.1.0.Final</seam.version>
+        <solder.version>${seam.version}</solder.version>
         <emma.version>2.0.5312</emma.version>
         <arquillian.version>1.0.0.Final</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
@@ -117,7 +118,7 @@
             <dependency>
                 <groupId>org.jboss.solder</groupId>
                 <artifactId>solder-logging</artifactId>
-                <version>${seam.version}</version>
+                <version>${solder.version}</version>
             </dependency>
 
             <dependency>
@@ -362,6 +363,9 @@
         </profile>
         <profile>
             <id>arq-jbossas-7-managed</id>
+        </profile>
+        <profile>
+            <id>arq-tomee-10-embedded</id>
         </profile>
     </profiles>
 

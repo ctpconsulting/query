@@ -2,14 +2,13 @@ package com.ctp.cdi.query.util.jpa;
 
 import javax.persistence.Query;
 
-import org.eclipse.persistence.jpa.JpaQuery;
-
 @ProviderSpecific("org.eclipse.persistence.jpa.JpaQuery")
-public class EclipseLinkEjbQueryStringExtractor implements QueryStringExtractor {
+public class EclipseLinkEjbQueryStringExtractor extends BaseQueryStringExtractor {
 
     @Override
     public String extractFrom(Query query) {
-        return query.unwrap(JpaQuery.class).getDatabaseQuery().getJPQLString();
+        Object dbQuery = invoke("getDatabaseQuery", query);
+        return (String) invoke("getJPQLString", dbQuery);
     }
 
 }

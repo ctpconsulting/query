@@ -30,13 +30,16 @@ import com.ctp.cdi.query.WithEntityManager;
 import com.ctp.cdi.query.audit.AuditEntityListener;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.criteria.Criteria;
+import com.ctp.cdi.query.criteria.CriteriaSupport;
 import com.ctp.cdi.query.criteria.QueryCriteria;
 import com.ctp.cdi.query.criteria.QuerySelection;
 import com.ctp.cdi.query.handler.QueryHandler;
 import com.ctp.cdi.query.home.DefaultNavigationProvider;
+import com.ctp.cdi.query.home.EntityHome;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.param.Parameters;
 import com.ctp.cdi.query.test.TransactionalTestCase;
+import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.util.EntityUtils;
 
 public abstract class TestDeployments {
@@ -48,7 +51,7 @@ public abstract class TestDeployments {
     }
     
     public static WebArchive initDeployment() {
-        return initDeployment(".*TestDeployments.*");
+        return initDeployment(".*test.*");
     }
 
     /**
@@ -62,7 +65,9 @@ public abstract class TestDeployments {
         WebArchive archive = ShrinkWrap.create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
                 .addClasses(QueryExtension.class)
+                .addClasses(TransactionalTestCase.class)
                 .addPackages(true, TEST_FILTER, createImplPackages())
+                .addPackages(true, AuditedEntity.class.getPackage())
                 .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
                 .addAsWebInfResource("test-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension", 
@@ -90,7 +95,8 @@ public abstract class TestDeployments {
                 .addClasses(AbstractEntityDao.class, Dao.class, EntityDao.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
                         NonEntity.class, Query.class, QueryParam.class, QueryResult.class, WithEntityManager.class)
-                .addClasses(Criteria.class, QuerySelection.class);
+                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
+                .addPackage(EntityHome.class.getPackage());
     }
     
     public static WebArchive addDependencies(WebArchive archive) {

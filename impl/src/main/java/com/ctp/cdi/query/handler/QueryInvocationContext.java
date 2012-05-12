@@ -21,6 +21,8 @@ public class QueryInvocationContext {
     private final List<QueryStringPostProcessor> queryPostProcessors;
     private final List<JpaQueryPostProcessor> jpaPostProcessors;
     
+    private String queryString;
+    
     public QueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
         this.entityManager = entityManager;
         this.params = Parameters.create(invocation.getMethod(), invocation.getParameters());
@@ -89,6 +91,14 @@ public class QueryInvocationContext {
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public String getQueryString() {
+        return queryString;
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
     }
 
 }
