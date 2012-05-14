@@ -136,6 +136,19 @@ public interface PersonDao extends EntityDao<Person, Long> {
 }]]>    </programlisting>
     </section>
     
+    <section id="methodexpressions-traversal">
+        <title>Nested Properties</title>
+        <para>
+            To create a comparison on a nested property, the traversal parts can be
+            separated by a <literal>_</literal>:
+        </para>
+        <programlisting role="JAVA"><![CDATA[public interface PersonDao extends EntityDao<Person, Long> {
+
+    List<Person> findByCompany_companyName(String companyName);
+
+}]]>    </programlisting>
+    </section>
+    
     <section id="methodexpressions-options">
         <title>Query Options</title>
         <para>

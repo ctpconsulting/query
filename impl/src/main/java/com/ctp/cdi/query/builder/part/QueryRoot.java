@@ -9,6 +9,7 @@ import org.jboss.solder.logging.Logger;
 
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.builder.QueryBuilderContext;
+import com.ctp.cdi.query.meta.DaoComponent;
 
 /**
  * Root of the query tree. Also the only exposed class in the package.
@@ -30,9 +31,9 @@ public class QueryRoot extends QueryPart {
         this.entityName = entityName;
     }
 
-    public static QueryRoot create(String method, String entityName) {
-        QueryRoot root = new QueryRoot(entityName);
-        root.build(method);
+    public static QueryRoot create(String method, DaoComponent dao) {
+        QueryRoot root = new QueryRoot(dao.getEntityName());
+        root.build(method, method, dao);
         root.createJpql();
         return root;
     }
@@ -42,7 +43,7 @@ public class QueryRoot extends QueryPart {
     }
 
     @Override
-    protected QueryPart build(String queryPart) {
+    protected QueryPart build(String queryPart, String method, DaoComponent dao) {
         String[] orderByParts = splitByKeyword(queryPart, "OrderBy");
         if (hasQueryConditions(orderByParts)) {
             String[] orParts = splitByKeyword(removePrefix(orderByParts[0]), "Or");
@@ -50,12 +51,12 @@ public class QueryRoot extends QueryPart {
             for (String or : orParts) {
                 OrQueryPart orPart = new OrQueryPart(first);
                 first = false;
-                children.add(orPart.build(or));
+                children.add(orPart.build(or, method, dao));
             }
         }
         if (orderByParts.length > 1) {
             OrderByQueryPart orderByPart = new OrderByQueryPart();
-            children.add(orderByPart.build(orderByParts[1]));
+            children.add(orderByPart.build(orderByParts[1], method, dao));
         }
         return this;
     }

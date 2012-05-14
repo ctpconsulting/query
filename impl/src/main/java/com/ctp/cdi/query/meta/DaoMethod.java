@@ -10,7 +10,6 @@ import com.ctp.cdi.query.builder.part.QueryRoot;
 import com.ctp.cdi.query.builder.result.QueryProcessor;
 import com.ctp.cdi.query.builder.result.QueryProcessorFactory;
 import com.ctp.cdi.query.handler.EntityDaoHandler;
-import com.ctp.cdi.query.util.EntityUtils;
 
 /**
  * Stores information about a specific method of a DAO:
@@ -55,8 +54,7 @@ public class DaoMethod {
     
     private QueryRoot initQueryRoot() {
         if (methodType == MethodType.PARSE) {
-            return QueryRoot.create(method.getName(), 
-                    EntityUtils.entityName(dao.getEntityClass()));
+            return QueryRoot.create(method.getName(), dao);
         }
         return QueryRoot.UNKNOWN_ROOT;
     }

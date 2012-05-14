@@ -10,9 +10,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ctp.cdi.query.WithEntityManager;
-import org.jboss.solder.reflection.AnnotationInstanceProvider;
 import org.jboss.solder.logging.Logger;
+import org.jboss.solder.reflection.AnnotationInstanceProvider;
+
+import com.ctp.cdi.query.WithEntityManager;
+import com.ctp.cdi.query.util.EntityUtils;
 
 /**
  * Stores information about a specific DAO. Extracts information about:
@@ -42,6 +44,10 @@ public class DaoComponent {
         this.daoClass = daoClass;
         this.entityClass = entityClass;
         initialize();
+    }
+    
+    public String getEntityName() {
+        return EntityUtils.entityName(entityClass.getEntityClass());
     }
 
     /**

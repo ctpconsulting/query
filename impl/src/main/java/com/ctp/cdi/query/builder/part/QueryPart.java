@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ctp.cdi.query.builder.QueryBuilderContext;
+import com.ctp.cdi.query.meta.DaoComponent;
 
 /**
  *
@@ -14,7 +15,7 @@ public abstract class QueryPart  {
     
     protected List<QueryPart> children = new LinkedList<QueryPart>();
     
-    protected abstract QueryPart build(String queryPart);
+    protected abstract QueryPart build(String queryPart, String method, DaoComponent dao);
     
     protected abstract QueryPart buildQuery(QueryBuilderContext ctx);
     

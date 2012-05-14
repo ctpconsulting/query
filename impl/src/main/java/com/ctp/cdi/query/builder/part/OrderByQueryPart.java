@@ -13,8 +13,9 @@ import java.util.TreeSet;
 
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.builder.QueryBuilderContext;
+import com.ctp.cdi.query.meta.DaoComponent;
 
-public class OrderByQueryPart extends QueryPart {
+public class OrderByQueryPart extends BasePropertyQueryPart {
 
     private static final String KEYWORD_ASC = "Asc";
     private static final String KEYWORD_DESC = "Desc";
@@ -22,7 +23,7 @@ public class OrderByQueryPart extends QueryPart {
     private final List<OrderByQueryAttribute> attributes = new LinkedList<OrderByQueryAttribute>();
 
     @Override
-    protected QueryPart build(String queryPart) {
+    protected QueryPart build(String queryPart, String method, DaoComponent dao) {
         Set<String> collect = new TreeSet<String>();
         List<String> ascSplit = new LinkedList<String>();
         split(queryPart, KEYWORD_ASC, ascSplit);
@@ -32,6 +33,7 @@ public class OrderByQueryPart extends QueryPart {
         for (String part : collect) {
             Direction direction = Direction.fromQueryPart(part);
             String attribute = direction.attribute(part);
+            validate(attribute, method, dao);
             attributes.add(new OrderByQueryAttribute(attribute, direction));
         }
         return this;
@@ -56,7 +58,7 @@ public class OrderByQueryPart extends QueryPart {
         }
     }
     
-    private static class OrderByQueryAttribute {
+    private class OrderByQueryAttribute {
         
         private final String attribute;
         private final Direction direction;
@@ -68,7 +70,7 @@ public class OrderByQueryPart extends QueryPart {
 
         protected void buildQuery(QueryBuilderContext ctx) {
             String entityPrefix = QueryBuilder.ENTITY_NAME + ".";
-            ctx.append(entityPrefix).append(attribute)
+            ctx.append(entityPrefix).append(rewriteSeparator(attribute))
                 .append(direction.queryDirection());
         }
     }

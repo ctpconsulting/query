@@ -37,6 +37,7 @@ public class Simple {
     private Integer counter = Integer.valueOf(0);
     @Temporal(TemporalType.TIMESTAMP)
     private Date temporal;
+    private EmbeddedSimple embedded;
     
     public Simple() {
     }
@@ -91,6 +92,14 @@ public class Simple {
 
     public void setTemporal(Date temporal) {
         this.temporal = temporal;
+    }
+
+    public EmbeddedSimple getEmbedded() {
+        return embedded;
+    }
+
+    public void setEmbedded(EmbeddedSimple embedded) {
+        this.embedded = embedded;
     }
 
 }

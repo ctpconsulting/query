@@ -1,6 +1,7 @@
 package com.ctp.cdi.query.builder.part;
 
 import com.ctp.cdi.query.builder.QueryBuilderContext;
+import com.ctp.cdi.query.meta.DaoComponent;
 
 /**
  *
@@ -13,8 +14,8 @@ class AndQueryPart extends ConnectingQueryPart {
     }
 
     @Override
-    protected QueryPart build(String queryPart) {
-        children.add(new PropertyQueryPart().build(queryPart));
+    protected QueryPart build(String queryPart, String method, DaoComponent dao) {
+        children.add(new PropertyQueryPart().build(queryPart, method, dao));
         return this;
     }
 

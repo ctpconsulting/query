@@ -3,6 +3,7 @@ package com.ctp.cdi.query.builder.part;
 import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
 
 import com.ctp.cdi.query.builder.QueryBuilderContext;
+import com.ctp.cdi.query.meta.DaoComponent;
 
 /**
  * @author thomashug
@@ -14,13 +15,13 @@ class OrQueryPart extends ConnectingQueryPart {
     }
 
     @Override
-    protected QueryPart build(String queryPart) {
+    protected QueryPart build(String queryPart, String method, DaoComponent dao) {
         String[] andParts = splitByKeyword(queryPart, "And");
         boolean first = true;
         for (String and : andParts) {
             AndQueryPart andPart = new AndQueryPart(first);
             first = false;
-            children.add(andPart.build(and));
+            children.add(andPart.build(and, method, dao));
         }
         return this;
     }
