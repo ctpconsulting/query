@@ -4,8 +4,7 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.persistence.LockModeType;
-import javax.persistence.Query;
+import javax.persistence.*;
 
 import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
@@ -47,7 +46,20 @@ public abstract class QueryBuilder {
     protected boolean hasLockMode(Method method) {
         return extractLockMode(method) != null;
     }
-    
+
+    protected QueryHint[] extractQueryHints(Method method) {
+        Class<com.ctp.cdi.query.Query> query = com.ctp.cdi.query.Query.class;
+        if (method.isAnnotationPresent(query) &&
+                method.getAnnotation(query).hints().length > 0) {
+            return method.getAnnotation(query).hints();
+        }
+        return null;
+    }
+
+    protected boolean hasQueryHints(Method method) {
+        return extractQueryHints(method) != null;
+    }
+
     protected Query applyRestrictions(QueryInvocationContext context, Query query) {
         Parameters params = context.getParams();
         Method method = context.getMethod();
@@ -59,6 +71,12 @@ public abstract class QueryBuilder {
         }
         if (hasLockMode(method)) {
             query.setLockMode(extractLockMode(method));
+        }
+        if (hasQueryHints(method)) {
+            QueryHint[] hints = extractQueryHints(method);
+            for (QueryHint hint : hints) {
+                query.setHint(hint.name(), hint.value());
+            }
         }
         query = context.applyJpaQueryPostProcessors(query);
         return query;
