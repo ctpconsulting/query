@@ -9,6 +9,9 @@
     </parent>
     
     <artifactId>cdi-query-faces</artifactId>
+
+    <name>CDI Query Faces</name>
+    <url>${project.parent.url}</url>
     
     <dependencies>
     
