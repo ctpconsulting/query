@@ -6,14 +6,14 @@ For a more detailed introduction into the extension, just have a look at the pro
 
 ### Code Sample
 
-public interface PersonDao extends EntityDao<Person, Long> {
+    public interface PersonDao extends EntityDao<Person, Long> {
 
-    List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
+        List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
 
-    @Query("select p from Person p where p.ssn = ?1")
-    Person findBySSN(String ssn);
+        @Query("select p from Person p where p.ssn = ?1")
+        Person findBySSN(String ssn);
 
-    @Query(named=Person.BY_FULL_NAME)
-    Person findByFullName(String firstName, String lastName);
+        @Query(named=Person.BY_FULL_NAME)
+        Person findByFullName(String firstName, String lastName);
 
-}
+    }
