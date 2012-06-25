@@ -158,9 +158,6 @@
     
         <profile>
             <id>arq-glassfish-31-embedded</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <testResources>
                     <testResource>
@@ -238,100 +235,78 @@
                 <deploy.libs>true</deploy.libs>
             </properties>
         </profile>
-        
+
         <profile>
-            <id>arq-tomee-10-embedded</id>
+            <id>arq-openejb-embedded</id>
             <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-tomee</directory>
-                    </testResource>
-                </testResources>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.apache.openejb</groupId>
-                                            <artifactId>openejb-javaagent</artifactId>
-                                            <version>4.0.0</version>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <forkMode>pertest</forkMode>
-                                <argLine>-javaagent:${basedir}/target/openejb-javaagent-4.0.0.jar</argLine>
-                                <workingDirectory>${basedir}/target</workingDirectory>
-                            </configuration>
-                        </plugin>
-                </plugins>
+              <testResources>
+                <testResource>
+                  <directory>src/test/resources</directory>
+                </testResource>
+                <testResource>
+                  <directory>src/test/resources-openejb</directory>
+                </testResource>
+              </testResources>
             </build>
-            <dependencies>
+            <dependencies> <!-- it seems dependencies are not so clean since we shouldn't need to specify so much of them -->
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
-                    <artifactId>arquillian-tomee-embedded</artifactId>
-                    <version>1.0.0</version>
+                    <artifactId>arquillian-openejb-embedded-4</artifactId>
+                    <version>4.1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-impl</artifactId>
+                  <version>1.1.4</version>
+                  <scope>test</scope>
+                </dependency>
+                <dependency>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-spi</artifactId>
+                  <version>1.1.4</version>
+                  <scope>test</scope>
+                </dependency>
+                <dependency>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-web</artifactId>
+                  <version>1.1.4</version>
+                  <scope>test</scope>
+                </dependency>
+                <dependency>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-ee-common</artifactId>
+                  <version>1.1.4</version>
+                  <scope>test</scope>
+                </dependency>
+                <dependency>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-ejb</artifactId>
+                  <version>1.1.4</version>
+                  <scope>test</scope>
+                </dependency>
+                <dependency> <!-- openejb 3.1.2 is imported elsewhere so forcing the version -->
+                  <groupId>org.apache.openejb</groupId>
+                  <artifactId>openejb-core</artifactId>
+                  <version>4.1.0-SNAPSHOT</version>
+                  <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
-                    <artifactId>openejb-core</artifactId>
-                    <version>4.0.0</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openjpa</groupId>
-                    <artifactId>openjpa-all</artifactId>
-                    <version>2.2.0</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-spi</artifactId>
-                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-impl</artifactId>
-                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-ejb</artifactId>
-                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openwebbeans</groupId>
-                    <artifactId>openwebbeans-ee</artifactId>
-                    <version>${version.owb}</version><!--$NO-MVN-MAN-VER$-->
-                </dependency>
-                <dependency>
-                    <groupId>org.hsqldb</groupId>
-                    <artifactId>hsqldb</artifactId>
+                    <artifactId>openejb-core-hibernate</artifactId>
+                    <version>4.1.0-SNAPSHOT</version>
+                    <type>pom</type>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
-            <properties>
-                <deploy.libs>false</deploy.libs>
-                <version.owb>1.1.4</version.owb>
-            </properties>
+            <repositories>
+                <repository>
+                    <id>openejb</id>
+                    <url>https://repository.apache.org/content/repositories/snapshots/</url>
+                </repository>
+            </repositories>
         </profile>
-    
+
         <profile>
             <id>code-analysis</id>
             <build>
