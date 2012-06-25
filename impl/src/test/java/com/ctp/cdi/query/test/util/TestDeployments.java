@@ -70,7 +70,7 @@ public abstract class TestDeployments {
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
                 .addAsWebInfResource("test-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
-                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension", 
+                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
         
