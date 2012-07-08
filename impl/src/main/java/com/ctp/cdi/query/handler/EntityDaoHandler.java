@@ -1,6 +1,7 @@
 package com.ctp.cdi.query.handler;
 
 import static com.ctp.cdi.query.util.QueryUtils.isEmpty;
+import static com.ctp.cdi.query.util.QueryUtils.isString;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -81,7 +82,8 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
     }
 
     public Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-        return extract(method).invoke(this, args);
+        Method extract = extract(method);
+        return extract.invoke(this, args);
     }
 
     @Override
@@ -321,11 +323,21 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return jpqlQuery.toString();
     }
 
-    private void addParameters(TypedQuery<?> query, E example, List<Property<Object>> properties) {
+    private void addParameters(TypedQuery<?> query, E example, List<Property<Object>> properties, boolean useLikeOperator) {
         for (Property<Object> property : properties) {
             property.setAccessible();
-            query.setParameter(property.getName(), property.getValue(example));
+            query.setParameter(property.getName(), transform(property.getValue(example), useLikeOperator));
         }
+    }
+
+    private Object transform(Object value, final boolean useLikeOperator) {
+        if (value != null && useLikeOperator && isString(value)) {
+            // seems to be an OpenJPA bug:
+            // parameters in querys fail validation, e.g. UPPER(e.name) like UPPER(:name) 
+            String result = ((String) value).toUpperCase();
+            return "%" + result + "%";
+        }
+        return value;
     }
 
     private String prepareWhere(List<Property<Object>> properties, boolean useLikeOperator) {
@@ -334,8 +346,9 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         while (iterator.hasNext()) {
             Property<Object> property = iterator.next();
             String name = property.getName();
-            if(useLikeOperator && property.getJavaClass().getName().equals(String.class.getName())) {
-                result.append("UPPER(e.").append(name).append(") like UPPER(concat('%',:").append(name).append(iterator.hasNext() ? ",'%')) and " : ",'%'))");
+            if (useLikeOperator && property.getJavaClass().getName().equals(String.class.getName())) {
+                result.append("UPPER(e.").append(name).append(") like :").append(name)
+                        .append(iterator.hasNext() ? " and " : "");
             } else {
                 result.append("e.").append(name).append(" = :").append(name).append(iterator.hasNext() ? " and " : "");
             }
@@ -367,7 +380,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         }
 
         List<Property<Object>> properties = extractProperties(attributes);
-        String jpqlQuery = exampleQuery(allQuery(),properties,useLikeOperator);
+        String jpqlQuery = exampleQuery(allQuery(), properties, useLikeOperator);
         log.debugv("findBy|findByLike: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager.createQuery(jpqlQuery, entityClass);
 
@@ -381,7 +394,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
             query.setMaxResults(max);
         }
 
-        addParameters(query, example, properties);
+        addParameters(query, example, properties, useLikeOperator);
         return query.getResultList();
     }
     
@@ -390,10 +403,10 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
             return count();
         }
         List<Property<Object>> properties = extractProperties(attributes);
-        String jpqlQuery = exampleQuery(countQuery(),properties,useLikeOperator);
+        String jpqlQuery = exampleQuery(countQuery(), properties, useLikeOperator);
         log.debugv("count: Created query {0}", jpqlQuery);
         TypedQuery<Long> query = entityManager.createQuery(jpqlQuery, Long.class);
-        addParameters(query, example, properties);
+        addParameters(query, example, properties, useLikeOperator);
         return query.getSingleResult();
     }
 

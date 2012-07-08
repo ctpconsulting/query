@@ -54,8 +54,7 @@ class PrincipalProvider extends AuditProvider {
         Set<Bean<?>> beans = manager.getBeans(propertyClass, principal);
         if (!beans.isEmpty() && beans.size() == 1) {
             Bean<?> bean = beans.iterator().next();
-            Object result = manager.getReference(bean, propertyClass, 
-                    manager.createCreationalContext(bean));
+            Object result = manager.getReference(bean, propertyClass, manager.createCreationalContext(bean));
             return result;
         }
         throw new IllegalArgumentException("Principal " + (beans.isEmpty() ? "not found" : "not unique") +

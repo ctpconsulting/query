@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.audit;
 
+import static com.ctp.cdi.query.test.util.TestDeployments.initDeployment;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
@@ -15,13 +16,12 @@ import org.junit.Test;
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.test.domain.Principal;
-import com.ctp.cdi.query.test.util.TestDeployments;
 
 public class AuditEntityListenerTest extends TransactionalTestCase {
     
     @Deployment
     public static Archive<?> deployment() {
-        return TestDeployments.initDeployment()
+        return initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
                 .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
                 .addPackage(AuditedEntity.class.getPackage());
@@ -31,6 +31,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     private EntityManager entityManager;
     
     private final String who = "test999";
+    private Principal principal = new Principal(who);
     
     @Produces @CurrentUser
     public String who() {
@@ -38,10 +39,12 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
     
     @Produces @CurrentUser
-    public Principal entity() {
-        Principal p = new Principal(who);
-        entityManager.persist(p);
-        return p;
+    public Principal entity() throws Exception {
+        try {
+            entityManager.persist(principal);
+        } catch (Throwable e) {
+        }
+        return principal;
     }
     
     @Test
@@ -67,13 +70,12 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
         entityManager.flush();
         
         // when
-        entity = entityManager.merge(entity);
+        entity = entityManager.find(AuditedEntity.class, entity.getId());
         entity.setName("test");
         entityManager.flush();
         
         // then
         assertNotNull(entity.getGregorianModified());
-        assertNotNull(entity.getSqlModified());
         assertNotNull(entity.getTimestamp());
     }
     
@@ -91,6 +93,11 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
         assertEquals(who, entity.getChanger());
         assertNotNull(entity.getPrincipal());
         assertEquals(who, entity.getPrincipal().getName());
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
     }
 
 }

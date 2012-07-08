@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
+
+    <package>com.ctp.cdi.query.test.domain.mapped</package>
+    <mapped-superclass class="MappedSuperclass"/>
+    <mapped-superclass class="MappedId">
+        <attributes>
+            <id name="id">
+                <generated-value />
+            </id>
+        </attributes>
+    </mapped-superclass>
+    <entity class="com.ctp.cdi.query.test.domain.mapped.MappedTwo">
+        <id-class class="com.ctp.cdi.query.test.domain.TeeId"/>
+        <attributes>
+            <id name="teeSetId"/>
+            <id name="holeId"/>
+        </attributes>
+    </entity>
+    <entity class="MappedThree">
+    </entity>
+
+</entity-mappings>

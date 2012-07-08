@@ -23,6 +23,31 @@ public class TeeId implements Serializable {
         this.holeId = holeId;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (holeId ^ (holeId >>> 32));
+        result = prime * result + (int) (teeSetId ^ (teeSetId >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TeeId other = (TeeId) obj;
+        if (holeId != other.holeId)
+            return false;
+        if (teeSetId != other.teeSetId)
+            return false;
+        return true;
+    }
+
     public long getTeeSetId() {
         return teeSetId;
     }

@@ -298,6 +298,11 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         assertNull(lookup);
     }
     
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
     private Simple createSimple(String name) {
         return createSimple(name, null);
     }

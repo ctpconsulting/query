@@ -118,6 +118,11 @@ public class EntityHomeTest extends TransactionalTestCase {
         assertEquals(2, home.getPageItems().size());
     }
     
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
     private Home createHome(String name) {
         Home entity = new Home();
         entity.setName("testPaginate");

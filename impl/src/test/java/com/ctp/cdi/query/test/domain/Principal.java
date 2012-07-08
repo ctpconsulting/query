@@ -15,6 +15,14 @@ public class Principal {
     public Principal() {
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Principal [id=").append(id)
+               .append(", name=").append(name).append("]");
+        return builder.toString();
+    }
+
     public Principal(String name) {
         this.name = name;
     }

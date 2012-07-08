@@ -240,6 +240,11 @@ public class QueryHandlerTest extends TransactionalTestCase {
     public void setup() {
         builder = new SimpleBuilder(entityManager);
     }
+    
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
 
     private Simple2 createSimple2(String name) {
         Simple2 result = new Simple2(name);

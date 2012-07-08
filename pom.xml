@@ -1,12 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.jboss.seam</groupId>
-        <artifactId>seam-parent</artifactId>
-        <version>19</version>
-    </parent>
-
     <artifactId>cdi-query-parent</artifactId>
     <groupId>com.ctp.cdi.query</groupId>
     <version>1.0.0.Alpha5-SNAPSHOT</version>
@@ -54,12 +48,25 @@
         <seam.version>3.1.0.Final</seam.version>
         <solder.version>${seam.version}</solder.version>
         <emma.version>2.0.5312</emma.version>
-        <arquillian.version>1.0.0.Final</arquillian.version>
+        <arquillian.version>1.0.1.Final</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
+        <jdk.source>1.6</jdk.source>
+        <jdk.target>1.6</jdk.target>
     </properties>
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${jdk.source}</source>
+                    <target>${jdk.target}</target>
+                </configuration>
+            </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -365,7 +372,7 @@
             <id>arq-jbossas-7-managed</id>
         </profile>
         <profile>
-            <id>arq-tomee-10-embedded</id>
+            <id>arq-openejb-embedded</id>
         </profile>
     </profiles>
 

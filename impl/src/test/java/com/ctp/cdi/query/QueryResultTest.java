@@ -96,7 +96,6 @@ public class QueryResultTest extends TransactionalTestCase {
                 .lockMode(LockModeType.NONE)
                 .flushMode(FlushModeType.COMMIT)
                 .orderDesc(Simple_.counter)
-                .orderAsc(Simple_.id)
                 .firstResult(2)
                 .maxResults(2)
                 .getResultList();
@@ -105,7 +104,6 @@ public class QueryResultTest extends TransactionalTestCase {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());
-        assertEquals(56, result.get(0).getCounter().intValue());
     }
     
     @Test
@@ -160,4 +158,10 @@ public class QueryResultTest extends TransactionalTestCase {
     public void setup() {
         builder = new SimpleBuilder(entityManager);
     }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
+
 }

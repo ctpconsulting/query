@@ -23,7 +23,6 @@ public class TimestampsProviderTest {
         assertNotNull(entity.getCreated());
         assertNotNull(entity.getModified());
         assertNull(entity.getGregorianModified());
-        assertNull(entity.getSqlModified());
         assertNull(entity.getTimestamp());
     }
 
@@ -39,7 +38,6 @@ public class TimestampsProviderTest {
         assertNull(entity.getCreated());
         assertNotNull(entity.getModified());
         assertNotNull(entity.getGregorianModified());
-        assertNotNull(entity.getSqlModified());
         assertNotNull(entity.getTimestamp());
     }
 

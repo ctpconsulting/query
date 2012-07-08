@@ -65,7 +65,8 @@ abstract class DescriptorReader {
     }
 
     ClassLoader classLoader() {
-        return Thread.currentThread().getContextClassLoader();
+        return getClass().getClassLoader();
+        //return Thread.currentThread().getContextClassLoader();
     }
     
     boolean exists(URL url) {

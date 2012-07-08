@@ -27,8 +27,6 @@
         <version.maven.pmd>2.7.1</version.maven.pmd>
         <version.maven.findbugs>2.4.0</version.maven.findbugs>
         <version.maven.cobertura>2.5.1</version.maven.cobertura>
-        <jdk.source>1.6</jdk.source>
-        <jdk.target>1.6</jdk.target>
         <project.parent.url>${project.artifactId}</project.parent.url>
     </properties>
 
@@ -39,16 +37,6 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${jdk.source}</source>
-                    <target>${jdk.target}</target>
-                </configuration>
-            </plugin>
-        </plugins>
         <pluginManagement>
             <plugins>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -182,10 +170,12 @@
                 <dependency>
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
+                    <version>1.0.0.CR3</version>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
+                    <version>3.1.2</version>
                 </dependency>
                 <dependency>
                     <groupId>org.hsqldb</groupId>
@@ -249,57 +239,21 @@
         <profile>
             <id>arq-openejb-embedded</id>
             <build>
-              <testResources>
-                <testResource>
-                  <directory>src/test/resources</directory>
-                </testResource>
-                <testResource>
-                  <directory>src/test/resources-openejb</directory>
-                </testResource>
-              </testResources>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-openejb</directory>
+                    </testResource>
+                </testResources>
             </build>
-            <dependencies> <!-- it seems dependencies are not so clean since we shouldn't need to specify so much of them -->
+            <dependencies>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
                     <artifactId>arquillian-openejb-embedded-4</artifactId>
                     <version>4.1.0-SNAPSHOT</version>
                     <scope>test</scope>
-                </dependency>
-                <dependency>
-                  <groupId>org.apache.openwebbeans</groupId>
-                  <artifactId>openwebbeans-impl</artifactId>
-                  <version>1.1.4</version>
-                  <scope>test</scope>
-                </dependency>
-                <dependency>
-                  <groupId>org.apache.openwebbeans</groupId>
-                  <artifactId>openwebbeans-spi</artifactId>
-                  <version>1.1.4</version>
-                  <scope>test</scope>
-                </dependency>
-                <dependency>
-                  <groupId>org.apache.openwebbeans</groupId>
-                  <artifactId>openwebbeans-web</artifactId>
-                  <version>1.1.4</version>
-                  <scope>test</scope>
-                </dependency>
-                <dependency>
-                  <groupId>org.apache.openwebbeans</groupId>
-                  <artifactId>openwebbeans-ee-common</artifactId>
-                  <version>1.1.4</version>
-                  <scope>test</scope>
-                </dependency>
-                <dependency>
-                  <groupId>org.apache.openwebbeans</groupId>
-                  <artifactId>openwebbeans-ejb</artifactId>
-                  <version>1.1.4</version>
-                  <scope>test</scope>
-                </dependency>
-                <dependency> <!-- openejb 3.1.2 is imported elsewhere so forcing the version -->
-                  <groupId>org.apache.openejb</groupId>
-                  <artifactId>openejb-core</artifactId>
-                  <version>4.1.0-SNAPSHOT</version>
-                  <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>

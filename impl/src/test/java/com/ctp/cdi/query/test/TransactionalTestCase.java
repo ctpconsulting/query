@@ -1,6 +1,7 @@
 package com.ctp.cdi.query.test;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -16,6 +17,9 @@ public abstract class TransactionalTestCase {
     
     @Before
     public void startTransaction() throws Exception {
+        // temp fix - OpenJPA seems not to properly initialize the static
+        // metamodel otherwise.
+        getEntityManager().getMetamodel();
         ut.begin();
     }
     
@@ -23,5 +27,7 @@ public abstract class TransactionalTestCase {
     public void rollbackTransaction() throws Exception {
         ut.rollback();
     }
+    
+    protected abstract EntityManager getEntityManager();
 
 }

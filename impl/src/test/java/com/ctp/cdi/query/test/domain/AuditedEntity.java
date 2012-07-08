@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -32,14 +34,12 @@ public class AuditedEntity implements Serializable {
     private String changer;
     
     @ModifiedBy
-    @ManyToOne(targetEntity = Principal.class)
+    @ManyToOne(targetEntity = Principal.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Principal principal;
     
     @Temporal(TemporalType.TIME)
     @ModifiedOn(onCreate = true)
     private java.util.Date modified;
-    
-    private java.sql.Date sqlModified;
     
     @Temporal(TemporalType.DATE)
     @ModifiedOn
@@ -56,16 +56,6 @@ public class AuditedEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @ModifiedOn
-    public java.sql.Date getSqlModified() {
-        return sqlModified;
-    }
-
-    public void setSqlModified(java.sql.Date sqlModified) {
-        this.sqlModified = sqlModified;
     }
 
     public Calendar getCreated() {

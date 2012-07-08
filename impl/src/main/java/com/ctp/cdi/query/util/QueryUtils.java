@@ -44,4 +44,8 @@ public final class QueryUtils {
         return array == null || array.length == 0;
     }
     
+    public static boolean isString(Object value) {
+        return value != null && value instanceof String;
+    }
+    
 }

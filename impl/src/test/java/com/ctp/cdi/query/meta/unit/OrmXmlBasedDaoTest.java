@@ -57,6 +57,11 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
         assertEquals(one.getId(), byName.getId());
     }
 
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
+
     private MappedOne createMappedOne(String name) {
         MappedOne result = new MappedOne(name);
         entityManager.persist(result);

@@ -260,6 +260,11 @@ public class CriteriaTest extends TransactionalTestCase {
             assertEquals(name.substring(1, 1+2), result[4]);
         }
     }
+    
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManager;
+    }
 
     private Simple createSimple(String name, Integer counter) {
         Simple result = new Simple(name);
