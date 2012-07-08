@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.meta;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,8 +17,10 @@ import com.ctp.cdi.query.meta.extractor.TypeMetadataExtractor;
  * 
  * @author thomashug
  */
-public class DaoComponents {
-    
+public class DaoComponents implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
     
     private final List<MetadataExtractor> extractors = Arrays.asList(new AnnotationMetadataExtractor(),

@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.handler;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -27,7 +28,7 @@ import com.ctp.cdi.query.meta.Initialized;
  * 
  * @author thomashug
  */
-public class QueryHandler {
+public class QueryHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
