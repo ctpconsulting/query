@@ -11,7 +11,7 @@ import com.ctp.cdi.query.meta.DaoComponent;
 
 abstract class BasePropertyQueryPart extends QueryPart {
 
-    final String SEPARATOR = "_";
+    final static String SEPARATOR = "_";
     
     void validate(String name, String method, DaoComponent dao) {
         Class<?> current = dao.getEntityClass();
@@ -28,7 +28,7 @@ abstract class BasePropertyQueryPart extends QueryPart {
 
     String rewriteSeparator(String name) {
         if (name.contains("_")) {
-            name = name.replaceAll(SEPARATOR, ".");
+            return name.replaceAll(SEPARATOR, ".");
         }
         return name;
     }

@@ -8,18 +8,19 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.jboss.solder.logging.Logger;
+
 import com.ctp.cdi.query.FirstResult;
 import com.ctp.cdi.query.MaxResults;
 import com.ctp.cdi.query.QueryParam;
-import org.jboss.solder.logging.Logger;
 
 /**
  * Convenience class to manage method and query parameters.
  * @author thomashug
  */
-public class Parameters {
+public final class Parameters {
 
-    private static final Logger log = Logger.getLogger(Parameters.class);
+    private static final Logger LOG = Logger.getLogger(Parameters.class);
 
     private static final int DEFAULT_MAX = 0;
     private static final int DEFAULT_FIRST = -1;
@@ -109,7 +110,7 @@ public class Parameters {
                 if (parameter instanceof Integer) {
                     return (Integer) parameter;
                 } else {
-                    log.warnv("Method parameter extraction: Param type must be int: {0}->is:{1}",
+                    LOG.warnv("Method parameter extraction: Param type must be int: {0}->is:{1}",
                             target, parameter.getClass());
                 }
             }

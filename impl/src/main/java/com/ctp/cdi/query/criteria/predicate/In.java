@@ -15,7 +15,7 @@ public class In<P, V> implements PredicateBuilder<P> {
 
     public In(SingularAttribute<? super P, V> singular, V[] values) {
         this.singular = singular;
-        this.values = values;
+        this.values = Arrays.copyOf(values, values.length);
     }
 
     @Override
@@ -23,8 +23,9 @@ public class In<P, V> implements PredicateBuilder<P> {
         Path<V> p = path.get(singular);
         CriteriaBuilder.In<V> in = builder.in(p);
         for (V value : values) {
-            if (value != null)
+            if (value != null) {
                 in.value(value);
+            }
         }
         return Arrays.asList((Predicate) in);
     }

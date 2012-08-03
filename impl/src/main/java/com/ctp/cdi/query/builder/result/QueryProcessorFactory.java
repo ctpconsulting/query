@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import com.ctp.cdi.query.Modifying;
 import com.ctp.cdi.query.QueryResult;
 
-public class QueryProcessorFactory {
+public final class QueryProcessorFactory {
 
     private final Method method;
 
@@ -44,28 +44,28 @@ public class QueryProcessorFactory {
         return method.getReturnType().isAssignableFrom(clazz);
     }
     
-    private static class ListQueryProcessor implements QueryProcessor {
+    private static final class ListQueryProcessor implements QueryProcessor {
         @Override
         public Object executeQuery(Query query) {
             return query.getResultList();
         }
     }
     
-    private static class NoOpQueryProcessor implements QueryProcessor {
+    private static final class NoOpQueryProcessor implements QueryProcessor {
         @Override
         public Object executeQuery(Query query) {
             return query;
         }
     }
     
-    private static class SingleResultQueryProcessor implements QueryProcessor {
+    private static final class SingleResultQueryProcessor implements QueryProcessor {
         @Override
         public Object executeQuery(Query query) {
             return query.getSingleResult();
         }
     }
     
-    private static class ExecuteUpdateQueryProcessor implements QueryProcessor {
+    private static final class ExecuteUpdateQueryProcessor implements QueryProcessor {
         
         private final boolean returnsVoid;
 

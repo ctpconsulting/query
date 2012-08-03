@@ -2,7 +2,7 @@ package com.ctp.cdi.query.meta.unit;
 
 import java.util.List;
 
-public class DescriptorHierarchyBuilder {
+public final class DescriptorHierarchyBuilder {
 
     private final List<EntityDescriptor> entities;
     private final List<MappedSuperclassDescriptor> superClasses;

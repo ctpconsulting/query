@@ -44,16 +44,21 @@ public class QueryHandler implements Serializable {
     private DaoComponents components;
     
     @AroundInvoke
-    public Object handle(InvocationContext context) throws Exception {
+    public Object handle(InvocationContext context) {
+        QueryInvocationContext ctx = null;
         try {
             Class<?> daoClass = extractFromProxy(context);
             DaoComponent dao = components.lookupComponent(daoClass);
             DaoMethod method = components.lookupMethod(daoClass, context.getMethod());
+            ctx = new QueryInvocationContext(context, method, resolveEntityManager(dao));
             QueryBuilder builder = queryBuilder.build(method);
-            return builder.execute(new QueryInvocationContext(context, method, resolveEntityManager(dao)));
+            return builder.execute(ctx);
         } catch (Exception e) {
             log.error("Query execution error", e);
-            throw e;
+            if (ctx != null) {
+                throw new QueryInvocationException(e, ctx);
+            }
+            throw new QueryInvocationException(e, context);
         }
     }
     

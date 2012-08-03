@@ -85,25 +85,13 @@ public class DefaultQueryResult<T> implements QueryResult<T> {
     @Override
     @SuppressWarnings("unchecked")
     public List<T> getResultList() {
-        try {
-            return ((Query) builder.execute(context)).getResultList();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return ((Query) builder.execute(context)).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T getSingleResult() {
-        try {
-            return (T) ((Query) builder.execute(context)).getSingleResult();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return (T) ((Query) builder.execute(context)).getSingleResult();
     }
 
     @Override

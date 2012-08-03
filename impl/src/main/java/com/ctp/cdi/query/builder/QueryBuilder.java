@@ -4,7 +4,9 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.LockModeType;
+import javax.persistence.Query;
+import javax.persistence.QueryHint;
 
 import com.ctp.cdi.query.handler.QueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
@@ -28,7 +30,7 @@ public abstract class QueryBuilder {
         return MessageFormat.format(QUERY_COUNT, entityName);
     }
     
-    public abstract Object execute(QueryInvocationContext ctx) throws Exception;
+    public abstract Object execute(QueryInvocationContext ctx);
     
     protected boolean returnsList(Method method) {
         return method.getReturnType().isAssignableFrom(List.class);

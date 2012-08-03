@@ -41,18 +41,20 @@ public class FetchBuilder<P, R, E> implements PredicateBuilder<P> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void fetchSingular(From path) {
-        if (joinType == null)
+        if (joinType == null) {
             path.fetch(singular);
-        else
+        } else {
             path.fetch(singular, joinType);
+        }
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void fetchPlural(From path) {
-        if (joinType == null)
+        if (joinType == null) {
             path.fetch(plural);
-        else
+        } else {
             path.fetch(plural, joinType);
+        }
     }
 
 }

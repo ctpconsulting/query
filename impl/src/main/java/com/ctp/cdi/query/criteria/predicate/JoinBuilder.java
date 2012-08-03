@@ -16,6 +16,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import com.ctp.cdi.query.criteria.Criteria;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     
     final Criteria<R, R> criteria;
@@ -58,7 +59,6 @@ public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public List<Predicate> build(CriteriaBuilder builder, Path<P> path) {
         Join join = null;
         if (singular != null) {
@@ -75,35 +75,32 @@ public class JoinBuilder<P, R, E> implements PredicateBuilder<P> {
         return criteria.predicates(builder, join);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Join joinSingular(From path) {
-        if (joinType == null)
+        if (joinType == null) {
             return path.join(singular);
+        }
         return path.join(singular, joinType);
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Join joinList(From path) {
-        if (joinType == null)
+        if (joinType == null) {
             return path.join(list);
+        }
         return path.join(list, joinType);
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Join joinCollection(From path) {
         if (joinType == null)
             return path.join(collection);
         return path.join(collection, joinType);
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Join joinSet(From path) {
         if (joinType == null)
             return path.join(set);
         return path.join(set, joinType);
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Join joinMap(From path) {
         if (joinType == null)
             return path.join(map);

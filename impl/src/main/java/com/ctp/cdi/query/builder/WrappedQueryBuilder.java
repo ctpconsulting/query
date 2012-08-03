@@ -13,7 +13,7 @@ public class WrappedQueryBuilder extends QueryBuilder {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Object execute(QueryInvocationContext ctx) throws Exception {
+    public Object execute(QueryInvocationContext ctx) {
         return new DefaultQueryResult(delegate, ctx);
     }
 

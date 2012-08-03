@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.ctp.cdi.query.meta.DaoEntity;
 
-public class PersistenceUnits {
+public final class PersistenceUnits {
 
     private static PersistenceUnits instance = new PersistenceUnits();
     
