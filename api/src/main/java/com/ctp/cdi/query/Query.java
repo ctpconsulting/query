@@ -5,7 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.persistence.*;
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 /**
  * Supply query meta data to a method with this annotation.<br/>
@@ -47,8 +48,8 @@ public @interface Query {
      */
     LockModeType lock() default LockModeType.NONE;
 
-    /** (Optional) Query properties and hints.  May include
-     * vendor-specific query hints.
+    /** 
+     * (Optional) Query properties and hints.  May include vendor-specific query hints.
      */
     QueryHint[] hints() default {};
 

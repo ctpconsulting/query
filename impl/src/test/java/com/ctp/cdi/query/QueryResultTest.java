@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.util.List;
 
@@ -80,6 +81,57 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
+    public void shouldChangeSortOrder() {
+        // given
+        final String name = "testChangeSortOrder";
+        builder.createSimple(name, Integer.valueOf(99));
+        builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(229));
+        
+        // when
+        QueryResult<Simple> query = dao.findByName(name);
+        List<Simple> result1 = query
+                .changeOrder(Simple_.counter)
+                .getResultList();
+        List<Simple> result2 = query
+                .changeOrder(Simple_.counter)
+                .getResultList();
+        
+        // then
+        assertEquals(22, result1.get(0).getCounter().intValue());
+        assertEquals(229, result2.get(0).getCounter().intValue());
+    }
+    
+    @Test
+    public void shouldClearSortOrder() {
+        // given
+        final String name = "testClearSortOrder";
+        builder.createSimple(name, Integer.valueOf(99));
+        builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(229));
+        
+        // when
+        QueryResult<Simple> query = dao.findByName(name);
+        List<Simple> result1 = query
+                .changeOrder(Simple_.counter)
+                .getResultList();
+        List<Simple> result2 = query
+                .clearOrder()
+                .getResultList();
+        
+        // then
+        assertEquals(result1.size(), result2.size());
+        for (int i = 0; i < result1.size(); i++) {
+            int count1 = result1.get(i).getCounter().intValue();
+            int count2 = result2.get(i).getCounter().intValue();
+            if (count1 != count2) {
+                return;
+            }
+        }
+        fail("Both collections sorted: " + result1 + "," + result2);
+    }
+    
+    @Test
     public void shouldPageResult() {
         // given
         final String name = "testPageResult";
@@ -104,6 +156,43 @@ public class QueryResultTest extends TransactionalTestCase {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());
+    }
+    
+    @Test
+    public void shouldPageWithPageAPI() {
+        // given
+        final String name = "testPageAPI";
+        builder.createSimple(name, Integer.valueOf(22));
+        builder.createSimple(name, Integer.valueOf(56));
+        builder.createSimple(name, Integer.valueOf(99));
+        builder.createSimple(name, Integer.valueOf(123));
+        builder.createSimple(name, Integer.valueOf(229));
+        builder.createSimple(name, Integer.valueOf(299));
+        builder.createSimple(name, Integer.valueOf(389));
+        
+        // when
+        QueryResult<Simple> pagedQuery = dao
+                .findByName(name)
+                .withPageSize(2);
+        List<Simple> result1 = pagedQuery.getResultList();
+        List<Simple> result2 = pagedQuery.nextPage().nextPage().getResultList();
+        int current = pagedQuery.currentPage();
+        List<Simple> result3 = pagedQuery.toPage(1).getResultList();
+        int total = pagedQuery.countPages();
+        int pageSize = pagedQuery.pageSize();
+        
+        // then
+        assertEquals(2, result1.size());
+        assertEquals(2, result2.size());
+        assertEquals(2, result3.size());
+        assertEquals(2, current);
+        assertEquals(4, total);
+        assertEquals(2, pageSize);
+        
+        assertEquals(22, result1.get(0).getCounter().intValue());
+        assertEquals(229, result2.get(0).getCounter().intValue());
+        assertEquals(99, result3.get(0).getCounter().intValue());
+        
     }
     
     @Test

@@ -24,6 +24,7 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.jboss.solder.logging.Logger;
 
+import com.ctp.cdi.query.builder.OrderDirection;
 import com.ctp.cdi.query.criteria.predicate.Between;
 import com.ctp.cdi.query.criteria.predicate.Eq;
 import com.ctp.cdi.query.criteria.predicate.FetchBuilder;
@@ -43,7 +44,6 @@ import com.ctp.cdi.query.criteria.predicate.NotLike;
 import com.ctp.cdi.query.criteria.predicate.OrBuilder;
 import com.ctp.cdi.query.criteria.predicate.PredicateBuilder;
 import com.ctp.cdi.query.criteria.processor.OrderBy;
-import com.ctp.cdi.query.criteria.processor.OrderBy.OrderDirection;
 import com.ctp.cdi.query.criteria.processor.QueryProcessor;
 
 public class QueryCriteria<C, R> implements Criteria<C, R> {

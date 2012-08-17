@@ -2,6 +2,7 @@ package com.ctp.cdi.query.builder.postprocessor;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import com.ctp.cdi.query.builder.OrderDirection;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.handler.QueryStringPostProcessor;
 
@@ -10,14 +11,14 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
     private static final String ORDER_BY = " order by ";
     
     private final String attribute;
-    private final String direction;
+    private OrderDirection direction;
 
-    public OrderByQueryStringPostProcessor(SingularAttribute<?, ?> attribute, String direction) {
+    public OrderByQueryStringPostProcessor(SingularAttribute<?, ?> attribute, OrderDirection direction) {
         this.attribute = attribute.getName();
         this.direction = direction;
     }
 
-    public OrderByQueryStringPostProcessor(String attribute, String direction) {
+    public OrderByQueryStringPostProcessor(String attribute, OrderDirection direction) {
         this.attribute = attribute;
         this.direction = direction;
     }
@@ -34,5 +35,18 @@ public class OrderByQueryStringPostProcessor implements QueryStringPostProcessor
                 .append(" ").append(direction)
                 .toString();
     }
+    
+    public boolean matches(SingularAttribute<?, ?> attribute) {
+        return matches(attribute.getName());
+    }
+
+    public boolean matches(String attribute) {
+        return this.attribute.equals(attribute);
+    }
+    
+    public void changeDirection() {
+        direction = direction.change();
+    }
+    
 
 }

@@ -5,12 +5,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.metamodel.SingularAttribute;
 
+import com.ctp.cdi.query.builder.OrderDirection;
+
 
 public class OrderBy<P, V> implements QueryProcessor<P> {
-    
-    public static enum OrderDirection {
-        ASC, DESC
-    }
     
     private final SingularAttribute<? super P, V> att;
     private final OrderDirection dir;

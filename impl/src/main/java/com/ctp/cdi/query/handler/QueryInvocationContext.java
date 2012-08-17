@@ -100,5 +100,9 @@ public class QueryInvocationContext {
     public void setQueryString(String queryString) {
         this.queryString = queryString;
     }
+    
+    public List<QueryStringPostProcessor> getQueryStringPostProcessors() {
+        return queryPostProcessors;
+    }
 
 }
