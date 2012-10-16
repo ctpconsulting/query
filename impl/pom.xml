@@ -169,16 +169,19 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
         </dependency>
         
         <dependency>
             <groupId>org.jboss.arquillian.protocol</groupId>
             <artifactId>arquillian-protocol-servlet</artifactId>
+            <scope>test</scope>
         </dependency>
     
         <dependency>
@@ -210,15 +213,18 @@
                     <groupId>org.jboss.arquillian.container</groupId>
                     <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
                     <version>1.0.0.CR3</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
                     <version>3.1.2</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.hsqldb</groupId>
                     <artifactId>hsqldb</artifactId>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <properties>
@@ -268,6 +274,7 @@
                     <groupId>org.jboss.as</groupId>
                     <artifactId>jboss-as-arquillian-container-managed</artifactId>
                     <version>7.1.1.Final</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <properties>
