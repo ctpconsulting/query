@@ -6,7 +6,7 @@ public class QueryInvocationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public QueryInvocationException(Throwable t, QueryInvocationContext context) {
+    public QueryInvocationException(Throwable t, CdiQueryInvocationContext context) {
         super(createMessage(context, t), t);
     }
     
@@ -14,7 +14,7 @@ public class QueryInvocationException extends RuntimeException {
         super(createMessage(context, t), t);
     }
 
-    private static final String createMessage(QueryInvocationContext context, Throwable t) {
+    private static final String createMessage(CdiQueryInvocationContext context, Throwable t) {
         StringBuilder builder = new StringBuilder();
         builder.append("Exception calling DAO: [");
         builder.append("DAO=").append(context.getDaoMethod().getDao().getDaoClass().getName()).append(",");

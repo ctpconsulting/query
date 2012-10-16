@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
 
-import com.ctp.cdi.query.criteria.CriteriaSupport;
-
 
 /**
  * Base DAO class to be extended by concrete implementations.
@@ -17,7 +15,7 @@ import com.ctp.cdi.query.criteria.CriteriaSupport;
  */
 @Dao
 public abstract class AbstractEntityDao<E, PK extends Serializable> 
-        implements EntityDao<E, PK>, CriteriaSupport<E> {
+        implements EntityDao<E, PK> {
 
     /**
      * Utility method to get hold of the entity manager for this DAO.
@@ -26,7 +24,7 @@ public abstract class AbstractEntityDao<E, PK extends Serializable>
      * 
      * @return          Entity manager instance.
      */
-    protected abstract EntityManager getEntityManager();
+    protected abstract EntityManager entityManager();
 
     /**
      * Utility method to create a criteria query.

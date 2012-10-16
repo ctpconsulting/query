@@ -18,18 +18,18 @@ import com.ctp.cdi.query.builder.postprocessor.HintPostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.LockModePostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.MaxResultPostProcessor;
 import com.ctp.cdi.query.builder.postprocessor.OrderByQueryStringPostProcessor;
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 import com.ctp.cdi.query.handler.QueryStringPostProcessor;
 
 public class DefaultQueryResult<T> implements QueryResult<T> {
     
     private final QueryBuilder builder;
-    private final QueryInvocationContext context;
+    private final CdiQueryInvocationContext context;
     
     private int page = 0;
     private int pageSize = 10;
 
-    public DefaultQueryResult(QueryBuilder builder, QueryInvocationContext context) {
+    public DefaultQueryResult(QueryBuilder builder, CdiQueryInvocationContext context) {
         this.builder = builder;
         this.context = context;
     }

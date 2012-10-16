@@ -5,7 +5,7 @@ import javax.persistence.Query;
 import org.jboss.solder.logging.Logger;
 
 import com.ctp.cdi.query.handler.JpaQueryPostProcessor;
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
 import com.ctp.cdi.query.util.QueryUtils;
 import com.ctp.cdi.query.util.jpa.QueryStringExtractorFactory;
@@ -16,7 +16,7 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor {
     private final QueryStringExtractorFactory factory = new QueryStringExtractorFactory();
     
     @Override
-    public Query postProcess(QueryInvocationContext context, Query query) {
+    public Query postProcess(CdiQueryInvocationContext context, Query query) {
         String queryString = getQueryString(context, query);
         QueryExtraction extract = new QueryExtraction(queryString);
         String count = extract.rewriteToCount();
@@ -27,7 +27,7 @@ public class CountQueryPostProcessor implements JpaQueryPostProcessor {
         return result;
     }
     
-    private String getQueryString(QueryInvocationContext context, Query query) {
+    private String getQueryString(CdiQueryInvocationContext context, Query query) {
         if (QueryUtils.isNotEmpty(context.getQueryString())) {
             return context.getQueryString();
         }

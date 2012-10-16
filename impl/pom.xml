@@ -66,6 +66,34 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <version>2.0.7</version>
+                <executions>
+                    <execution>
+                        <id>process-test</id>
+                        <goals>
+                            <goal>process-test</goal>
+                        </goals>
+                        <phase>generate-test-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <processors>
+                        <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                    </processors>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysema.querydsl</groupId>
+                        <artifactId>querydsl-apt</artifactId>
+                        <version>${querydsl.version}</version>
+                    </dependency> 
+                </dependencies>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -123,6 +151,18 @@
             <artifactId>solder-logging</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- Tests -->
 
@@ -144,7 +184,6 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -252,13 +291,13 @@
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
                     <artifactId>arquillian-openejb-embedded-4</artifactId>
-                    <version>4.1.0-SNAPSHOT</version>
+                    <version>4.5.0</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.openejb</groupId>
                     <artifactId>openejb-core-hibernate</artifactId>
-                    <version>4.1.0-SNAPSHOT</version>
+                    <version>4.5.0</version>
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>

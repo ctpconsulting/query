@@ -80,6 +80,15 @@ public class QueryRootTest {
     }
     
     @Test(expected = MethodExpressionException.class)
+    public void shouldFailWithPrefixOnly() {
+        // given
+        final String name = "findBy";
+        
+        // when
+        QueryRoot.create(name, dao);
+    }
+    
+    @Test(expected = MethodExpressionException.class)
     public void shouldFailInOrderBy() {
         // given
         final String name = "findByNameOrderByInvalidDesc";

@@ -8,7 +8,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.QueryHint;
 
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 import com.ctp.cdi.query.param.Parameters;
 
 /**
@@ -30,7 +30,7 @@ public abstract class QueryBuilder {
         return MessageFormat.format(QUERY_COUNT, entityName);
     }
     
-    public abstract Object execute(QueryInvocationContext ctx);
+    public abstract Object execute(CdiQueryInvocationContext ctx);
     
     protected boolean returnsList(Method method) {
         return method.getReturnType().isAssignableFrom(List.class);
@@ -62,7 +62,7 @@ public abstract class QueryBuilder {
         return extractQueryHints(method) != null;
     }
 
-    protected Query applyRestrictions(QueryInvocationContext context, Query query) {
+    protected Query applyRestrictions(CdiQueryInvocationContext context, Query query) {
         Parameters params = context.getParams();
         Method method = context.getMethod();
         if (params.hasSizeRestriction()) {

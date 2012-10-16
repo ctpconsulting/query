@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import com.ctp.cdi.query.Query;
+import com.ctp.cdi.query.builder.MethodExpressionException;
 import com.ctp.cdi.query.builder.part.QueryRoot;
 import com.ctp.cdi.query.builder.result.QueryProcessor;
 import com.ctp.cdi.query.builder.result.QueryProcessorFactory;
-import com.ctp.cdi.query.handler.EntityDaoHandler;
 
 /**
  * Stores information about a specific method of a DAO:
@@ -43,13 +43,13 @@ public class DaoMethod {
     }
     
     private MethodType extractMethodType() {
-        if (isDelegateMethod()) {
-            return MethodType.DELEGATE;
-        } else if (isAnnotated()) {
+        if (isAnnotated()) {
             return MethodType.ANNOTATED;
-        } 
-        
-        return MethodType.PARSE;
+        }
+        if (isMethodExpression()) {
+            return MethodType.PARSE;
+        }        
+        return MethodType.DELEGATE;
     }
     
     private QueryRoot initQueryRoot() {
@@ -70,9 +70,17 @@ public class DaoMethod {
     private boolean isValid(Query query) {
         return isNotEmpty(query.value()) || isNotEmpty(query.named()) || isNotEmpty(query.sql());
     }
-
-    private boolean isDelegateMethod() {
-        return !Modifier.isAbstract(method.getModifiers()) || EntityDaoHandler.contains(method);
+    
+    private boolean isMethodExpression() {
+        if (!Modifier.isAbstract(method.getModifiers())) {
+            return false;
+        }
+        try {
+            QueryRoot.create(method.getName(), dao);
+            return true;
+        } catch (MethodExpressionException e) {
+            return false;
+        }
     }
 
     public MethodType getMethodType() {

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.criteria.JoinType;
 
 import com.ctp.cdi.query.AbstractEntityDao;
+import com.ctp.cdi.query.criteria.CriteriaSupport;
 import com.ctp.cdi.query.test.domain.OneToMany;
 import com.ctp.cdi.query.test.domain.OneToMany_;
 import com.ctp.cdi.query.test.domain.OneToOne;
@@ -12,7 +13,8 @@ import com.ctp.cdi.query.test.domain.OneToOne_;
 import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.Parent_;
 
-public abstract class ParentDao extends AbstractEntityDao<Parent, Long> {
+public abstract class ParentDao extends AbstractEntityDao<Parent, Long> 
+        implements CriteriaSupport<Parent> {
 
     public List<Parent> joinQuery(String name, String oneName, String manyName) {
         return criteria()

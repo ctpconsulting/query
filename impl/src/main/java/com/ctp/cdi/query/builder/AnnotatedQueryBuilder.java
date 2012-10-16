@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import javax.persistence.EntityManager;
 
 import com.ctp.cdi.query.Query;
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 import com.ctp.cdi.query.meta.MethodType;
 import com.ctp.cdi.query.meta.QueryInvocation;
 import com.ctp.cdi.query.param.Parameters;
@@ -23,14 +23,14 @@ public class AnnotatedQueryBuilder extends QueryBuilder {
     private final QueryStringExtractorFactory factory = new QueryStringExtractorFactory();
 
     @Override
-    public Object execute(QueryInvocationContext context) {
+    public Object execute(CdiQueryInvocationContext context) {
         Method method = context.getMethod();
         Query query = method.getAnnotation(Query.class);
         javax.persistence.Query jpaQuery = createJpaQuery(query, context);
         return context.executeQuery(jpaQuery);
     }
     
-    private javax.persistence.Query createJpaQuery(Query query, QueryInvocationContext context) {
+    private javax.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context) {
         EntityManager entityManager = context.getEntityManager();
         Parameters params = context.getParams();
         javax.persistence.Query result = null;

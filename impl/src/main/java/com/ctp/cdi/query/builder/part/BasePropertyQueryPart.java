@@ -15,6 +15,9 @@ abstract class BasePropertyQueryPart extends QueryPart {
     
     void validate(String name, String method, DaoComponent dao) {
         Class<?> current = dao.getEntityClass();
+        if (name == null) {
+            throw new MethodExpressionException(null, dao.getDaoClass(), method);
+        }
         for (String property : name.split(SEPARATOR)) {
             PropertyQuery<?> query = PropertyQueries.createQuery(current)
                     .addCriteria(new NamedPropertyCriteria(property));

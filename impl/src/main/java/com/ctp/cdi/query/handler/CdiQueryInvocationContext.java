@@ -10,8 +10,9 @@ import javax.persistence.Query;
 
 import com.ctp.cdi.query.meta.DaoMethod;
 import com.ctp.cdi.query.param.Parameters;
+import com.ctp.cdi.query.spi.QueryInvocationContext;
 
-public class QueryInvocationContext {
+public class CdiQueryInvocationContext implements QueryInvocationContext {
 
     private final EntityManager entityManager;
     private final Parameters params;
@@ -23,7 +24,7 @@ public class QueryInvocationContext {
     
     private String queryString;
     
-    public QueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
+    public CdiQueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
         this.entityManager = entityManager;
         this.params = Parameters.create(invocation.getMethod(), invocation.getParameters());
         this.invocation = invocation;
@@ -31,6 +32,26 @@ public class QueryInvocationContext {
         this.entityClass = daoMethod.getDao().getEntityClass();
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
         this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
+    }
+    
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
+    @Override
+    public Method getMethod() {
+        return invocation.getMethod();
+    }
+    
+    @Override
+    public Object[] getMethodParameters() {
+        return invocation.getParameters();
+    }
+    
+    @Override
+    public Class<?> getEntityClass() {
+        return entityClass;
     }
     
     public void addQueryStringPostProcessor(QueryStringPostProcessor postProcessor) {
@@ -68,10 +89,6 @@ public class QueryInvocationContext {
     public Object executeQuery(Query jpaQuery) {
         return daoMethod.getQueryProcessor().executeQuery(jpaQuery);
     }
-    
-    public Method getMethod() {
-        return invocation.getMethod();
-    }
 
     public Parameters getParams() {
         return params;
@@ -81,16 +98,8 @@ public class QueryInvocationContext {
         return invocation;
     }
 
-    public Class<?> getEntityClass() {
-        return entityClass;
-    }
-
     public DaoMethod getDaoMethod() {
         return daoMethod;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 
     public String getQueryString() {

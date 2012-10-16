@@ -10,12 +10,12 @@ import com.ctp.cdi.query.test.domain.Simple;
 public abstract class SimpleDaoWithOverriddenEntityManager extends AbstractEntityDao<Simple, Long> {
     
     @Override @Simplistic
-    protected abstract EntityManager getEntityManager();
+    protected abstract EntityManager entityManager();
 
     public abstract List<Simple> findByName(String name);
     
     public List<Simple> findWithEm(String name) {
-        return getEntityManager().createQuery("select s from Simple s where s.name = ?1", Simple.class)
+        return entityManager().createQuery("select s from Simple s where s.name = ?1", Simple.class)
                 .setParameter(1, name)
                 .getResultList();
     }

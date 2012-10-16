@@ -47,8 +47,9 @@
     <properties>
         <seam.version>3.1.0.Final</seam.version>
         <solder.version>${seam.version}</solder.version>
+        <querydsl.version>2.8.0</querydsl.version>
         <emma.version>2.0.5312</emma.version>
-        <arquillian.version>1.0.1.Final</arquillian.version>
+        <arquillian.version>1.0.2.Final</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
         <jdk.source>1.6</jdk.source>
         <jdk.target>1.6</jdk.target>
@@ -64,6 +65,7 @@
                 <configuration>
                     <source>${jdk.source}</source>
                     <target>${jdk.target}</target>
+                    <proc>none</proc>
                 </configuration>
             </plugin>
             
@@ -178,6 +180,21 @@
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.0-api</artifactId>
                 <version>1.0.0.Final</version>
+                <scope>provided</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.mysema.querydsl</groupId>
+                <artifactId>querydsl-jpa</artifactId>
+                <version>${querydsl.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mysema.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${querydsl.version}</version>
+                <optional>true</optional>
                 <scope>provided</scope>
             </dependency>
 

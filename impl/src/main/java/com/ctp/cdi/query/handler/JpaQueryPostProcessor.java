@@ -4,6 +4,6 @@ import javax.persistence.Query;
 
 public interface JpaQueryPostProcessor {
 
-    Query postProcess(QueryInvocationContext context, Query query);
+    Query postProcess(CdiQueryInvocationContext context, Query query);
 
 }

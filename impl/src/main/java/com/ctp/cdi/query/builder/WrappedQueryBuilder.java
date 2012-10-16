@@ -1,7 +1,7 @@
 package com.ctp.cdi.query.builder;
 
 import com.ctp.cdi.query.builder.result.DefaultQueryResult;
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 
 public class WrappedQueryBuilder extends QueryBuilder {
     
@@ -13,7 +13,7 @@ public class WrappedQueryBuilder extends QueryBuilder {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Object execute(QueryInvocationContext ctx) {
+    public Object execute(CdiQueryInvocationContext ctx) {
         return new DefaultQueryResult(delegate, ctx);
     }
 

@@ -9,6 +9,7 @@
 
     <container qualifier="jbossas-7-managed" default="true">
         <configuration>
+            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
             <property name="jbossHome">target/jboss-as-7.1.1.Final</property>
         </configuration>
     </container>

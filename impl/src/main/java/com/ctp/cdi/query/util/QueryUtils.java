@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.util;
 
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collection;
 
@@ -19,7 +20,7 @@ public final class QueryUtils {
     }
     
     public static String uncapitalize(String value) {
-        if (value == null) {
+        if (isEmpty(value)) {
             return null;
         }
         if (value.length() == 1) {
@@ -48,4 +49,16 @@ public final class QueryUtils {
         return value != null && value instanceof String;
     }
     
+    public static boolean contains(Class<?> clazz, Method method) {
+        return extract(clazz, method) != null;
+    }
+    
+    public static Method extract(Class<?> clazz, Method method) {
+        try {
+            String name = method.getName();
+            return clazz.getMethod(name, method.getParameterTypes());
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
 }

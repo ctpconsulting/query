@@ -33,12 +33,15 @@ import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.criteria.Criteria;
 import com.ctp.cdi.query.criteria.CriteriaSupport;
 import com.ctp.cdi.query.criteria.QueryCriteria;
+import com.ctp.cdi.query.criteria.QueryDslSupport;
 import com.ctp.cdi.query.criteria.QuerySelection;
 import com.ctp.cdi.query.handler.QueryHandler;
 import com.ctp.cdi.query.home.DefaultNavigationProvider;
 import com.ctp.cdi.query.home.EntityHome;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.param.Parameters;
+import com.ctp.cdi.query.spi.DelegateQueryHandler;
+import com.ctp.cdi.query.spi.QueryInvocationContext;
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.AuditedEntity;
 import com.ctp.cdi.query.util.EntityUtils;
@@ -97,11 +100,16 @@ public abstract class TestDeployments {
                 .addClasses(AbstractEntityDao.class, Dao.class, EntityDao.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
                         NonEntity.class, Query.class, QueryParam.class, QueryResult.class, WithEntityManager.class)
-                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
+                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class,
+                        QueryDslSupport.class)
+                .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class)
                 .addPackage(EntityHome.class.getPackage());
     }
     
     public static WebArchive addDependencies(WebArchive archive) {
+        archive.addAsLibraries(resolver()
+                .artifact("com.mysema.querydsl:querydsl-jpa")
+                .resolveAsFiles());
         if (includeLibs()) {
             archive.addAsLibraries(resolver()
                     .artifact("org.jboss.solder:solder-api")

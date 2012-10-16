@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.jboss.solder.logging.Logger;
 
+import com.ctp.cdi.query.builder.MethodExpressionException;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.builder.QueryBuilderContext;
 import com.ctp.cdi.query.meta.DaoComponent;
@@ -57,6 +58,9 @@ public class QueryRoot extends QueryPart {
         if (orderByParts.length > 1) {
             OrderByQueryPart orderByPart = new OrderByQueryPart();
             children.add(orderByPart.build(orderByParts[1], method, dao));
+        }
+        if (children.isEmpty()) {
+            throw new MethodExpressionException(dao.getDaoClass(), method);
         }
         return this;
     }

@@ -4,7 +4,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
 import com.ctp.cdi.query.handler.JpaQueryPostProcessor;
-import com.ctp.cdi.query.handler.QueryInvocationContext;
+import com.ctp.cdi.query.handler.CdiQueryInvocationContext;
 
 public class LockModePostProcessor implements JpaQueryPostProcessor {
     
@@ -15,7 +15,7 @@ public class LockModePostProcessor implements JpaQueryPostProcessor {
     }
 
     @Override
-    public Query postProcess(QueryInvocationContext context, Query query) {
+    public Query postProcess(CdiQueryInvocationContext context, Query query) {
         query.setLockMode(lockMode);
         return query;
     }

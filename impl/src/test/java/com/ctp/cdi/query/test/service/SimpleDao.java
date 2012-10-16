@@ -18,7 +18,7 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
 
     public List<Simple> implementedQueryByName(String name) {
         String query = "select s from Simple s where s.name = :name";
-        return getEntityManager().createQuery(query, Simple.class)
+        return entityManager().createQuery(query, Simple.class)
                 .setParameter("name", name)
                 .getResultList();
     }
@@ -56,6 +56,6 @@ public abstract class SimpleDao extends AbstractEntityDao<Simple, Long> {
     public abstract QueryResult<Simple> findByName(String name);
     
     @Override
-    protected abstract EntityManager getEntityManager();
+    protected abstract EntityManager entityManager();
 
 }

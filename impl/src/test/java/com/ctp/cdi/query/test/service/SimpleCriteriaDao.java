@@ -3,10 +3,12 @@ package com.ctp.cdi.query.test.service;
 import java.util.List;
 
 import com.ctp.cdi.query.AbstractEntityDao;
+import com.ctp.cdi.query.criteria.CriteriaSupport;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.domain.Simple_;
 
-public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long> {
+public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long>
+        implements CriteriaSupport<Simple> {
 
     public List<Simple> queryByCriteria(String name, Boolean enabled, Integer from, Integer to) {
         return criteria()
