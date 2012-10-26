@@ -90,6 +90,7 @@
                 <configuration>
                     <processors>
                         <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                        <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
                     </processors>
                 </configuration>
                 <dependencies>
@@ -97,7 +98,12 @@
                         <groupId>com.mysema.querydsl</groupId>
                         <artifactId>querydsl-apt</artifactId>
                         <version>${querydsl.version}</version>
-                    </dependency> 
+                    </dependency>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-jpamodelgen</artifactId>
+                        <version>1.2.0.Final</version>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>

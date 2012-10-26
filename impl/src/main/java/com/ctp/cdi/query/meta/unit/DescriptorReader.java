@@ -1,5 +1,7 @@
 package com.ctp.cdi.query.meta.unit;
 
+import static java.lang.Thread.currentThread;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -65,8 +67,7 @@ abstract class DescriptorReader {
     }
 
     ClassLoader classLoader() {
-        return getClass().getClassLoader();
-        //return Thread.currentThread().getContextClassLoader();
+        return currentThread().getContextClassLoader();
     }
     
     boolean exists(URL url) {
