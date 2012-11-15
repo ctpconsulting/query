@@ -25,14 +25,6 @@ public final class EntityUtils {
     private EntityUtils() {
     }
 
-    public static boolean isNew(Object entity) {
-        assertIsEntity(entity);
-        Property<Serializable> property = primaryKey(entity.getClass());
-        property.setAccessible();
-        Serializable value = property.getValue(entity);
-        return value == null;
-    }
-
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Class<? extends Serializable> primaryKeyClass(Class<?> entityClass) {
         if (entityClass.isAnnotationPresent(IdClass.class)) {
