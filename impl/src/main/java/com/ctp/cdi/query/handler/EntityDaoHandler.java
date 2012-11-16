@@ -1,7 +1,6 @@
 package com.ctp.cdi.query.handler;
 
 import static com.ctp.cdi.query.util.EntityUtils.entityName;
-import static com.ctp.cdi.query.util.EntityUtils.isNew;
 import static com.ctp.cdi.query.util.QueryUtils.isEmpty;
 import static com.ctp.cdi.query.util.QueryUtils.isString;
 
@@ -252,4 +251,8 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return query.getSingleResult();
     }
 
+    private boolean isNew(final E entity) {
+        return entityManager().getEntityManagerFactory()
+                    .getPersistenceUnitUtil().getIdentifier(entity) == null;
+    }
 }
