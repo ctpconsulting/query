@@ -181,7 +181,7 @@
 
         <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -328,6 +328,33 @@
                     <url>https://repository.apache.org/content/repositories/snapshots/</url>
                 </repository>
             </repositories>
+        </profile>
+        
+        <profile>
+            <id>arq-tomee-embedded</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-openejb</directory>
+                    </testResource>
+                </testResources>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>apache-tomee</artifactId>
+                    <classifier>plus</classifier>
+                    <type>zip</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>arquillian-tomee-embedded</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
 
         <profile>
