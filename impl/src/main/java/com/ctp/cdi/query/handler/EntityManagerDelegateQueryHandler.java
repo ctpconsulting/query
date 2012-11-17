@@ -16,7 +16,7 @@ import javax.persistence.metamodel.Metamodel;
 
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
 
-@Typed({ EntityManagerDelegateQueryHandler.class, DelegateQueryHandler.class })
+@Typed(DelegateQueryHandler.class )
 public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryHandler<E>
         implements EntityManager {
     
