@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.builder.part;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

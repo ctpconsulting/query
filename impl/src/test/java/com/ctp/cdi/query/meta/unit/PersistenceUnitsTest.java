@@ -4,10 +4,10 @@ import static com.ctp.cdi.query.test.util.TestDeployments.TEST_FILTER;
 import static com.ctp.cdi.query.test.util.TestDeployments.addDependencies;
 import static com.ctp.cdi.query.test.util.TestDeployments.createApiArchive;
 import static com.ctp.cdi.query.test.util.TestDeployments.createImplPackages;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

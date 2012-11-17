@@ -1,6 +1,6 @@
 package com.ctp.cdi.query;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;

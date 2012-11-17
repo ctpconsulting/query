@@ -1,6 +1,6 @@
 package com.ctp.cdi.query.meta.unit;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
