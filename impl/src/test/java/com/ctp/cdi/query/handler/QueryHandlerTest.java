@@ -47,7 +47,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     private SimpleBuilder builder;
 
     @Test
-    public void shouldDelegateToImplementation() {
+    public void should_delegate_to_implementation() {
         // given
         final String name = "testDelegateToImplementation";
         builder.createSimple(name);
@@ -61,7 +61,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateNamedQueryIndex() {
+    public void should_create_named_query_index() {
         // given
         final String name = "testCreateNamedQueryIndex";
         builder.createSimple(name);
@@ -76,7 +76,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateNamedQueryNamed() {
+    public void should_create_named_query_named() {
         // given
         final String name = "testCreateNamedQueryNamed";
         Simple simple = builder.createSimple(name);
@@ -90,7 +90,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldRunAnnotatedQuery() {
+    public void should_run_annotated_query() {
         // given
         final String name = "testRunAnnotatedQuery";
         builder.createSimple(name);
@@ -104,7 +104,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateQueryByMethodName() {
+    public void should_create_query_by_method_name() {
         // given
         final String name = "testCreateQueryByMethodName";
         builder.createSimple(name);
@@ -118,7 +118,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldRestrictResultSizeByAnnotation() {
+    public void should_restrict_result_size_by_annotation() {
         // given
         final String name = "testRestrictResultSizeByAnnotation";
         builder.createSimple(name);
@@ -133,7 +133,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldRestrictResultSizeByParameters() {
+    public void should_restrict_result_size_by_parameters() {
         // given
         final String name = "testRestrictResultSizeByParameters";
         builder.createSimple(name);
@@ -149,7 +149,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldWorkWith2ndDao() {
+    public void should_work_with_2nd_dao() {
         // given
         final String name = "testWorkWith2ndDao";
         Simple2 simple = createSimple2(name);
@@ -164,7 +164,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldReturnAggregate() {
+    public void should_return_aggregate() {
         // given
         final String name = "testReturnAggregate";
         builder.createSimple(name);
@@ -177,7 +177,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldFindWithNativeQuery() {
+    public void should_find_with_native_query() {
         // given
         final String name = "testFindWithNativeQuery";
         builder.createSimple(name);
@@ -192,7 +192,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldOrderResultByMethodOrderBy() {
+    public void should_order_result_by_method_order_by() {
         // given
         final String name = "testFindWithNativeQuery";
         builder.createSimple(name, Integer.valueOf(33));
@@ -223,7 +223,7 @@ public class QueryHandlerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldExecuteUpdate() {
+    public void should_execute_update() {
         // given
         final String name = "testFindWithNativeQuery";
         final String newName = "testFindWithNativeQueryUpdated" + System.currentTimeMillis();

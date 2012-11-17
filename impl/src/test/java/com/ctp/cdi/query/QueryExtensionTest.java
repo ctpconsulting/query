@@ -37,7 +37,7 @@ public class QueryExtensionTest {
     Instance<SimpleDao> extendedClassDao;
 
     @Test
-    public void shouldInject() {
+    public void should_inject() {
         assertNotNull(dao.get());
         assertNotNull(extendedDao.get());
         assertNotNull(extendedClassDao.get());

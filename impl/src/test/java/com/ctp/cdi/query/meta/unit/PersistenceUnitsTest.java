@@ -50,7 +50,7 @@ public class PersistenceUnitsTest {
     }
     
     @Test
-    public void shouldRecognizeEntityData() {
+    public void should_recognize_entity_data() {
         // given
   
         // when
@@ -65,9 +65,9 @@ public class PersistenceUnitsTest {
         assertTrue(positive3);
         assertFalse(negative);
     }
-    
+
     @Test
-    public void shouldRecognizeIds() {
+    public void should_recognize_ids() {
         // given
         
         // when
@@ -78,9 +78,9 @@ public class PersistenceUnitsTest {
         assertEquals("id", idField1);
         assertEquals("id", idField2);
     }
-    
+
     @Test
-    public void shouldRecognizeName() {
+    public void should_recognize_name() {
         // given
         
         // when
@@ -89,9 +89,9 @@ public class PersistenceUnitsTest {
         // then
         assertEquals("Mapped_One", name);
     }
-    
+
     @Test
-    public void shouldRecognizeIdClass() {
+    public void should_recognize_id_class() {
         // given
         
         // when
@@ -102,7 +102,7 @@ public class PersistenceUnitsTest {
     }
 
     @Test
-    public void shouldPrepareDaoEntity() {
+    public void should_prepare_dao_entity() {
         // given
         
         // when
@@ -117,4 +117,5 @@ public class PersistenceUnitsTest {
         assertEquals(TeeId.class, entity2.getPrimaryClass());
         assertEquals(Long.class, entity3.getPrimaryClass());
     }
+
 }

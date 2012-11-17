@@ -2,19 +2,18 @@ package com.ctp.cdi.query.util;
 
 import java.io.Serializable;
 
-import com.ctp.cdi.query.test.domain.Tee;
-import com.ctp.cdi.query.test.domain.Tee2;
-import com.ctp.cdi.query.test.domain.TeeId;
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.domain.Tee;
+import com.ctp.cdi.query.test.domain.Tee2;
+import com.ctp.cdi.query.test.domain.TeeId;
 
 public class EntityUtilsTest {
 
     @Test
-    public void shouldFindIdPropertyClass() {
+    public void should_find_id_property_class() {
         // given
 
         // when
@@ -25,7 +24,7 @@ public class EntityUtilsTest {
     }
 
     @Test
-    public void shouldFindIdClass() {
+    public void should_find_id_class() {
         // given
 
         // when

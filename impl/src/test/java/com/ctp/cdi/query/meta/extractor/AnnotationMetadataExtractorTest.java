@@ -14,7 +14,7 @@ import com.ctp.cdi.query.test.service.DaoInterface;
 public class AnnotationMetadataExtractorTest {
 
     @Test
-    public void shouldExtractEntityClassFromDaoAnnotation() {
+    public void should_extract_entity_class_from_dao_annotation() {
         // given
         AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 
@@ -28,7 +28,7 @@ public class AnnotationMetadataExtractorTest {
     }
 
     @Test
-    public void shouldThrowExcptionWhenAnnotationWithEntityClassNotPresent() {
+    public void should_throw_excption_when_annotation_with_entity_class_not_present() {
         // given
         AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 
@@ -40,7 +40,7 @@ public class AnnotationMetadataExtractorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenAnnotationWithNonEntityClass() {
+    public void should_throw_exception_when_annotation_with_non_entity_class() {
         // given
         AnnotationMetadataExtractor extractor = new AnnotationMetadataExtractor();
 

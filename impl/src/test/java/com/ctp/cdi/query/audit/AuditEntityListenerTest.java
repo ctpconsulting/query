@@ -48,7 +48,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldSetCreationDate() throws Exception {
+    public void should_set_creation_date() throws Exception {
         // given
         AuditedEntity entity = new AuditedEntity();
         
@@ -63,7 +63,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldSetModificationDate() throws Exception {
+    public void should_set_modification_date() throws Exception {
         // given
         AuditedEntity entity = new AuditedEntity();
         entityManager.persist(entity);
@@ -80,7 +80,7 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldSetChangingPrincipal() {
+    public void should_set_changing_principal() {
         // given
         AuditedEntity entity = new AuditedEntity();
         

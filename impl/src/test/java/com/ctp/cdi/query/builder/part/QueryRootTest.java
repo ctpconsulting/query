@@ -20,7 +20,7 @@ public class QueryRootTest {
     private final DaoComponent dao = new DaoComponent(SimpleDao.class, new DaoEntity(Simple.class, Long.class));
     
     @Test
-    public void shouldCreateSimpleQuery() {
+    public void should_create_simple_query() {
         // given
         final String name = "findByName";
         final String expected = 
@@ -35,7 +35,7 @@ public class QueryRootTest {
     }
     
     @Test
-    public void shouldCreateComplexQuery() {
+    public void should_create_complex_query() {
         // given
         final String name = "findByNameAndTemporalBetweenOrEnabledIsNull" +
         		"AndCamelCaseAndEmbedded_embeddNotEqualOrderByEmbedded_embeddDesc";
@@ -56,7 +56,7 @@ public class QueryRootTest {
     }
     
     @Test
-    public void shouldCreateQueryWithOrderByOnly() {
+    public void should_create_query_with_order_by_only() {
         // given
         final String name = "findByOrderByIdAsc";
         final String expected = 
@@ -71,7 +71,7 @@ public class QueryRootTest {
     }
     
     @Test(expected = MethodExpressionException.class)
-    public void shouldFailInWhere() {
+    public void should_fail_in_where() {
         // given
         final String name = "findByInvalid";
         
@@ -80,7 +80,7 @@ public class QueryRootTest {
     }
     
     @Test(expected = MethodExpressionException.class)
-    public void shouldFailWithPrefixOnly() {
+    public void should_fail_with_prefix_only() {
         // given
         final String name = "findBy";
         
@@ -89,7 +89,7 @@ public class QueryRootTest {
     }
     
     @Test(expected = MethodExpressionException.class)
-    public void shouldFailInOrderBy() {
+    public void should_fail_in_order_by() {
         // given
         final String name = "findByNameOrderByInvalidDesc";
         

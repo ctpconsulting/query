@@ -38,7 +38,7 @@ public class EntityManagerTest {
     private SimpleDaoWithOverriddenEntityManager daoWithInjection;
 
     @Test
-    public void shouldUseQualifiedEntityManager() {
+    public void should_use_qualified_entity_manager() {
         // when
         List<Simple> result = daoWithAnnotation.findByName("testUseQualifiedEntityManager");
 
@@ -48,7 +48,7 @@ public class EntityManagerTest {
     }
 
     @Test
-    public void shouldUseInjectedEntityManager() {
+    public void should_use_injected_entity_manager() {
         // when
         List<Simple> result = daoWithInjection.findByName("testUseInjectedEntityManager");
 
@@ -58,7 +58,7 @@ public class EntityManagerTest {
     }
 
     @Test
-    public void shouldInjectEntityManager() {
+    public void should_inject_entity_manager() {
         // when
         List<Simple> result = daoWithInjection.findWithEm("testInjectEntityManager");
 

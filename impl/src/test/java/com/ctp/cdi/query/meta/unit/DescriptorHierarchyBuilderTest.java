@@ -26,7 +26,7 @@ public class DescriptorHierarchyBuilderTest {
     }
     
     @Test
-    public void shouldBuildHierarchy() {
+    public void should_build_hierarchy() {
         // given
         DescriptorHierarchyBuilder builder = DescriptorHierarchyBuilder.newInstance(entities, superClasses);
         

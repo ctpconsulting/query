@@ -50,7 +50,7 @@ public class CriteriaTest extends TransactionalTestCase {
     private EntityManager entityManager;
 
     @Test
-    public void shouldCreateCriteriaQuery() {
+    public void should_create_criteria_query() {
         // given
         final String name = "testCreateCriteriaQuery";
         createSimple(name, 55);
@@ -67,7 +67,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateJoinCriteriaQuery() {
+    public void should_create_join_criteria_query() {
         // given
         final String name = "testCreateJoinCriteriaQuery";
         final String nameOne = name + "-one";
@@ -95,7 +95,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateOrQuery() {
+    public void should_create_or_query() {
         // given
         final String name = "testCreateOrQuery";
         Parent parent1 = new Parent(name + "1");
@@ -121,7 +121,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateOrderedQuery() {
+    public void should_create_ordered_query() {
         // given
         final String name = "testCreateOrderedQuery";
         Parent parent1 = new Parent(name + "99");
@@ -147,7 +147,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateQueryWihtoutNulls() {
+    public void should_create_query_wihtout_nulls() {
         // given
         final String name = "testCreateQueryWihtoutNulls";
         Parent parent = new Parent(name);
@@ -164,7 +164,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateFetchQuery() {
+    public void should_create_fetch_query() {
         // given
         final String name = "testCreateFetchQuery";
         Parent parent = new Parent(name);
@@ -185,7 +185,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldCreateInQuery() {
+    public void should_create_in_query() {
         // given
         final String name = "testCreateInQuery";
         Parent parent1 = new Parent(name + "-1");
@@ -206,7 +206,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCreateSelectCriteriaWithResultType() {
+    public void should_create_select_criteria_with_result_type() {
         // given
         final String name = "testCreateSelectCriteriaWithResultType";
         createSimple(name, 1);
@@ -224,7 +224,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCreateSelectCriteriaWithoutResultType() {
+    public void should_create_select_criteria_without_result_type() {
         // given
         final String name = "testCreateSelectCriteriaWithoutResultType";
         createSimple(name, 10);
@@ -242,7 +242,7 @@ public class CriteriaTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCreateSelectCriteriaWithAttributes() {
+    public void should_create_select_criteria_with_attributes() {
         // given
         final String name = "testCreateSelectCriteriaWithAttributes";
         createSimple(name, 10);

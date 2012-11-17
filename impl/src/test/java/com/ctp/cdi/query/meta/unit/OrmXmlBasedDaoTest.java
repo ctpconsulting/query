@@ -44,7 +44,7 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
     private MappedOneDao mappedOneDao;
     
     @Test
-    public void shouldFindBy() {
+    public void should_find_by() {
         // given
         MappedOne one = createMappedOne("shouldFindBy");
         

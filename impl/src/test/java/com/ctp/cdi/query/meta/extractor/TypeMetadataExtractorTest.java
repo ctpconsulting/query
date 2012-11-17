@@ -14,7 +14,7 @@ import com.ctp.cdi.query.test.service.SimpleDao;
 public class TypeMetadataExtractorTest {
 
     @Test
-    public void shouldExtractFromClass() {
+    public void should_extract_from_class() {
         // given
         MetadataExtractor extractor = new TypeMetadataExtractor();
         
@@ -28,7 +28,7 @@ public class TypeMetadataExtractorTest {
     }
     
     @Test
-    public void shouldNotExtractFromAnnotation() {
+    public void should_not_extract_from_annotation() {
         // given
         MetadataExtractor extractor = new TypeMetadataExtractor();
         

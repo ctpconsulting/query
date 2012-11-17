@@ -12,7 +12,7 @@ import com.ctp.cdi.query.test.domain.Simple;
 public class TimestampsProviderTest {
 
     @Test
-    public void shouldSetDatesForCreation() {
+    public void should_set_dates_for_creation() {
         // given
         AuditedEntity entity = new AuditedEntity();
         
@@ -27,7 +27,7 @@ public class TimestampsProviderTest {
     }
 
     @Test
-    public void shouldSetDatesForUpdate() {
+    public void should_set_dates_for_update() {
         // given
         AuditedEntity entity = new AuditedEntity();
         
@@ -42,7 +42,7 @@ public class TimestampsProviderTest {
     }
 
     @Test
-    public void shouldNotFailOnNonAuditedEntity() {
+    public void should_not_fail_on_non_audited_entity() {
         // given
         Simple entity = new Simple();
         
@@ -55,7 +55,7 @@ public class TimestampsProviderTest {
     }
     
     @Test(expected = AuditPropertyException.class)
-    public void shouldFailOnInvalidEntity() {
+    public void should_fail_on_invalid_entity() {
         // given
         InvalidEntity entity = new InvalidEntity();
         

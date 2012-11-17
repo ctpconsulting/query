@@ -36,7 +36,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     private EntityManager entityManager;
     
     @Test
-    public void shouldRetrieve() {
+    public void should_retrieve() {
         // given
         Home entity = new Home();
         entity.setName("testRetrieve");
@@ -51,7 +51,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCreate() {
+    public void should_create() {
         // given
         Home entity = new Home();
         entity.setName("testCreate");
@@ -65,7 +65,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldUpdate() {
+    public void should_update() {
         // given
         Home entity = new Home();
         entity.setName("testUpdate");
@@ -84,7 +84,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     }
 
     @Test
-    public void shouldDelete() {
+    public void should_delete() {
         // given
         Home entity = new Home();
         entity.setName("testDelete");
@@ -99,7 +99,7 @@ public class EntityHomeTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldPaginate() {
+    public void should_paginate() {
         // given
         String name = "testPaginate";
         createHome(name);

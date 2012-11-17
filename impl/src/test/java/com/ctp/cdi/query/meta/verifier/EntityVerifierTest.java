@@ -10,7 +10,7 @@ import com.ctp.cdi.query.test.domain.Simple;
 public class EntityVerifierTest {
 
     @Test
-    public void shouldAcceptEntityClass() {
+    public void should_accept_entity_class() {
         // given
         EntityVerifier entityVerifier = new EntityVerifier();
 
@@ -22,7 +22,7 @@ public class EntityVerifierTest {
     }
 
     @Test
-    public void shouldNotAcceptClassWithoutEntityAnnotation() {
+    public void should_not_accept_class_without_entity_annotation() {
         // given
         EntityVerifier entityVerifier = new EntityVerifier();
 

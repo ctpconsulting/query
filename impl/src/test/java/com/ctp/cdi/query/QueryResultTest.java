@@ -46,7 +46,7 @@ public class QueryResultTest extends TransactionalTestCase {
     private SimpleBuilder builder;
 
     @Test
-    public void shouldSortResult() {
+    public void should_sort_result() {
         // given
         final String name = "testSortResult";
         builder.createSimple(name, Integer.valueOf(99));
@@ -81,7 +81,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldChangeSortOrder() {
+    public void should_change_sort_order() {
         // given
         final String name = "testChangeSortOrder";
         builder.createSimple(name, Integer.valueOf(99));
@@ -103,7 +103,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldClearSortOrder() {
+    public void should_clear_sort_order() {
         // given
         final String name = "testClearSortOrder";
         builder.createSimple(name, Integer.valueOf(99));
@@ -132,7 +132,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldPageResult() {
+    public void should_page_result() {
         // given
         final String name = "testPageResult";
         builder.createSimple(name, Integer.valueOf(99));
@@ -159,7 +159,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldPageWithPageAPI() {
+    public void should_page_with_page_api() {
         // given
         final String name = "testPageAPI";
         builder.createSimple(name, Integer.valueOf(22));
@@ -196,7 +196,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldModifyNamedQuery() {
+    public void should_modify_named_query() {
         // given
         final String name = "testModifyNamedQuery";
         builder.createSimple(name + 0);
@@ -216,7 +216,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCountWithMethodQuery() {
+    public void should_count_with_method_query() {
         // given
         final String name = "testCountWithMethodQuery";
         builder.createSimple(name);
@@ -230,7 +230,7 @@ public class QueryResultTest extends TransactionalTestCase {
     }
     
     @Test
-    public void shouldCountWithNamedQuery() {
+    public void should_count_with_named_query() {
         // given
         final String name = "testCountWithNamedQuery";
         builder.createSimple(name);
