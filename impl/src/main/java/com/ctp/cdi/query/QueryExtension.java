@@ -1,10 +1,15 @@
 package com.ctp.cdi.query;
 
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.persistence.EntityManager;
 
 import org.jboss.solder.bean.BeanBuilder;
 import org.jboss.solder.logging.Logger;
@@ -50,7 +55,7 @@ public class QueryExtension extends ServiceHandlerExtension {
         try {
             final BeanBuilder<X> builder = new BeanBuilder<X>(beanManager);
             builder.readFromType(annotatedType);
-            builder.types(annotatedType.getTypeClosure());
+            builder.types(extracted(annotatedType));
             builder.beanLifecycle(new ServiceHandlerBeanLifecycle(
                     annotatedType.getJavaClass(), handlerClass, beanManager));
             builder.toString("Generated @ServiceHandler for [" + builder.getBeanClass() + "] with qualifiers ["
@@ -61,6 +66,16 @@ public class QueryExtension extends ServiceHandlerExtension {
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private <X> Set<Type> extracted(AnnotatedType<X> annotatedType) {
+        Set<Type> result = new HashSet<Type>();
+        for (Type type : annotatedType.getTypeClosure()) {
+            if (!type.equals(EntityManager.class)) {
+                result.add(type);
+            }
+        }
+        return result;
     }
 
 }
