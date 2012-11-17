@@ -44,7 +44,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
 
     @Override
     public E save(E entity) {
-        if (isNew(entity)) {
+        if (context.isNew(entity)) {
             entityManager().persist(entity);
             return entity;
         }
@@ -251,8 +251,4 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         return query.getSingleResult();
     }
 
-    private boolean isNew(final E entity) {
-        return entityManager().getEntityManagerFactory()
-                    .getPersistenceUnitUtil().getIdentifier(entity) == null;
-    }
 }

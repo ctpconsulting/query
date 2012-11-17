@@ -40,18 +40,26 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
     }
     
     @Override
-    public Method getMethod() {
-        return invocation.getMethod();
-    }
-    
-    @Override
-    public Object[] getMethodParameters() {
-        return invocation.getParameters();
+    public boolean isNew(Object entity) {
+        try {
+            return entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity) == null;
+        } catch (IllegalArgumentException e) {
+            // Not an entity
+            return false;
+        }
     }
     
     @Override
     public Class<?> getEntityClass() {
         return entityClass;
+    }
+
+    public Method getMethod() {
+        return invocation.getMethod();
+    }
+
+    public Object[] getMethodParameters() {
+        return invocation.getParameters();
     }
     
     public void addQueryStringPostProcessor(QueryStringPostProcessor postProcessor) {

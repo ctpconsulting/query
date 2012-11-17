@@ -5,15 +5,14 @@ import javax.persistence.EntityManager;
 
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
 import com.ctp.cdi.query.spi.QueryInvocationContext;
-import com.ctp.cdi.query.test.domain.Simple;
 
-public class MyEntityDaoDelegate implements DelegateQueryHandler, MyEntityDao<Simple> {
+public class MyEntityDaoDelegate<E> implements DelegateQueryHandler, MyEntityDao<E> {
 
     @Inject
     private QueryInvocationContext context;
 
     @Override
-    public Simple saveAndFlushAndRefresh(Simple entity) {
+    public E saveAndFlushAndRefresh(E entity) {
         entityManager().persist(entity);
         entityManager().flush();
         entityManager().refresh(entity);
@@ -23,6 +22,5 @@ public class MyEntityDaoDelegate implements DelegateQueryHandler, MyEntityDao<Si
     private EntityManager entityManager() {
         return context.getEntityManager();
     }
-
 
 }
