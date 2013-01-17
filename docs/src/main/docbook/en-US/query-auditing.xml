@@ -113,7 +113,6 @@ public class AuditedEntity implements Serializable {
                     to a persistent context. Also, be aware that the CDI container will
                     proxy a scoped bean, which might confuse the persistence provider
                     when peristing / updating the target entity.
-                    TODO - validate.
                 </para>
             </tip>
         </section>
