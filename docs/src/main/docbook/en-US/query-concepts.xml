@@ -146,5 +146,27 @@ public abstract class CustomerDao extends AbstractEntityDao<Customer, Long> {
 
 }]]>    </programlisting>
     </section>
+    <section id="concepts-entitymanagers">
+        <title>Extending EntityManager</title>
+        <para>
+            When you inject a DAO in a class, this should be all you need to interact with
+            when it comes to persistence. The base DAOs CDI Query provides contain various
+            methods which should be fine for many cases. But then there's that special method
+            on the <literal>EntityManager</literal> you'd need now...
+        </para>
+        <para>
+            For this case, your DAOs can also extend or implement the <literal>EntityManager</literal>
+            interface:
+        </para>
+        <programlisting role="JAVA"><![CDATA[@Dao
+public interface SimpleDao extends EntityDao<Simple, Long>, EntityManager {
+}]]>    </programlisting>
+        <tip>
+            <para>
+                The CDI bean type of your DAO will not include the
+                <literal>EntityManager</literal> type.
+            </para>
+        </tip>
+    </section>
 
 </chapter>
