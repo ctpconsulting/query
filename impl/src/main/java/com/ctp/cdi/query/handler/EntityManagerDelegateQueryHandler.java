@@ -1,5 +1,6 @@
 package com.ctp.cdi.query.handler;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.enterprise.inject.Typed;
@@ -14,12 +15,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.Metamodel;
 
+import com.ctp.cdi.query.EntityManagerDao;
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
 
 @Typed(DelegateQueryHandler.class)
-public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryHandler<E>
-        implements EntityManager {
-    
+public class EntityManagerDelegateQueryHandler<E, PK extends Serializable> extends AbstractDelegateQueryHandler<E>
+        implements EntityManagerDao<E, PK> {
+
     @Override
     public void clear() {
         delegate().clear();
@@ -36,13 +38,9 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public Query createNamedQuery(String query) {
-        return delegate().createNamedQuery(query);
-    }
-
-    @Override
-    public <T> TypedQuery<T> createNamedQuery(String query, Class<T> clazz) {
-        return delegate().createNamedQuery(query, clazz);
+    @SuppressWarnings("unchecked")
+    public TypedQuery<E> createNamedQuery(String query) {
+        return (TypedQuery<E>) delegate().createNamedQuery(query, context.getEntityClass());
     }
 
     @Override
@@ -51,28 +49,19 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public Query createNativeQuery(String sql, Class resultClass) {
-        return delegate().createNativeQuery(sql, resultClass);
-    }
-
-    @Override
     public Query createNativeQuery(String sql, String resultSetMapping) {
         return delegate().createNativeQuery(sql, resultSetMapping);
     }
 
     @Override
-    public Query createQuery(String query) {
-        return delegate().createQuery(query);
+    @SuppressWarnings("unchecked")
+    public TypedQuery<E> createQuery(String query) {
+        return (TypedQuery<E>) delegate().createQuery(query, context.getEntityClass());
     }
 
     @Override
-    public <T> TypedQuery<T> createQuery(CriteriaQuery<T> query) {
+    public TypedQuery<E> createQuery(CriteriaQuery<E> query) {
         return delegate().createQuery(query);
-    }
-
-    @Override
-    public <T> TypedQuery<T> createQuery(String query, Class<T> resultClass) {
-        return delegate().createQuery(query, resultClass);
     }
 
     @Override
@@ -81,23 +70,27 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Object pk) {
-        return delegate().find(entityClass, pk);
+    @SuppressWarnings("unchecked")
+    public E find(PK primaryKey) {
+        return (E) delegate().find(context.getEntityClass(), primaryKey);
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
-        return delegate().find(entityClass, primaryKey, properties);
+    @SuppressWarnings("unchecked")
+    public E find(PK primaryKey, Map<String, Object> properties) {
+        return (E) delegate().find(context.getEntityClass(), primaryKey, properties);
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Object pk, LockModeType lockMode) {
-        return delegate().find(entityClass, pk, lockMode);
+    @SuppressWarnings("unchecked")
+    public E find(PK primaryKey, LockModeType lockMode) {
+        return (E) delegate().find(context.getEntityClass(), primaryKey, lockMode);
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Object pk, LockModeType lockMode, Map<String, Object> properties) {
-        return delegate().find(entityClass, pk, lockMode, properties);
+    @SuppressWarnings("unchecked")
+    public E find(PK pk, LockModeType lockMode, Map<String, Object> properties) {
+        return (E) delegate().find(context.getEntityClass(), pk, lockMode, properties);
     }
 
     @Override
@@ -141,8 +134,9 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public <T> T getReference(Class<T> entityClass, Object pk) {
-        return delegate().getReference(entityClass, pk);
+    @SuppressWarnings("unchecked")
+    public E getReference(PK pk) {
+        return (E) delegate().getReference(context.getEntityClass(), pk);
     }
 
     @Override
@@ -166,17 +160,17 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public void lock(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+    public void lock(E entity, LockModeType lockMode, Map<String, Object> properties) {
         delegate().lock(entity, lockMode, properties);
     }
 
     @Override
-    public <T> T merge(T entity) {
+    public E merge(E entity) {
         return delegate().merge(entity);
     }
 
     @Override
-    public void persist(Object entity) {
+    public void persist(E entity) {
         delegate().persist(entity);
     }
 
@@ -186,17 +180,17 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     }
 
     @Override
-    public void refresh(Object entity, Map<String, Object> properties) {
+    public void refresh(E entity, Map<String, Object> properties) {
         delegate().refresh(entity, properties);
     }
 
     @Override
     public void refresh(Object entity, LockModeType lockMode) {
-        delegate().refresh(entity, lockMode);        
+        delegate().refresh(entity, lockMode);
     }
 
     @Override
-    public void refresh(Object entity, LockModeType lockMode, Map<String, Object> properties) {
+    public void refresh(E entity, LockModeType lockMode, Map<String, Object> properties) {
         delegate().refresh(entity, lockMode, properties);
     }
 
@@ -219,7 +213,7 @@ public class EntityManagerDelegateQueryHandler<E> extends AbstractDelegateQueryH
     public <T> T unwrap(Class<T> clazz) {
         return delegate().unwrap(clazz);
     }
-    
+
     private EntityManager delegate() {
         return context.getEntityManager();
     }

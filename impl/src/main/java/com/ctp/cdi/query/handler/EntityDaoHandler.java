@@ -20,7 +20,6 @@ import org.jboss.solder.properties.Property;
 import org.jboss.solder.properties.query.NamedPropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
 
-import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
@@ -34,11 +33,11 @@ import com.ctp.cdi.query.spi.QueryInvocationContext;
  * @param <E>   Entity type.
  * @param <PK>  Primary key type, must be a serializable.
  */
-public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntityDao<E, PK>
-        implements DelegateQueryHandler {
+public class EntityDaoHandler<E, PK extends Serializable>
+        implements EntityDao<E, PK>, DelegateQueryHandler {
 
     private final Logger log = Logger.getLogger(EntityDaoHandler.class);
-    
+
     @Inject
     private QueryInvocationContext context;
 
@@ -130,17 +129,14 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         entityManager().flush();
     }
 
-    @Override
     public EntityManager entityManager() {
         return context.getEntityManager();
     }
 
-    @Override
     public CriteriaQuery<E> criteriaQuery() {
         return entityManager().getCriteriaBuilder().createQuery(entityClass());
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public Class<E> entityClass() {
         return (Class<E>) context.getEntityClass();
@@ -174,7 +170,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
     private Object transform(Object value, final boolean useLikeOperator) {
         if (value != null && useLikeOperator && isString(value)) {
             // seems to be an OpenJPA bug:
-            // parameters in querys fail validation, e.g. UPPER(e.name) like UPPER(:name) 
+            // parameters in querys fail validation, e.g. UPPER(e.name) like UPPER(:name)
             String result = ((String) value).toUpperCase();
             return "%" + result + "%";
         }
@@ -204,14 +200,14 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         }
         return result;
     }
-    
+
     private  List<Property<Object>> extractProperties(SingularAttribute<E, ?>... attributes) {
         List<String> names = extractPropertyNames(attributes);
         List<Property<Object>> properties = PropertyQueries.createQuery(entityClass())
                 .addCriteria(new NamedPropertyCriteria(names.toArray(new String[] {}))).getResultList();
         return properties;
     }
-    
+
     private List<E> executeExampleQuery(E example, int start, int max, boolean useLikeOperator, SingularAttribute<E, ?>... attributes) {
         //Not sure if this should be the intended behaviour
         //when we don't get any attributes maybe we should
@@ -238,7 +234,7 @@ public class EntityDaoHandler<E, PK extends Serializable> extends AbstractEntity
         addParameters(query, example, properties, useLikeOperator);
         return query.getResultList();
     }
-    
+
     private Long executeCountQuery(E example, boolean useLikeOperator, SingularAttribute<E, ?>... attributes) {
         if (isEmpty(attributes)) {
             return count();

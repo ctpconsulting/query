@@ -42,6 +42,12 @@
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.mysema.querydsl</groupId>

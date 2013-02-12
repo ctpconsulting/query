@@ -13,8 +13,9 @@ import org.junit.Test;
 
 import com.ctp.cdi.query.test.TransactionalTestCase;
 import com.ctp.cdi.query.test.domain.Simple;
+import com.ctp.cdi.query.test.service.MyEntityDao;
+import com.ctp.cdi.query.test.service.MyEntityDaoDelegate;
 import com.ctp.cdi.query.test.service.MySimpleDao;
-import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.util.TestDeployments;
 
 public class CdiQuerySpiTest extends TransactionalTestCase {
@@ -22,14 +23,16 @@ public class CdiQuerySpiTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return TestDeployments.initDeployment()
-                          .addPackage(SimpleDao.class.getPackage())
-                          .addPackage(Simple.class.getPackage());
+                .addClasses(MySimpleDao.class,
+                            MyEntityDao.class,
+                            MyEntityDaoDelegate.class)
+                .addPackage(Simple.class.getPackage());
     }
-    
+
     @Produces
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Inject
     private MySimpleDao dao;
 
@@ -37,14 +40,14 @@ public class CdiQuerySpiTest extends TransactionalTestCase {
     public void should_call_delegate() {
         // given
         Simple simple = new Simple("test_call_delegate");
-        
+
         // when
         simple = dao.saveAndFlushAndRefresh(simple);
-        
+
         // then
         assertNotNull(simple.getId());
     }
-    
+
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;

@@ -22,7 +22,6 @@ import com.ctp.cdi.query.test.domain.Parent;
 import com.ctp.cdi.query.test.domain.Simple;
 import com.ctp.cdi.query.test.service.ParentDao;
 import com.ctp.cdi.query.test.service.SimpleCriteriaDao;
-import com.ctp.cdi.query.test.service.SimpleDao;
 import com.ctp.cdi.query.test.service.Statistics;
 import com.ctp.cdi.query.test.util.TestDeployments;
 
@@ -35,8 +34,8 @@ public class CriteriaTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return TestDeployments.initDeployment()
-                          .addPackage(SimpleDao.class.getPackage())
-                          .addPackage(Simple.class.getPackage());
+                .addClasses(SimpleCriteriaDao.class, ParentDao.class)
+                .addPackage(Simple.class.getPackage());
     }
 
     @Inject
@@ -204,7 +203,7 @@ public class CriteriaTest extends TransactionalTestCase {
         assertNotNull(result);
         assertEquals(3, result.size());
     }
-    
+
     @Test
     public void should_create_select_criteria_with_result_type() {
         // given
@@ -214,22 +213,22 @@ public class CriteriaTest extends TransactionalTestCase {
         createSimple(name, 3);
         createSimple(name, 4);
         createSimple(name, 99);
-        
+
         // when
         Statistics result = dao.queryWithSelect(name);
-        
+
         // then
         assertNotNull(result.getAverage());
         assertEquals(Long.valueOf(5l), result.getCount());
     }
-    
+
     @Test
     public void should_create_select_criteria_without_result_type() {
         // given
         final String name = "testCreateSelectCriteriaWithoutResultType";
         createSimple(name, 10);
         createSimple(name, 99);
-        
+
         // when
         Object[] result = dao.queryWithSelectAggregateReturnArray(name);
 
@@ -240,14 +239,14 @@ public class CriteriaTest extends TransactionalTestCase {
         assertTrue(result[3] instanceof java.sql.Time);
         assertTrue(result[4] instanceof java.sql.Timestamp);
     }
-    
+
     @Test
     public void should_create_select_criteria_with_attributes() {
         // given
         final String name = "testCreateSelectCriteriaWithAttributes";
         createSimple(name, 10);
         createSimple(name, 99);
-        
+
         // when
         List<Object[]> results = dao.queryWithSelectAttributes(name);
 
@@ -260,7 +259,7 @@ public class CriteriaTest extends TransactionalTestCase {
             assertEquals(name.substring(1, 1+2), result[4]);
         }
     }
-    
+
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;

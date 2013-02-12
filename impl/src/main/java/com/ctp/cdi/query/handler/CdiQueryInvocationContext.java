@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -16,29 +15,33 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
 
     private final EntityManager entityManager;
     private final Parameters params;
-    private final InvocationContext invocation;
     private final Class<?> entityClass;
+    private final Object proxy;
+    private final Method method;
+    private final Object[] args;
     private final DaoMethod daoMethod;
     private final List<QueryStringPostProcessor> queryPostProcessors;
     private final List<JpaQueryPostProcessor> jpaPostProcessors;
-    
+
     private String queryString;
-    
-    public CdiQueryInvocationContext(InvocationContext invocation, DaoMethod daoMethod, EntityManager entityManager) {
+
+    public CdiQueryInvocationContext(Object proxy, Method method, Object[] args, DaoMethod daoMethod, EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.params = Parameters.create(invocation.getMethod(), invocation.getParameters());
-        this.invocation = invocation;
+        this.params = Parameters.create(method, args);
+        this.proxy = proxy;
+        this.method = method;
+        this.args = args;
         this.daoMethod = daoMethod;
         this.entityClass = daoMethod.getDao().getEntityClass();
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
         this.jpaPostProcessors = new LinkedList<JpaQueryPostProcessor>();
     }
-    
+
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
+
     @Override
     public boolean isNew(Object entity) {
         try {
@@ -48,36 +51,40 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
             return false;
         }
     }
-    
+
     @Override
     public Class<?> getEntityClass() {
         return entityClass;
     }
 
+    public Object proceed() throws Exception {
+        return method.invoke(proxy, args);
+    }
+
     public Method getMethod() {
-        return invocation.getMethod();
+        return method;
     }
 
     public Object[] getMethodParameters() {
-        return invocation.getParameters();
+        return args;
     }
-    
+
     public void addQueryStringPostProcessor(QueryStringPostProcessor postProcessor) {
         queryPostProcessors.add(postProcessor);
     }
-    
+
     public void addJpaQueryPostProcessor(JpaQueryPostProcessor postProcessor) {
         jpaPostProcessors.add(postProcessor);
     }
-    
+
     public void removeJpaQueryPostProcessor(JpaQueryPostProcessor postProcessor) {
         jpaPostProcessors.remove(postProcessor);
     }
-    
+
     public boolean hasQueryStringPostProcessors() {
         return !queryPostProcessors.isEmpty();
     }
-    
+
     public String applyQueryStringPostProcessors(String queryString) {
         String result = queryString;
         for (QueryStringPostProcessor processor : queryPostProcessors) {
@@ -85,7 +92,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
         }
         return result;
     }
-    
+
     public Query applyJpaQueryPostProcessors(Query query) {
         Query result = query;
         for (JpaQueryPostProcessor processor : jpaPostProcessors) {
@@ -93,17 +100,13 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
         }
         return result;
     }
-    
+
     public Object executeQuery(Query jpaQuery) {
         return daoMethod.getQueryProcessor().executeQuery(jpaQuery);
     }
 
     public Parameters getParams() {
         return params;
-    }
-
-    public InvocationContext getInvocation() {
-        return invocation;
     }
 
     public DaoMethod getDaoMethod() {
@@ -117,7 +120,7 @@ public class CdiQueryInvocationContext implements QueryInvocationContext {
     public void setQueryString(String queryString) {
         this.queryString = queryString;
     }
-    
+
     public List<QueryStringPostProcessor> getQueryStringPostProcessors() {
         return queryPostProcessors;
     }

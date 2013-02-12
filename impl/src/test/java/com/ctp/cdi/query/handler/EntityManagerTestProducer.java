@@ -8,7 +8,6 @@ import com.ctp.cdi.query.test.service.Simplistic;
 
 public class EntityManagerTestProducer {
 
-    @SuppressWarnings("unused")
     @Produces @Simplistic
     @PersistenceContext
     private EntityManager entityManager;

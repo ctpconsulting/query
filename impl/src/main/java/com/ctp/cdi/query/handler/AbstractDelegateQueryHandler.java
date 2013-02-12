@@ -10,6 +10,7 @@ public abstract class AbstractDelegateQueryHandler<E> implements DelegateQueryHa
     @Inject
     protected CdiQueryInvocationContext context;
 
+    @SuppressWarnings("unchecked")
     protected Class<E> getEntityClass() {
         return (Class<E>) context.getEntityClass();
     }

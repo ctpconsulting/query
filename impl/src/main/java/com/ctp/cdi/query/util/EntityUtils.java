@@ -16,7 +16,6 @@ import org.jboss.solder.properties.query.PropertyCriteria;
 import org.jboss.solder.properties.query.PropertyQueries;
 import org.jboss.solder.properties.query.PropertyQuery;
 
-import com.ctp.cdi.query.meta.NonEntityException;
 import com.ctp.cdi.query.meta.unit.PersistenceUnits;
 import com.ctp.cdi.query.meta.verifier.EntityVerifier;
 
@@ -37,7 +36,7 @@ public final class EntityUtils {
         Property<Serializable> property = primaryKey(entityClass);
         return property.getJavaClass();
     }
-    
+
     public static Object primaryKeyValue(Object entity) {
         Property<Serializable> property = primaryKey(entity.getClass());
         return property.getValue(entity);
@@ -68,15 +67,6 @@ public final class EntityUtils {
         throw new IllegalStateException("Class " + entityClass + " has no id defined");
     }
 
-    private static void assertIsEntity(Object entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("Provided object is null");
-        }
-        if (!isEntityClass(entity.getClass())) {
-            throw new NonEntityException("Provided object is not an @Entity");
-        }
-    }
-    
     private static List<PropertyCriteria> criteriaList(Class<?> entityClass) {
         List<PropertyCriteria> criteria = new LinkedList<PropertyCriteria>();
         criteria.add(new AnnotatedPropertyCriteria(Id.class));

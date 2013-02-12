@@ -25,7 +25,7 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
 
     @Deployment
     public static Archive<?> deployment() {
-        return TestDeployments.initDeployment(".*mapped.*")
+        return TestDeployments.initDeployment("(.*mapped.*)|(.*test.*)")
                 .addClasses(MappedOneDao.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
@@ -35,23 +35,23 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
                 .addAsWebInfResource("test-mapped-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"));
     }
-    
+
     @Produces
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Inject
     private MappedOneDao mappedOneDao;
-    
+
     @Test
     public void should_find_by() {
         // given
         MappedOne one = createMappedOne("shouldFindBy");
-        
+
         // when
         MappedOne byPk = mappedOneDao.findBy(one.getId());
         MappedOne byName = mappedOneDao.findByName("shouldFindBy");
-        
+
         // then
         assertEquals(one.getId(), byPk.getId());
         assertEquals(one.getId(), byName.getId());
@@ -68,5 +68,5 @@ public class OrmXmlBasedDaoTest extends TransactionalTestCase {
         entityManager.flush();
         return result;
     }
-    
+
 }
