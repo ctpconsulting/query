@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.jboss.solder.logging.Logger;
-import org.jboss.solder.reflection.AnnotationInstanceProvider;
+import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 
 import com.ctp.cdi.query.WithEntityManager;
 import com.ctp.cdi.query.util.EntityUtils;
@@ -29,7 +30,7 @@ import com.ctp.cdi.query.util.EntityUtils;
  */
 public class DaoComponent {
 
-    private final Logger log = Logger.getLogger(DaoComponent.class);
+    private static final Logger log = Logger.getLogger(DaoComponent.class.getName());
 
     private final Class<?> daoClass;
     private final DaoEntity entityClass;
@@ -45,7 +46,7 @@ public class DaoComponent {
         this.entityClass = entityClass;
         initialize();
     }
-    
+
     public String getEntityName() {
         return EntityUtils.entityName(entityClass.getEntityClass());
     }
@@ -112,10 +113,9 @@ public class DaoComponent {
         if (daoClass.isAnnotationPresent(WithEntityManager.class)) {
             Class<? extends Annotation>[] annotations = daoClass.getAnnotation(WithEntityManager.class).value();
             qualifiers = new Annotation[annotations.length];
-            AnnotationInstanceProvider provider = new AnnotationInstanceProvider();
             for (int i = 0; i < annotations.length; i++) {
                 Class<? extends Annotation> clazz = annotations[i];
-                qualifiers[i] = provider.get(clazz, new HashMap<String, Object>());
+                qualifiers[i] = AnnotationInstanceProvider.of(clazz);
             }
         } else {
             qualifiers = new Annotation[] {};
@@ -133,7 +133,7 @@ public class DaoComponent {
             }
             current = current.getSuperclass();
         }
-        log.debugv("collectClasses(): Found {0} for {1}", result, daoClass);
+        log.log(Level.FINER, "collectClasses(): Found {0} for {1}", new Object[] { result, daoClass });
         return result;
     }
 

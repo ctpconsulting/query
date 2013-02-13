@@ -48,7 +48,7 @@ public class DelegateQueryBuilder extends QueryBuilder {
     private Method extract(Object obj, Method method) {
         try {
             String name = method.getName();
-            return obj.getClass().getMethod(name, method.getParameterTypes());
+            return obj != null ? obj.getClass().getMethod(name, method.getParameterTypes()) : null;
         } catch (NoSuchMethodException e) {
             return null;
         }

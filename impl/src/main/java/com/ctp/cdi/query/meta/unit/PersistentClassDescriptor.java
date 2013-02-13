@@ -2,9 +2,9 @@ package com.ctp.cdi.query.meta.unit;
 
 import java.io.Serializable;
 
-import org.jboss.solder.properties.query.NamedPropertyCriteria;
-import org.jboss.solder.properties.query.PropertyQueries;
-import org.jboss.solder.properties.query.PropertyQuery;
+import com.ctp.cdi.query.property.query.NamedPropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyQueries;
+import com.ctp.cdi.query.property.query.PropertyQuery;
 
 abstract class PersistentClassDescriptor {
 
@@ -37,11 +37,11 @@ abstract class PersistentClassDescriptor {
     public Class<?> getEntityClass() {
         return entityClass;
     }
-    
+
     String className(Class<?> clazz) {
         return clazz == null ? null : clazz.getSimpleName();
     }
-    
+
     private Class<?> entityClass(String entityClass, String packageName) {
         try {
             String clazzName = buildClassName(entityClass, packageName);
@@ -50,17 +50,17 @@ abstract class PersistentClassDescriptor {
             throw new IllegalArgumentException("Can't create class " + buildClassName(entityClass, packageName), e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     private Class<? extends Serializable> idClass(Class<?> entity, String idClass, String packageName, String id) {
         try {
-            return (Class<? extends Serializable>) 
+            return (Class<? extends Serializable>)
                     (idClass != null ? Class.forName(buildClassName(idClass, packageName)) : lookupIdClass(entity, id));
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Failed to get ID class", e);
         }
     }
-    
+
     private Class<?> lookupIdClass(Class<?> entity, String id) {
         if (entity == null || id == null) {
             return null;
@@ -69,14 +69,14 @@ abstract class PersistentClassDescriptor {
                 .addCriteria(new NamedPropertyCriteria(id));
         return query.getFirstResult().getJavaClass();
     }
-    
+
     private String buildClassName(String clazzName, String packageName) {
         if (clazzName == null && packageName == null) {
             return null;
         }
         return (packageName != null && !isClassNameQualified(clazzName)) ? packageName + "." + clazzName : clazzName;
     }
-    
+
     private boolean isClassNameQualified(String name) {
         return name.contains(".");
     }

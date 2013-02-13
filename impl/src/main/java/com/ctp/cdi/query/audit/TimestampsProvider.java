@@ -4,11 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
-import org.jboss.solder.properties.Property;
-import org.jboss.solder.properties.query.AnnotatedPropertyCriteria;
-import org.jboss.solder.properties.query.PropertyQueries;
-import org.jboss.solder.properties.query.PropertyQuery;
+import com.ctp.cdi.query.property.Property;
+import com.ctp.cdi.query.property.query.AnnotatedPropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyQueries;
+import com.ctp.cdi.query.property.query.PropertyQuery;
 
 /**
  * Set timestamps on marked properties.
@@ -24,7 +25,7 @@ class TimestampsProvider extends AuditProvider {
     public void preUpdate(Object entity) {
         updateTimestamps(entity, false);
     }
-    
+
     private void updateTimestamps(Object entity, boolean create) {
         long systime = System.currentTimeMillis();
         List<Property<Object>> properties = new LinkedList<Property<Object>>();
@@ -40,7 +41,7 @@ class TimestampsProvider extends AuditProvider {
             setProperty(entity, property, systime, create);
         }
     }
-    
+
     private void setProperty(Object entity, Property<Object> property, long systime, boolean create) {
         try {
             if (!isCorrectContext(property, create)) {
@@ -48,7 +49,7 @@ class TimestampsProvider extends AuditProvider {
             }
             Object now = now(property.getJavaClass(), systime);
             property.setValue(entity, now);
-            log.debugv("Updated property {0} with {1}", propertyName(entity, property), now);
+            log.log(Level.FINER, "Updated property {0} with {1}", new Object[] { propertyName(entity, property), now });
         } catch (Exception e) {
             String message = "Failed to set property " + propertyName(entity, property) + ", is this a temporal type?";
             throw new AuditPropertyException(message, e);

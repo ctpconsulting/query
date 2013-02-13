@@ -1,18 +1,17 @@
 package com.ctp.cdi.query.builder.part;
 
-import org.jboss.solder.properties.Property;
-import org.jboss.solder.properties.query.NamedPropertyCriteria;
-import org.jboss.solder.properties.query.PropertyQueries;
-import org.jboss.solder.properties.query.PropertyQuery;
-
 import com.ctp.cdi.query.builder.MethodExpressionException;
 import com.ctp.cdi.query.meta.DaoComponent;
+import com.ctp.cdi.query.property.Property;
+import com.ctp.cdi.query.property.query.NamedPropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyQueries;
+import com.ctp.cdi.query.property.query.PropertyQuery;
 
 
 abstract class BasePropertyQueryPart extends QueryPart {
 
     final static String SEPARATOR = "_";
-    
+
     void validate(String name, String method, DaoComponent dao) {
         Class<?> current = dao.getEntityClass();
         if (name == null) {

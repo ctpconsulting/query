@@ -7,13 +7,13 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.jboss.solder.beanManager.BeanManagerLocator;
+import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 public class AuditEntityListener {
-    
+
     @PrePersist
     public void persist(Object entity) {
-        BeanManager beanManager = new BeanManagerLocator().getBeanManager();
+        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(PrePersistAuditListener.class);
         for (Bean<?> bean : beans) {
             PrePersistAuditListener result = (PrePersistAuditListener) beanManager.getReference(
@@ -21,10 +21,10 @@ public class AuditEntityListener {
             result.prePersist(entity);
         }
     }
-    
+
     @PreUpdate
     public void update(Object entity) {
-        BeanManager beanManager = new BeanManagerLocator().getBeanManager();
+        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(PreUpdateAuditListener.class);
         for (Bean<?> bean : beans) {
             PreUpdateAuditListener result = (PreUpdateAuditListener) beanManager.getReference(

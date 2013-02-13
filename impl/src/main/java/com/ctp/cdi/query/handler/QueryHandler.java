@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
@@ -14,8 +16,6 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-import org.jboss.solder.logging.Logger;
 
 import com.ctp.cdi.query.Dao;
 import com.ctp.cdi.query.builder.QueryBuilder;
@@ -36,7 +36,7 @@ public class QueryHandler implements Serializable, InvocationHandler {
 
     private static final long serialVersionUID = 1L;
 
-    private final Logger log = Logger.getLogger(getClass());
+    private static final Logger log = Logger.getLogger(QueryHandler.class.getName());
 
     @Inject @Any
     private Instance<EntityManager> entityManager;
@@ -61,7 +61,7 @@ public class QueryHandler implements Serializable, InvocationHandler {
             QueryBuilder builder = queryBuilder.build(daoMethod);
             return builder.execute(queryContext);
         } catch (Exception e) {
-            log.error("Query execution error", e);
+            log.log(Level.SEVERE, "Query execution error", e);
             if (queryContext != null) {
                 throw new QueryInvocationException(e, queryContext);
             }

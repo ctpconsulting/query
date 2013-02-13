@@ -1,6 +1,8 @@
 package com.ctp.cdi.query;
 
 import java.lang.reflect.InvocationHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -8,8 +10,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-
-import org.jboss.solder.logging.Logger;
 
 import com.ctp.cdi.query.meta.DaoComponentsFactory;
 import com.ctp.cdi.query.meta.unit.PersistenceUnits;
@@ -22,7 +22,7 @@ import com.ctp.cdi.query.meta.unit.PersistenceUnits;
  */
 public class QueryExtension implements Extension {
 
-    private final Logger log = Logger.getLogger(QueryExtension.class);
+    private static final Logger log = Logger.getLogger(QueryExtension.class.getName());
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before) {
         PersistenceUnits.instance().init();
@@ -30,10 +30,10 @@ public class QueryExtension implements Extension {
 
     <X> void processAnnotatedType(@Observes ProcessAnnotatedType<X> event, BeanManager beanManager) {
         if (isDao(event.getAnnotatedType())) {
-            log.debugv("getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
+            log.log(Level.FINER, "getHandlerClass: Dao annotation detected on {0}", event.getAnnotatedType());
             boolean added = DaoComponentsFactory.instance().add(event.getAnnotatedType().getJavaClass());
             if (!added) {
-                log.infov("getHandlerClass: Type {0} ignored as it's not related to an entity",
+                log.log(Level.INFO, "getHandlerClass: Type {0} ignored as it's not related to an entity",
                         event.getAnnotatedType());
             }
         }

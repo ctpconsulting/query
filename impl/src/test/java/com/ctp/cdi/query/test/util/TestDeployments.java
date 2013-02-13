@@ -19,6 +19,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import com.ctp.cdi.query.AbstractEntityDao;
 import com.ctp.cdi.query.Dao;
 import com.ctp.cdi.query.EntityDao;
+import com.ctp.cdi.query.EntityManagerDao;
 import com.ctp.cdi.query.FirstResult;
 import com.ctp.cdi.query.MaxResults;
 import com.ctp.cdi.query.Modifying;
@@ -40,6 +41,7 @@ import com.ctp.cdi.query.home.DefaultNavigationProvider;
 import com.ctp.cdi.query.home.EntityHome;
 import com.ctp.cdi.query.meta.DaoComponents;
 import com.ctp.cdi.query.param.Parameters;
+import com.ctp.cdi.query.property.Property;
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
 import com.ctp.cdi.query.spi.QueryInvocationContext;
 import com.ctp.cdi.query.test.TransactionalTestCase;
@@ -49,11 +51,11 @@ import com.ctp.cdi.query.util.EntityUtils;
 public abstract class TestDeployments {
 
     public static Filter<ArchivePath> TEST_FILTER = new ExcludeRegExpPaths(".*Test.*class");
- 
+
     public static MavenDependencyResolver resolver() {
         return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
     }
-    
+
     public static WebArchive initDeployment() {
         return initDeployment(".*test.*");
     }
@@ -61,7 +63,7 @@ public abstract class TestDeployments {
     /**
      * Create a basic deployment containing API classes, the Extension class and
      * test persistence / beans descriptor.
-     * 
+     *
      * @return Basic web archive.
      */
     public static WebArchive initDeployment(String testFilter) {
@@ -78,7 +80,7 @@ public abstract class TestDeployments {
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
-        
+
         return addDependencies(archive);
     }
 
@@ -91,7 +93,8 @@ public abstract class TestDeployments {
                 DaoComponents.class.getPackage(),
                 Parameters.class.getPackage(),
                 EntityUtils.class.getPackage(),
-                DefaultNavigationProvider.class.getPackage()
+                DefaultNavigationProvider.class.getPackage(),
+                Property.class.getPackage()
             ).toArray(new Package[8]);
     }
 
@@ -99,35 +102,36 @@ public abstract class TestDeployments {
         return ShrinkWrap.create(JavaArchive.class, "archive.jar")
                 .addClasses(AbstractEntityDao.class, Dao.class, EntityDao.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
-                        NonEntity.class, Query.class, QueryParam.class, QueryResult.class, WithEntityManager.class)
+                        NonEntity.class, Query.class, QueryParam.class, QueryResult.class,
+                        WithEntityManager.class, EntityManagerDao.class)
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class,
                         QueryDslSupport.class)
                 .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class)
                 .addPackage(EntityHome.class.getPackage());
     }
-    
+
     public static WebArchive addDependencies(WebArchive archive) {
         archive.addAsLibraries(resolver()
                 .artifact("com.mysema.querydsl:querydsl-jpa")
                 .resolveAsFiles());
         if (includeLibs()) {
             archive.addAsLibraries(resolver()
-                    .artifact("org.jboss.solder:solder-api")
-                    .artifact("org.jboss.solder:solder-impl").resolveAsFiles());
+                    .artifact("org.apache.deltaspike.core:deltaspike-core-api")
+                    .artifact("org.apache.deltaspike.core:deltaspike-core-impl").resolveAsFiles());
         }
         return archive;
     }
-    
+
     public static boolean config(String property) {
         ResourceBundle bundle = ResourceBundle.getBundle("test-settings");
         return Boolean.valueOf(bundle.getString(property));
     }
-    
+
     public static String classpathResource(String resource, String fallback) {
         URL url = TestDeployments.class.getClassLoader().getResource(resource);
         return url != null ? resource : fallback;
     }
-    
+
     private static boolean includeLibs() {
         return config("arquillian.deploy.libs");
     }

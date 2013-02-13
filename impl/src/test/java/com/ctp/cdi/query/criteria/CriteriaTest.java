@@ -34,7 +34,7 @@ public class CriteriaTest extends TransactionalTestCase {
     @Deployment
     public static Archive<?> deployment() {
         return TestDeployments.initDeployment()
-                .addClasses(SimpleCriteriaDao.class, ParentDao.class)
+                .addClasses(SimpleCriteriaDao.class, ParentDao.class, Statistics.class)
                 .addPackage(Simple.class.getPackage());
     }
 

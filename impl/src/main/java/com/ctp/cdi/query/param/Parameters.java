@@ -5,10 +5,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.Query;
-
-import org.jboss.solder.logging.Logger;
 
 import com.ctp.cdi.query.FirstResult;
 import com.ctp.cdi.query.MaxResults;
@@ -20,7 +20,7 @@ import com.ctp.cdi.query.QueryParam;
  */
 public final class Parameters {
 
-    private static final Logger LOG = Logger.getLogger(Parameters.class);
+    private static final Logger LOG = Logger.getLogger(Parameters.class.getName());
 
     private static final int DEFAULT_MAX = 0;
     private static final int DEFAULT_FIRST = -1;
@@ -110,8 +110,9 @@ public final class Parameters {
                 if (parameter instanceof Integer) {
                     return (Integer) parameter;
                 } else {
-                    LOG.warnv("Method parameter extraction: Param type must be int: {0}->is:{1}",
-                            target, parameter.getClass());
+                    LOG.log(Level.WARNING, "Method parameter extraction: " +
+                    		"Param type must be int: {0}->is:{1}",
+                            new Object [] { target, parameter.getClass() });
                 }
             }
         }

@@ -4,8 +4,8 @@ import static com.ctp.cdi.query.util.QueryUtils.splitByKeyword;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.jboss.solder.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.ctp.cdi.query.builder.MethodExpressionException;
 import com.ctp.cdi.query.builder.QueryBuilder;
@@ -22,7 +22,7 @@ public class QueryRoot extends QueryPart {
 
     public static final String QUERY_PREFIX = "findBy";
 
-    private final Logger log = Logger.getLogger(QueryRoot.class);
+    private static final Logger log = Logger.getLogger(QueryRoot.class.getName());
 
     private final String entityName;
 
@@ -79,16 +79,16 @@ public class QueryRoot extends QueryPart {
         QueryBuilderContext ctx = new QueryBuilderContext();
         buildQuery(ctx);
         jpqlQuery = ctx.resultString();
-        log.debugv("createJpql: Query is {0}", jpqlQuery);
+        log.log(Level.FINER, "createJpql: Query is {0}", jpqlQuery);
         return jpqlQuery;
     }
-    
+
     private Set<Class<? extends QueryPart>> excludedForWhereCheck() {
         Set<Class<? extends QueryPart>> excluded = new HashSet<Class<? extends QueryPart>>();
         excluded.add(OrderByQueryPart.class);
         return excluded;
     }
-    
+
     private boolean hasQueryConditions(String[] orderByParts) {
         return !QUERY_PREFIX.equals(orderByParts[0]);
     }

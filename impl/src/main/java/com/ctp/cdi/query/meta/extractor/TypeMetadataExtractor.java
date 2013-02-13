@@ -3,15 +3,15 @@ package com.ctp.cdi.query.meta.extractor;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import org.jboss.solder.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.ctp.cdi.query.meta.DaoEntity;
 import com.ctp.cdi.query.util.EntityUtils;
 
 public class TypeMetadataExtractor implements MetadataExtractor {
-    
-    private final Logger log = Logger.getLogger(getClass());
+
+    private static final Logger log = Logger.getLogger(TypeMetadataExtractor.class.getName());
 
     @Override
     public DaoEntity extract(Class<?> daoClass) {
@@ -36,10 +36,10 @@ public class TypeMetadataExtractor implements MetadataExtractor {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     private DaoEntity extractFrom(Type type) {
-        log.debugv("extractFrom: type = {0}", type);
+        log.log(Level.FINER, "extractFrom: type = {0}", type);
         if (!(type  instanceof ParameterizedType)) {
             return null;
         }

@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -15,13 +17,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
 
-import org.jboss.solder.logging.Logger;
-import org.jboss.solder.properties.Property;
-import org.jboss.solder.properties.query.NamedPropertyCriteria;
-import org.jboss.solder.properties.query.PropertyQueries;
-
 import com.ctp.cdi.query.EntityDao;
 import com.ctp.cdi.query.builder.QueryBuilder;
+import com.ctp.cdi.query.property.Property;
+import com.ctp.cdi.query.property.query.NamedPropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyQueries;
 import com.ctp.cdi.query.spi.DelegateQueryHandler;
 import com.ctp.cdi.query.spi.QueryInvocationContext;
 
@@ -36,7 +36,7 @@ import com.ctp.cdi.query.spi.QueryInvocationContext;
 public class EntityDaoHandler<E, PK extends Serializable>
         implements EntityDao<E, PK>, DelegateQueryHandler {
 
-    private final Logger log = Logger.getLogger(EntityDaoHandler.class);
+    private static final Logger log = Logger.getLogger(EntityDaoHandler.class.getName());
 
     @Inject
     private QueryInvocationContext context;
@@ -218,7 +218,7 @@ public class EntityDaoHandler<E, PK extends Serializable>
 
         List<Property<Object>> properties = extractProperties(attributes);
         String jpqlQuery = exampleQuery(allQuery(), properties, useLikeOperator);
-        log.debugv("findBy|findByLike: Created query {0}", jpqlQuery);
+        log.log(Level.FINER, "findBy|findByLike: Created query {0}", jpqlQuery);
         TypedQuery<E> query = entityManager().createQuery(jpqlQuery, entityClass());
 
         // set starting position
@@ -241,7 +241,7 @@ public class EntityDaoHandler<E, PK extends Serializable>
         }
         List<Property<Object>> properties = extractProperties(attributes);
         String jpqlQuery = exampleQuery(countQuery(), properties, useLikeOperator);
-        log.debugv("count: Created query {0}", jpqlQuery);
+        log.log(Level.FINER, "count: Created query {0}", jpqlQuery);
         TypedQuery<Long> query = entityManager().createQuery(jpqlQuery, Long.class);
         addParameters(query, example, properties, useLikeOperator);
         return query.getSingleResult();

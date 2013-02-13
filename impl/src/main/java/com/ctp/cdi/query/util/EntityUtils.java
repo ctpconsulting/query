@@ -9,15 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
-import org.jboss.solder.properties.Property;
-import org.jboss.solder.properties.query.AnnotatedPropertyCriteria;
-import org.jboss.solder.properties.query.NamedPropertyCriteria;
-import org.jboss.solder.properties.query.PropertyCriteria;
-import org.jboss.solder.properties.query.PropertyQueries;
-import org.jboss.solder.properties.query.PropertyQuery;
-
 import com.ctp.cdi.query.meta.unit.PersistenceUnits;
 import com.ctp.cdi.query.meta.verifier.EntityVerifier;
+import com.ctp.cdi.query.property.Property;
+import com.ctp.cdi.query.property.query.AnnotatedPropertyCriteria;
+import com.ctp.cdi.query.property.query.NamedPropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyCriteria;
+import com.ctp.cdi.query.property.query.PropertyQueries;
+import com.ctp.cdi.query.property.query.PropertyQuery;
 
 public final class EntityUtils {
 
