@@ -397,7 +397,7 @@
             <id>jenkins</id>
             <distributionManagement>
                 <site>
-                    <id>local-jenkins</id>
+                    <id>jenkins-local</id>
                     <url>file:///${env.WORKSPACE}/target/deployed-site</url>
                 </site>
             </distributionManagement>

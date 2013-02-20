@@ -2,7 +2,6 @@ package com.ctp.cdi.query.test.util;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.ResourceBundle;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -75,7 +74,6 @@ public abstract class TestDeployments {
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
-                .addAsResource("test-settings.properties", ArchivePaths.create("test-settings.properties"))
                 .addAsWebInfResource(classpathResource("test-persistence.xml", "META-INF/persistence.xml"), ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
@@ -95,7 +93,7 @@ public abstract class TestDeployments {
                 EntityUtils.class.getPackage(),
                 DefaultNavigationProvider.class.getPackage(),
                 Property.class.getPackage()
-            ).toArray(new Package[8]);
+            ).toArray(new Package[9]);
     }
 
     public static Archive<?> createApiArchive() {
@@ -111,29 +109,16 @@ public abstract class TestDeployments {
     }
 
     public static WebArchive addDependencies(WebArchive archive) {
-        archive.addAsLibraries(resolver()
+        return archive.addAsLibraries(resolver()
                 .artifact("com.mysema.querydsl:querydsl-jpa")
+                .artifact("org.apache.deltaspike.core:deltaspike-core-api")
+                .artifact("org.apache.deltaspike.core:deltaspike-core-impl")
                 .resolveAsFiles());
-        if (includeLibs()) {
-            archive.addAsLibraries(resolver()
-                    .artifact("org.apache.deltaspike.core:deltaspike-core-api")
-                    .artifact("org.apache.deltaspike.core:deltaspike-core-impl").resolveAsFiles());
-        }
-        return archive;
-    }
-
-    public static boolean config(String property) {
-        ResourceBundle bundle = ResourceBundle.getBundle("test-settings");
-        return Boolean.valueOf(bundle.getString(property));
     }
 
     public static String classpathResource(String resource, String fallback) {
         URL url = TestDeployments.class.getClassLoader().getResource(resource);
         return url != null ? resource : fallback;
-    }
-
-    private static boolean includeLibs() {
-        return config("arquillian.deploy.libs");
     }
 
 }

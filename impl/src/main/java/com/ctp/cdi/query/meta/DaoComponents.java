@@ -12,9 +12,9 @@ import com.ctp.cdi.query.meta.extractor.MetadataExtractor;
 import com.ctp.cdi.query.meta.extractor.TypeMetadataExtractor;
 
 /**
- * Convenience class to access DAO and DAO method meta data. Acts as 
+ * Convenience class to access DAO and DAO method meta data. Acts as
  * repository for DAO related meta data.
- * 
+ *
  * @author thomashug
  */
 public class DaoComponents implements Serializable {
@@ -22,10 +22,10 @@ public class DaoComponents implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Map<Class<?>, DaoComponent> daos = new HashMap<Class<?>, DaoComponent>();
-    
+
     private final List<MetadataExtractor> extractors = Arrays.asList(new AnnotationMetadataExtractor(),
             new TypeMetadataExtractor());
-    
+
     /**
      * Add a DAO class to the meta data repository.
      * @param daoClass      The dao class.
@@ -45,6 +45,23 @@ public class DaoComponents implements Serializable {
         return false;
     }
 
+
+    /**
+     * Repository access - lookup the DAO component meta data from a list of candidate classes.
+     * Depending on the implementation, proxy objects might have been modified so the actual class
+     * does not match the original DAO class.
+     * @param candidateClasses  List of candidates to check.
+     * @return                  A {@link DaoComponent} corresponding to the daoClass parameter.
+     */
+    public DaoComponent lookupComponent(List<Class<?>> candidateClasses) {
+        for (Class<?> daoClass : candidateClasses) {
+            if (daos.containsKey(daoClass)) {
+                return daos.get(daoClass);
+            }
+        }
+        throw new RuntimeException("Unknown DAO classes " + candidateClasses);
+    }
+
     /**
      * Repository access - lookup the DAO component meta data for a specific DAO class.
      * @param daoClass      The DAO class to lookup the method for
@@ -56,7 +73,7 @@ public class DaoComponents implements Serializable {
         }
         throw new RuntimeException("Unknown DAO class " + daoClass.getName());
     }
-    
+
     /**
      * Repository access - lookup method information for a specific DAO class.
      * @param daoClass      The DAO class to lookup the method for
@@ -66,7 +83,7 @@ public class DaoComponents implements Serializable {
     public DaoMethod lookupMethod(Class<?> daoClass, Method method) {
         return lookupComponent(daoClass).lookupMethod(method);
     }
-    
+
     private DaoEntity extractEntityMetaData(Class<?> daoClass) {
         for (MetadataExtractor extractor : extractors) {
             DaoEntity entity = extractor.extract(daoClass);

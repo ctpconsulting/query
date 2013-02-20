@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
@@ -54,9 +54,9 @@ public class QueryHandler implements Serializable, InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         CdiQueryInvocationContext queryContext = null;
         try {
-            Class<?> daoClass = extractFromProxy(proxy.getClass());
-            DaoComponent dao = components.lookupComponent(daoClass);
-            DaoMethod daoMethod = components.lookupMethod(daoClass, method);
+            List<Class<?>> candidates = extractFromProxy(proxy.getClass());
+            DaoComponent dao = components.lookupComponent(candidates);
+            DaoMethod daoMethod = components.lookupMethod(dao.getDaoClass(), method);
             queryContext = createContext(proxy, method, args, dao, daoMethod);
             QueryBuilder builder = queryBuilder.build(daoMethod);
             return builder.execute(queryContext);
@@ -75,30 +75,21 @@ public class QueryHandler implements Serializable, InvocationHandler {
         return queryContext;
     }
 
-    protected Class<?> extractFromProxy(Class<?> proxyClass) {
-        if (ProxyFactory.isProxyClass(proxyClass)) {
-            if (isInterfaceProxy(proxyClass)) {
-                return extractFromInterface(proxyClass);
-            } else {
-                return proxyClass.getSuperclass();
-            }
+    protected List<Class<?>> extractFromProxy(Class<?> proxyClass) {
+        List<Class<?>> result = new LinkedList<Class<?>>();
+        result.add(proxyClass);
+        if (isInterfaceProxy(proxyClass)) {
+            result.addAll(Arrays.asList(proxyClass.getInterfaces()));
+        } else {
+            result.add(proxyClass.getSuperclass());
         }
-        return proxyClass;
+        return result;
     }
 
     private boolean isInterfaceProxy(Class<?> proxyClass) {
         Class<?>[] interfaces = proxyClass.getInterfaces();
         return Object.class.equals(proxyClass.getSuperclass()) &&
                 interfaces != null && interfaces.length > 0;
-    }
-
-    private Class<?> extractFromInterface(Class<?> proxyClass) {
-        for (Class<?> interFace : proxyClass.getInterfaces()) {
-            if (!ProxyObject.class.equals(interFace)) {
-                return interFace;
-            }
-        }
-        return null;
     }
 
     private EntityManager resolveEntityManager(DaoComponent dao) {
