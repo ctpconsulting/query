@@ -33,7 +33,6 @@ import com.ctp.cdi.query.builder.QueryBuilder;
 import com.ctp.cdi.query.criteria.Criteria;
 import com.ctp.cdi.query.criteria.CriteriaSupport;
 import com.ctp.cdi.query.criteria.QueryCriteria;
-import com.ctp.cdi.query.criteria.QueryDslSupport;
 import com.ctp.cdi.query.criteria.QuerySelection;
 import com.ctp.cdi.query.handler.QueryHandler;
 import com.ctp.cdi.query.home.DefaultNavigationProvider;
@@ -102,15 +101,13 @@ public abstract class TestDeployments {
                         FirstResult.class, MaxResults.class, Modifying.class,
                         NonEntity.class, Query.class, QueryParam.class, QueryResult.class,
                         WithEntityManager.class, EntityManagerDao.class)
-                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class,
-                        QueryDslSupport.class)
+                .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class)
                 .addPackage(EntityHome.class.getPackage());
     }
 
     public static WebArchive addDependencies(WebArchive archive) {
         return archive.addAsLibraries(resolver()
-                .artifact("com.mysema.querydsl:querydsl-jpa")
                 .artifact("org.apache.deltaspike.core:deltaspike-core-api")
                 .artifact("org.apache.deltaspike.core:deltaspike-core-impl")
                 .resolveAsFiles());
