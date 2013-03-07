@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -31,7 +30,7 @@ import com.ctp.cdi.query.meta.Initialized;
  * @author thomashug
  */
 @Dao
-@RequestScoped
+@ApplicationScoped
 public class QueryHandler implements Serializable, InvocationHandler {
 
     private static final long serialVersionUID = 1L;
@@ -48,7 +47,7 @@ public class QueryHandler implements Serializable, InvocationHandler {
     private DaoComponents components;
 
     @Inject
-    private Event<CdiQueryInvocationContext> contextCreated;
+    private CdiQueryContextHolder context;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -59,19 +58,22 @@ public class QueryHandler implements Serializable, InvocationHandler {
             DaoMethod daoMethod = components.lookupMethod(dao.getDaoClass(), method);
             queryContext = createContext(proxy, method, args, dao, daoMethod);
             QueryBuilder builder = queryBuilder.build(daoMethod);
-            return builder.execute(queryContext);
+            Object result = builder.execute(queryContext);
+            return result;
         } catch (Exception e) {
             log.log(Level.SEVERE, "Query execution error", e);
             if (queryContext != null) {
                 throw new QueryInvocationException(e, queryContext);
             }
             throw new QueryInvocationException(e, proxy.getClass(), method);
+        } finally {
+            context.dispose();
         }
     }
 
     private CdiQueryInvocationContext createContext(Object proxy, Method method, Object[] args, DaoComponent dao, DaoMethod daoMethod) {
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, daoMethod, resolveEntityManager(dao));
-        contextCreated.fire(queryContext);
+        context.set(queryContext);
         return queryContext;
     }
 
