@@ -1,1 +1,1 @@
-com.ctp.cdi.query.QueryExtension
+org.apache.deltaspike.query.impl.QueryExtension

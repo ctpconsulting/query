@@ -1,17 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    
     <parent>
-        <groupId>com.ctp.cdi.query</groupId>
-        <artifactId>cdi-query-parent</artifactId>
-        <version>1.0.0.Alpha6-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>query-module-project</artifactId>
+        <version>0.4-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cdi-query-api</artifactId>
+    <artifactId>query-module-project-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>CDI Query API</name>
+    <name>Apache DeltaSpike Query-Module API</name>
     <url>${project.parent.url}</url>
 
     <prerequisites>
@@ -35,11 +34,10 @@
             <artifactId>jboss-ejb-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <optional>true</optional>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
             <scope>provided</scope>
         </dependency>
         

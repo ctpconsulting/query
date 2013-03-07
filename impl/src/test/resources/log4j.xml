@@ -22,7 +22,7 @@
     <!-- Limit categories -->
     <!-- ================ -->
 
-    <category name="com.ctp">
+    <category name="org.apache.deltaspike.query">
         <priority value="DEBUG" />
     </category>
 

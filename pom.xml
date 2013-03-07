@@ -1,25 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <!-- parent>
+        <groupId>org.apache.deltaspike.modules</groupId>
+        <artifactId>modules-project</artifactId>
+        <version>0.4-incubating-SNAPSHOT</version>
+    </parent -->
 
-    <artifactId>cdi-query-parent</artifactId>
-    <groupId>com.ctp.cdi.query</groupId>
-    <version>1.0.0.Alpha6-SNAPSHOT</version>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>query-module-project</artifactId>
+    <version>0.4-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>CDI Query Module</name>
-
-    <description>
-        The Parent for the CDI Query Module
-    </description>
+    <name>Apache DeltaSpike Query-Module</name>
 
     <url>http://ctpconsulting.github.com/query/</url>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <scm>
         <connection>scm:git:git://github.com:ctpconsulting/query.git</connection>
@@ -30,24 +24,20 @@
     <developers>
         <developer>
             <name>Thomas Hug</name>
-            <email>thomas.hug@ctp-consulting.com</email>
+            <email>Thomas.Hug@ctp.com</email>
         </developer>
         <developer>
             <name>Bartosz Majsak</name>
-            <email>bartosz.majsak@ctp-consulting.com</email>
+            <email>Bartosz.Majsak@ctp.com</email>
         </developer>
     </developers>
 
     <modules>
         <module>api</module>
         <module>impl</module>
-        <module>faces</module>
     </modules>
 
     <properties>
-        <seam.version>3.1.0.Final</seam.version>
-        <solder.version>${seam.version}</solder.version>
-        <deltaspike.version>0.4-incubating-SNAPSHOT</deltaspike.version>
         <emma.version>2.0.5312</emma.version>
         <arquillian.version>1.0.3.Final</arquillian.version>
         <version.maven.site>3.0-beta-3</version.maven.site>
@@ -61,7 +51,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
                 <configuration>
                     <source>${jdk.source}</source>
                     <target>${jdk.target}</target>
@@ -90,26 +79,6 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-dependency-plugin</artifactId>
-                                    <versionRange>[1.0.0,)</versionRange>
-                                    <goals><goal>copy-dependencies</goal></goals>
-                                </pluginExecutionFilter>
-                                <action><ignore /></action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     
@@ -124,57 +93,29 @@
         <dependencies>
 
             <dependency>
-                <groupId>org.jboss.seam</groupId>
-                <artifactId>seam-bom</artifactId>
-                <version>${seam.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.solder</groupId>
-                <artifactId>solder-logging</artifactId>
-                <version>${solder.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query-api</artifactId>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>query-module-project-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query-api</artifactId>
+                <groupId>org.apache.deltaspike.modules</groupId>
+                <artifactId>query-module-project-impl</artifactId>
                 <version>${project.version}</version>
-                <classifier>sources</classifier>
             </dependency>
-
+            
             <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query-api</artifactId>
+                <groupId>org.apache.deltaspike.core</groupId>
+                <artifactId>deltaspike-core-api</artifactId>
                 <version>${project.version}</version>
-                <classifier>javadoc</classifier>
             </dependency>
-
+        
             <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query-impl</artifactId>
+                <groupId>org.apache.deltaspike.core</groupId>
+                <artifactId>deltaspike-core-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query-impl</artifactId>
-                <version>${project.version}</version>
-                <classifier>sources</classifier>
-            </dependency>
-
-            <dependency>
-                <groupId>com.ctp.cdi.query</groupId>
-                <artifactId>cdi-query</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            
 
             <dependency>
                 <groupId>org.jboss.weld</groupId>
@@ -189,17 +130,19 @@
                 <version>1.0.0.Final</version>
                 <scope>provided</scope>
             </dependency>
-
+            
             <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
-                <artifactId>deltaspike-core-api</artifactId>
-                <version>${deltaspike.version}</version>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>1.0-SP4</version>
+                <scope>provided</scope>
             </dependency>
-        
+    
             <dependency>
-                <groupId>org.apache.deltaspike.core</groupId>
-                <artifactId>deltaspike-core-impl</artifactId>
-                <version>${deltaspike.version}</version>
+                <groupId>org.jboss.spec.javax.ejb</groupId>
+                <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+                <version>1.0.2.Final</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- *************************** TEST *************************** -->
@@ -367,39 +310,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>bamboo</id>
-            <distributionManagement>
-                <site>
-                    <id>bamboo-local</id>
-                    <url>file:///${bamboo.build.working.directory}/target/deployed-site</url>
-                </site>
-            </distributionManagement>
-        </profile>
-        <profile>
-            <id>jenkins</id>
-            <distributionManagement>
-                <site>
-                    <id>jenkins-local</id>
-                    <url>file:///${env.WORKSPACE}/target/deployed-site</url>
-                </site>
-            </distributionManagement>
-        </profile>
-        <profile>
-            <id>sonatype</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>sonatype-nexus-snapshots</id>
-                    <name>Sonatype Nexus Snapshots</name>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                </snapshotRepository>
-                <repository>
-                    <id>sonatype-nexus-staging</id>
-                    <name>Nexus Release Repository</name>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
         </profile>
         <profile>
             <id>release-sign-artifacts</id>

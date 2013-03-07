@@ -6,7 +6,7 @@
     <persistence-unit-metadata>
         <persistence-unit-defaults>
             <entity-listeners>
-                <entity-listener class="com.ctp.cdi.query.audit.AuditEntityListener" />
+                <entity-listener class="org.apache.deltaspike.query.impl.audit.AuditEntityListener" />
             </entity-listeners>
         </persistence-unit-defaults>
     </persistence-unit-metadata>
