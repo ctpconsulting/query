@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.api;
 
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
@@ -13,7 +30,8 @@ import javax.persistence.metamodel.SingularAttribute;
  * @param <E>   Entity type.
  * @param <PK>  Primary key type.
  */
-public interface EntityDao<E, PK extends Serializable> {
+public interface EntityDao<E, PK extends Serializable>
+{
 
     /**
      * Persist (new entity) or merge the given entity.
@@ -28,26 +46,27 @@ public interface EntityDao<E, PK extends Serializable> {
      * @return                  Returns the modified entity.
      */
     E saveAndFlush(E entity);
-    
+
     /**
-     * Convenience access to {@link EntityManager#remove(Object)}.
+     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}.
      * @param entity            Entity to remove.
      */
     void remove(E entity);
-    
+
     /**
-     * Convenience access to {@link EntityManager#refresh(Object)}.
+     * Convenience access to {@link javax.persistence.EntityManager#refresh(Object)}.
      * @param entity            Entity to refresh.
      */
     void refresh(E entity);
 
     /**
-     * Convenience access to {@link EntityManager#flush()}.
+     * Convenience access to {@link javax.persistence.EntityManager#flush()}.
      */
     void flush();
 
     /**
-     * Entity lookup by primary key. Convenicence method around {@link EntityManager#find(Class, Object)}.
+     * Entity lookup by primary key. Convenicence method around
+     * {@link javax.persistence.EntityManager#find(Class, Object)}.
      * @param primaryKey        DB primary key.
      * @return                  Entity identified by primary or null if it does not exist.
      */
@@ -66,7 +85,7 @@ public interface EntityDao<E, PK extends Serializable> {
      * @return                  List of entities, empty if none found.
      */
     List<E> findAll(int start, int max);
-    
+
     /**
      * Query by example - for a given object and a specific set of properties.
      * @param example           Sample entity. Query all like.
@@ -94,7 +113,8 @@ public interface EntityDao<E, PK extends Serializable> {
     List<E> findByLike(E example, SingularAttribute<E, ?>... attributes);
 
     /**
-     * Query by example - for a given object and a specific set of properties using a like operator for Strings with support for pagination.
+     * Query by example - for a given object and a specific set of properties
+     * using a like operator for Strings with support for pagination.
      * @param example           Sample entity. Query all like.
      * @param start             The starting position.
      * @param max               The maximum number of results to return

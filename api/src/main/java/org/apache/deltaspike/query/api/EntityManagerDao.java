@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.api;
 
 import java.io.Serializable;
@@ -14,7 +32,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.Metamodel;
 
 
-public interface EntityManagerDao<E, PK extends Serializable> {
+public interface EntityManagerDao<E, PK extends Serializable>
+{
 
     void clear();
 
@@ -26,68 +45,68 @@ public interface EntityManagerDao<E, PK extends Serializable> {
 
     Query createNativeQuery(String sql);
 
-    public Query createNativeQuery(String sql, String resultSetMapping);
+    Query createNativeQuery(String sql, String resultSetMapping);
 
-    public TypedQuery<E> createQuery(CriteriaQuery<E> query);
+    TypedQuery<E> createQuery(CriteriaQuery<E> query);
 
-    public TypedQuery<E> createQuery(String query);
+    TypedQuery<E> createQuery(String query);
 
-    public void detach(E entity);
+    void detach(E entity);
 
-    public E find(PK primaryKey);
+    E find(PK primaryKey);
 
-    public E find(PK primaryKey, Map<String, Object> properties);
+    E find(PK primaryKey, Map<String, Object> properties);
 
-    public E find(PK pk, LockModeType lockMode);
+    E find(PK pk, LockModeType lockMode);
 
-    public E find(PK pk, LockModeType lockMode, Map<String, Object> properties);
+    E find(PK pk, LockModeType lockMode, Map<String, Object> properties);
 
-    public void flush();
+    void flush();
 
-    public CriteriaBuilder getCriteriaBuilder();
+    CriteriaBuilder getCriteriaBuilder();
 
-    public Object getDelegate();
+    Object getDelegate();
 
-    public EntityManagerFactory getEntityManagerFactory();
+    EntityManagerFactory getEntityManagerFactory();
 
-    public FlushModeType getFlushMode();
+    FlushModeType getFlushMode();
 
-    public LockModeType getLockMode(E entity);
+    LockModeType getLockMode(E entity);
 
-    public Metamodel getMetamodel();
+    Metamodel getMetamodel();
 
-    public Map<String, Object> getProperties();
+    Map<String, Object> getProperties();
 
-    public E getReference(PK pk);
+    E getReference(PK pk);
 
-    public EntityTransaction getTransaction();
+    EntityTransaction getTransaction();
 
-    public boolean isOpen();
+    boolean isOpen();
 
-    public void joinTransaction();
+    void joinTransaction();
 
-    public void lock(Object entity, LockModeType lockMode);
+    void lock(Object entity, LockModeType lockMode);
 
-    public void lock(E entity, LockModeType lockMode, Map<String, Object> properties);
+    void lock(E entity, LockModeType lockMode, Map<String, Object> properties);
 
-    public E merge(E entity);
+    E merge(E entity);
 
-    public void persist(E entity);
+    void persist(E entity);
 
-    public void refresh(E entity);
+    void refresh(E entity);
 
-    public void refresh(E entity, Map<String, Object> properties);
+    void refresh(E entity, Map<String, Object> properties);
 
-    public void refresh(E entity, LockModeType lockMode);
+    void refresh(E entity, LockModeType lockMode);
 
-    public void refresh(E entity, LockModeType lockMode, Map<String, Object> properties);
+    void refresh(E entity, LockModeType lockMode, Map<String, Object> properties);
 
-    public void remove(E entity);
+    void remove(E entity);
 
-    public void setFlushMode(FlushModeType flushMode);
+    void setFlushMode(FlushModeType flushMode);
 
-    public void setProperty(String name, Object value);
+    void setProperty(String name, Object value);
 
-    public <T> T unwrap(Class<T> clazz);
+    <T> T unwrap(Class<T> clazz);
 
 }

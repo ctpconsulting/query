@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.meta.unit;
 
 import static org.apache.deltaspike.query.test.util.TestDeployments.TEST_FILTER;
@@ -11,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.deltaspike.query.impl.QueryExtension;
 import org.apache.deltaspike.query.impl.meta.DaoEntity;
-import org.apache.deltaspike.query.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.query.test.TransactionalTestCase;
 import org.apache.deltaspike.query.test.domain.Parent;
 import org.apache.deltaspike.query.test.domain.TeeId;
@@ -30,36 +47,40 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(Arquillian.class)
-public class PersistenceUnitsTest {
+public class PersistenceUnitsTest
+{
 
     @Deployment
-    public static Archive<?> deployment() {
+    public static Archive<?> deployment()
+    {
         Logging.reconfigure();
-        return addDependencies(ShrinkWrap.create(WebArchive.class, "test.war")
+        return addDependencies(ShrinkWrap
+                .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, Parent.class.getPackage())
                 .addClasses(QueryExtension.class, TransactionalTestCase.class, MappedOneDao.class)
-                .addAsWebInfResource("test-mapped-persistence.xml", ArchivePaths.create("classes/META-INF/persistence.xml"))
+                .addAsWebInfResource("test-mapped-persistence.xml",
+                        ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
                 .addAsWebInfResource("test-custom-orm.xml", ArchivePaths.create("classes/META-INF/custom-orm.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
-                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension", 
+                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension")));
     }
-    
+
     @Test
-    public void should_recognize_entity_data() {
+    public void should_recognize_entity_data()
+    {
         // given
-  
+
         // when
         boolean positive1 = PersistenceUnits.instance().isEntity(MappedOne.class);
         boolean positive2 = PersistenceUnits.instance().isEntity(MappedTwo.class);
         boolean positive3 = PersistenceUnits.instance().isEntity(MappedThree.class);
         boolean negative = PersistenceUnits.instance().isEntity(Long.class);
-        
+
         // then
         assertTrue(positive1);
         assertTrue(positive2);
@@ -68,49 +89,53 @@ public class PersistenceUnitsTest {
     }
 
     @Test
-    public void should_recognize_ids() {
+    public void should_recognize_ids()
+    {
         // given
-        
+
         // when
         String idField1 = PersistenceUnits.instance().primaryKeyField(MappedOne.class);
         String idField2 = PersistenceUnits.instance().primaryKeyField(MappedThree.class);
-        
+
         // then
         assertEquals("id", idField1);
         assertEquals("id", idField2);
     }
 
     @Test
-    public void should_recognize_name() {
+    public void should_recognize_name()
+    {
         // given
-        
+
         // when
         String name = PersistenceUnits.instance().entityName(MappedOne.class);
-        
+
         // then
         assertEquals("Mapped_One", name);
     }
 
     @Test
-    public void should_recognize_id_class() {
+    public void should_recognize_id_class()
+    {
         // given
-        
+
         // when
         Class<?> idClass = PersistenceUnits.instance().primaryKeyIdClass(MappedTwo.class);
-        
+
         // then
         assertEquals(TeeId.class, idClass);
     }
 
     @Test
-    public void should_prepare_dao_entity() {
+    public void should_prepare_dao_entity()
+    {
         // given
-        
+
         // when
         DaoEntity entity1 = PersistenceUnits.instance().lookupMetadata(MappedOne.class);
         DaoEntity entity2 = PersistenceUnits.instance().lookupMetadata(MappedTwo.class);
         DaoEntity entity3 = PersistenceUnits.instance().lookupMetadata(MappedThree.class);
-        
+
         // then
         assertNotNull(entity1);
         assertNotNull(entity2);

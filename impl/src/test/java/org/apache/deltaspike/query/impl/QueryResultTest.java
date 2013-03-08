@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl;
 
 import static org.junit.Assert.assertEquals;
@@ -27,10 +45,12 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Before;
 import org.junit.Test;
 
-public class QueryResultTest extends TransactionalTestCase {
+public class QueryResultTest extends TransactionalTestCase
+{
 
     @Deployment
-    public static Archive<?> deployment() {
+    public static Archive<?> deployment()
+    {
         return TestDeployments.initDeployment()
                 .addClasses(SimpleDao.class)
                 .addPackage(Simple.class.getPackage());
@@ -46,7 +66,8 @@ public class QueryResultTest extends TransactionalTestCase {
     private SimpleBuilder builder;
 
     @Test
-    public void should_sort_result() {
+    public void should_sort_result()
+    {
         // given
         final String name = "testSortResult";
         builder.createSimple(name, Integer.valueOf(99));
@@ -67,12 +88,16 @@ public class QueryResultTest extends TransactionalTestCase {
         assertFalse(result.isEmpty());
         int lastCounter = Integer.MAX_VALUE;
         long lastId = Long.MIN_VALUE;
-        for (Simple simple : result) {
+        for (Simple simple : result)
+        {
             int currentCounter = simple.getCounter().intValue();
             long currentId = simple.getId().longValue();
-            if (currentCounter == lastCounter) {
+            if (currentCounter == lastCounter)
+            {
                 assertTrue(currentId > lastId);
-            } else {
+            }
+            else
+            {
                 assertTrue(currentCounter < lastCounter);
             }
             lastCounter = currentCounter;
@@ -81,7 +106,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_change_sort_order() {
+    public void should_change_sort_order()
+    {
         // given
         final String name = "testChangeSortOrder";
         builder.createSimple(name, Integer.valueOf(99));
@@ -103,7 +129,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_clear_sort_order() {
+    public void should_clear_sort_order()
+    {
         // given
         final String name = "testClearSortOrder";
         builder.createSimple(name, Integer.valueOf(99));
@@ -121,10 +148,12 @@ public class QueryResultTest extends TransactionalTestCase {
 
         // then
         assertEquals(result1.size(), result2.size());
-        for (int i = 0; i < result1.size(); i++) {
+        for (int i = 0; i < result1.size(); i++)
+        {
             int count1 = result1.get(i).getCounter().intValue();
             int count2 = result2.get(i).getCounter().intValue();
-            if (count1 != count2) {
+            if (count1 != count2)
+            {
                 return;
             }
         }
@@ -132,7 +161,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_page_result() {
+    public void should_page_result()
+    {
         // given
         final String name = "testPageResult";
         builder.createSimple(name, Integer.valueOf(99));
@@ -159,7 +189,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_page_with_page_api() {
+    public void should_page_with_page_api()
+    {
         // given
         final String name = "testPageAPI";
         builder.createSimple(name, Integer.valueOf(22));
@@ -196,7 +227,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_modify_named_query() {
+    public void should_modify_named_query()
+    {
         // given
         final String name = "testModifyNamedQuery";
         builder.createSimple(name + 0);
@@ -206,8 +238,8 @@ public class QueryResultTest extends TransactionalTestCase {
 
         // when
         List<Simple> result = dao.queryResultWithNamed(name + "%")
-                 .orderDesc(Simple_.name)
-                 .getResultList();
+                .orderDesc(Simple_.name)
+                .getResultList();
 
         // then
         assertEquals(4, result.size());
@@ -216,7 +248,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_count_with_method_query() {
+    public void should_count_with_method_query()
+    {
         // given
         final String name = "testCountWithMethodQuery";
         builder.createSimple(name);
@@ -230,7 +263,8 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_count_with_named_query() {
+    public void should_count_with_named_query()
+    {
         // given
         final String name = "testCountWithNamedQuery";
         builder.createSimple(name);
@@ -244,12 +278,14 @@ public class QueryResultTest extends TransactionalTestCase {
     }
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         builder = new SimpleBuilder(entityManager);
     }
 
     @Override
-    protected EntityManager getEntityManager() {
+    protected EntityManager getEntityManager()
+    {
         return entityManager;
     }
 

@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.audit;
 
 import static org.apache.deltaspike.query.test.util.TestDeployments.initDeployment;
@@ -17,11 +35,12 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Test;
 
-
-public class AuditEntityListenerTest extends TransactionalTestCase {
+public class AuditEntityListenerTest extends TransactionalTestCase
+{
 
     @Deployment
-    public static Archive<?> deployment() {
+    public static Archive<?> deployment()
+    {
         return initDeployment()
                 .addPackage(AuditEntityListener.class.getPackage())
                 .addAsWebInfResource("test-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))
@@ -34,22 +53,30 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     private final String who = "test999";
     private final Principal principal = new Principal(who);
 
-    @Produces @CurrentUser
-    public String who() {
+    @Produces
+    @CurrentUser
+    public String who()
+    {
         return who;
     }
 
-    @Produces @CurrentUser
-    public Principal entity() throws Exception {
-        try {
+    @Produces
+    @CurrentUser
+    public Principal entity() throws Exception
+    {
+        try
+        {
             entityManager.persist(principal);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
         }
         return principal;
     }
 
     @Test
-    public void should_set_creation_date() throws Exception {
+    public void should_set_creation_date() throws Exception
+    {
         // given
         AuditedEntity entity = new AuditedEntity();
 
@@ -64,7 +91,8 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_set_modification_date() throws Exception {
+    public void should_set_modification_date() throws Exception
+    {
         // given
         AuditedEntity entity = new AuditedEntity();
         entityManager.persist(entity);
@@ -81,7 +109,8 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_set_changing_principal() {
+    public void should_set_changing_principal()
+    {
         // given
         AuditedEntity entity = new AuditedEntity();
 
@@ -97,7 +126,8 @@ public class AuditEntityListenerTest extends TransactionalTestCase {
     }
 
     @Override
-    protected EntityManager getEntityManager() {
+    protected EntityManager getEntityManager()
+    {
         return entityManager;
     }
 

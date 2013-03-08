@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.builder.result;
 
 import java.util.Iterator;
@@ -21,186 +39,230 @@ import org.apache.deltaspike.query.impl.builder.postprocessor.OrderByQueryString
 import org.apache.deltaspike.query.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.query.impl.handler.QueryStringPostProcessor;
 
+public class DefaultQueryResult<T> implements QueryResult<T>
+{
 
-public class DefaultQueryResult<T> implements QueryResult<T> {
-    
     private final QueryBuilder builder;
     private final CdiQueryInvocationContext context;
-    
+
     private int page = 0;
     private int pageSize = 10;
 
-    public DefaultQueryResult(QueryBuilder builder, CdiQueryInvocationContext context) {
+    public DefaultQueryResult(QueryBuilder builder, CdiQueryInvocationContext context)
+    {
         this.builder = builder;
         this.context = context;
     }
 
     @Override
-    public <X> QueryResult<T> orderAsc(SingularAttribute<T, X> attribute) {
-        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC));
-        return this;
-    }
-    
-    @Override
-    public QueryResult<T> orderAsc(String attribute) {
+    public <X> QueryResult<T> orderAsc(SingularAttribute<T, X> attribute)
+    {
         context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC));
         return this;
     }
 
     @Override
-    public <X> QueryResult<T> orderDesc(SingularAttribute<T, X> attribute) {
+    public QueryResult<T> orderAsc(String attribute)
+    {
+        context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.ASC));
+        return this;
+    }
+
+    @Override
+    public <X> QueryResult<T> orderDesc(SingularAttribute<T, X> attribute)
+    {
         context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC));
         return this;
     }
-    
+
     @Override
-    public QueryResult<T> orderDesc(String attribute) {
+    public QueryResult<T> orderDesc(String attribute)
+    {
         context.addQueryStringPostProcessor(new OrderByQueryStringPostProcessor(attribute, OrderDirection.DESC));
         return this;
     }
-    
+
     @Override
-    public <X> QueryResult<T> changeOrder(final SingularAttribute<T, X> attribute) {
-        changeOrder(new ChangeOrder() {
+    public <X> QueryResult<T> changeOrder(final SingularAttribute<T, X> attribute)
+    {
+        changeOrder(new ChangeOrder()
+        {
             @Override
-            public boolean matches(OrderByQueryStringPostProcessor orderBy) {
+            public boolean matches(OrderByQueryStringPostProcessor orderBy)
+            {
                 return orderBy.matches(attribute);
             }
+
             @Override
-            public void addDefault() {
+            public void addDefault()
+            {
                 orderAsc(attribute);
             }
         });
         return this;
     }
-    
+
     @Override
-    public QueryResult<T> changeOrder(final String attribute) {
-        changeOrder(new ChangeOrder() {
+    public QueryResult<T> changeOrder(final String attribute)
+    {
+        changeOrder(new ChangeOrder()
+        {
             @Override
-            public boolean matches(OrderByQueryStringPostProcessor orderBy) {
+            public boolean matches(OrderByQueryStringPostProcessor orderBy)
+            {
                 return orderBy.matches(attribute);
             }
+
             @Override
-            public void addDefault() {
+            public void addDefault()
+            {
                 orderAsc(attribute);
             }
         });
         return this;
     }
-    
+
     @Override
-    public QueryResult<T> clearOrder() {
-        for (Iterator<QueryStringPostProcessor> it = context.getQueryStringPostProcessors().iterator(); it.hasNext();) {
-            if (it.next() instanceof OrderByQueryStringPostProcessor) {
+    public QueryResult<T> clearOrder()
+    {
+        for (Iterator<QueryStringPostProcessor> it = context.getQueryStringPostProcessors().iterator(); it.hasNext();)
+        {
+            if (it.next() instanceof OrderByQueryStringPostProcessor)
+            {
                 it.remove();
             }
         }
         return this;
     }
-    
+
     @Override
-    public QueryResult<T> maxResults(int max) {
+    public QueryResult<T> maxResults(int max)
+    {
         context.addJpaQueryPostProcessor(new MaxResultPostProcessor(max));
         pageSize = max;
         return this;
     }
 
     @Override
-    public QueryResult<T> firstResult(int first) {
+    public QueryResult<T> firstResult(int first)
+    {
         context.addJpaQueryPostProcessor(new FirstResultPostProcessor(first));
         return this;
     }
 
     @Override
-    public QueryResult<T> lockMode(LockModeType lockMode) {
+    public QueryResult<T> lockMode(LockModeType lockMode)
+    {
         context.addJpaQueryPostProcessor(new LockModePostProcessor(lockMode));
         return this;
     }
 
     @Override
-    public QueryResult<T> flushMode(FlushModeType flushMode) {
+    public QueryResult<T> flushMode(FlushModeType flushMode)
+    {
         context.addJpaQueryPostProcessor(new FlushModePostProcessor(flushMode));
         return this;
     }
-    
+
     @Override
-    public QueryResult<T> hint(String hint, Object value) {
+    public QueryResult<T> hint(String hint, Object value)
+    {
         context.addJpaQueryPostProcessor(new HintPostProcessor(hint, value));
         return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> getResultList() {
+    public List<T> getResultList()
+    {
         return ((Query) builder.execute(context)).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T getSingleResult() {
+    public T getSingleResult()
+    {
         return (T) ((Query) builder.execute(context)).getSingleResult();
     }
 
     @Override
-    public long count() {
+    public long count()
+    {
         CountQueryPostProcessor counter = new CountQueryPostProcessor();
         context.addJpaQueryPostProcessor(counter);
-        try {
+        try
+        {
             Long result = (Long) ((Query) builder.execute(context)).getSingleResult();
             return result.intValue();
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e)
+        {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new RuntimeException(e);
-        } finally {
+        }
+        finally
+        {
             context.removeJpaQueryPostProcessor(counter);
         }
     }
-    
+
     @Override
-    public QueryResult<T> withPageSize(int pageSize) {
+    public QueryResult<T> withPageSize(int pageSize)
+    {
         return maxResults(pageSize);
     }
 
     @Override
-    public QueryResult<T> toPage(int page) {
+    public QueryResult<T> toPage(int page)
+    {
         this.page = page;
         return firstResult(pageSize * page);
     }
 
     @Override
-    public QueryResult<T> nextPage() {
+    public QueryResult<T> nextPage()
+    {
         page = page + 1;
         return firstResult(pageSize * page);
     }
 
     @Override
-    public QueryResult<T> previousPage() {
+    public QueryResult<T> previousPage()
+    {
         page = page > 0 ? page - 1 : page;
         return firstResult(pageSize * page);
     }
 
     @Override
-    public int countPages() {
+    public int countPages()
+    {
         return (int) Math.ceil((double) count() / pageSize);
     }
-    
+
     @Override
-    public int currentPage() {
+    public int currentPage()
+    {
         return page;
     }
-    
+
     @Override
-    public int pageSize() {
+    public int pageSize()
+    {
         return pageSize;
     }
 
-    private <X> QueryResult<T> changeOrder(ChangeOrder changeOrder) {
-        for (QueryStringPostProcessor processor : context.getQueryStringPostProcessors()) {
-            if (processor instanceof OrderByQueryStringPostProcessor) {
+    private <X> QueryResult<T> changeOrder(ChangeOrder changeOrder)
+    {
+        for (QueryStringPostProcessor processor : context.getQueryStringPostProcessors())
+        {
+            if (processor instanceof OrderByQueryStringPostProcessor)
+            {
                 OrderByQueryStringPostProcessor orderBy = (OrderByQueryStringPostProcessor) processor;
-                if (changeOrder.matches(orderBy)) {
+                if (changeOrder.matches(orderBy))
+                {
                     orderBy.changeDirection();
                     return this;
                 }
@@ -209,11 +271,12 @@ public class DefaultQueryResult<T> implements QueryResult<T> {
         changeOrder.addDefault();
         return this;
     }
-    
-    private static abstract class ChangeOrder {
-        
+
+    private abstract static class ChangeOrder
+    {
+
         public abstract boolean matches(OrderByQueryStringPostProcessor orderBy);
-        
+
         public abstract void addDefault();
 
     }

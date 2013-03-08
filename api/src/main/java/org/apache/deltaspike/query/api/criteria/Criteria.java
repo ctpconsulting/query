@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.api.criteria;
 
 import java.util.Collection;
@@ -17,35 +35,37 @@ import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * Criteria API utilities.
- * 
+ *
  * @author thomashug
  *
- * @param <C>   Entity type.
- * @param <R>   Result type.
+ * @param <C> Entity type.
+ * @param <R> Result type.
  */
-public interface Criteria<C, R> {
-    
+public interface Criteria<C, R>
+{
+
     /**
      * Executes the query and returns the result list.
-     * @return          List of entities matching the query.
+     *
+     * @return List of entities matching the query.
      */
     List<R> getResultList();
 
     /**
      * Executes the query which has a single result.
-     * @return          Entity matching the search query.
+     *
+     * @return Entity matching the search query.
      */
     R getSingleResult();
 
     /**
      * Creates a JPA query object to be executed.
-     * @return          A {@link TypedQuery} object ready to return results.
+     *
+     * @return A {@link TypedQuery} object ready to return results.
      */
     TypedQuery<R> createQuery();
 
-    Criteria<C, R> or(Criteria<C, R> first, Criteria<C, R> second);
-
-    Criteria<C, R> or(Criteria<C, R> first, Criteria<C, R> second, Criteria<C, R> third);
+    Criteria<C, R> or(Criteria<C, R>... criteria);
 
     Criteria<C, R> or(Collection<Criteria<C, R>> criteria);
 
@@ -72,7 +92,7 @@ public interface Criteria<C, R> {
     <P> Criteria<C, R> orderDesc(SingularAttribute<? super C, P> att);
 
     <N> Criteria<C, N> select(Class<N> resultClass, QuerySelection<? super C, ?>... selection);
-    
+
     Criteria<C, Object[]> select(QuerySelection<? super C, ?>... selection);
 
     Criteria<C, R> distinct();
@@ -104,7 +124,7 @@ public interface Criteria<C, R> {
     <P extends Collection<?>> Criteria<C, R> notEmpty(SingularAttribute<? super C, P> att);
 
     <P> Criteria<C, R> in(SingularAttribute<? super C, P> att, P... values);
-    
+
     List<Predicate> predicates(CriteriaBuilder builder, Path<C> path);
 
 }

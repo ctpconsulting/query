@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.criteria;
 
 import static org.junit.Assert.assertEquals;
@@ -24,15 +42,16 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 
-
 /**
  *
  * @author thomashug
  */
-public class CriteriaTest extends TransactionalTestCase {
+public class CriteriaTest extends TransactionalTestCase
+{
 
     @Deployment
-    public static Archive<?> deployment() {
+    public static Archive<?> deployment()
+    {
         return TestDeployments.initDeployment()
                 .addClasses(SimpleCriteriaDao.class, ParentDao.class, Statistics.class)
                 .addPackage(Simple.class.getPackage());
@@ -49,7 +68,8 @@ public class CriteriaTest extends TransactionalTestCase {
     private EntityManager entityManager;
 
     @Test
-    public void should_create_criteria_query() {
+    public void should_create_criteria_query()
+    {
         // given
         final String name = "testCreateCriteriaQuery";
         createSimple(name, 55);
@@ -66,7 +86,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_join_criteria_query() {
+    public void should_create_join_criteria_query()
+    {
         // given
         final String name = "testCreateJoinCriteriaQuery";
         final String nameOne = name + "-one";
@@ -94,7 +115,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_or_query() {
+    public void should_create_or_query()
+    {
         // given
         final String name = "testCreateOrQuery";
         Parent parent1 = new Parent(name + "1");
@@ -120,7 +142,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_ordered_query() {
+    public void should_create_ordered_query()
+    {
         // given
         final String name = "testCreateOrderedQuery";
         Parent parent1 = new Parent(name + "99");
@@ -146,7 +169,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_query_wihtout_nulls() {
+    public void should_create_query_wihtout_nulls()
+    {
         // given
         final String name = "testCreateQueryWihtoutNulls";
         Parent parent = new Parent(name);
@@ -163,7 +187,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_fetch_query() {
+    public void should_create_fetch_query()
+    {
         // given
         final String name = "testCreateFetchQuery";
         Parent parent = new Parent(name);
@@ -184,7 +209,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_in_query() {
+    public void should_create_in_query()
+    {
         // given
         final String name = "testCreateInQuery";
         Parent parent1 = new Parent(name + "-1");
@@ -205,7 +231,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_select_criteria_with_result_type() {
+    public void should_create_select_criteria_with_result_type()
+    {
         // given
         final String name = "testCreateSelectCriteriaWithResultType";
         createSimple(name, 1);
@@ -223,7 +250,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_select_criteria_without_result_type() {
+    public void should_create_select_criteria_without_result_type()
+    {
         // given
         final String name = "testCreateSelectCriteriaWithoutResultType";
         createSimple(name, 10);
@@ -241,7 +269,8 @@ public class CriteriaTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_create_select_criteria_with_attributes() {
+    public void should_create_select_criteria_with_attributes()
+    {
         // given
         final String name = "testCreateSelectCriteriaWithAttributes";
         createSimple(name, 10);
@@ -251,21 +280,24 @@ public class CriteriaTest extends TransactionalTestCase {
         List<Object[]> results = dao.queryWithSelectAttributes(name);
 
         // then
-        for (Object[] result : results) {
+        for (Object[] result : results)
+        {
             assertEquals(name, result[0]);
             assertEquals(name.toUpperCase(), result[1]);
             assertEquals(name.toLowerCase(), result[2]);
             assertEquals(name.substring(1), result[3]);
-            assertEquals(name.substring(1, 1+2), result[4]);
+            assertEquals(name.substring(1, 1 + 2), result[4]);
         }
     }
 
     @Override
-    protected EntityManager getEntityManager() {
+    protected EntityManager getEntityManager()
+    {
         return entityManager;
     }
 
-    private Simple createSimple(String name, Integer counter) {
+    private Simple createSimple(String name, Integer counter)
+    {
         Simple result = new Simple(name);
         result.setCounter(counter);
         entityManager.persist(result);

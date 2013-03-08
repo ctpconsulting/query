@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.property;
 
 import java.beans.Introspector;
@@ -11,44 +29,61 @@ import java.security.PrivilegedAction;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.Annotated;
-
 /**
- * Utility class for working with JDK Reflection and also CDI's {@link Annotated} metadata.
+ * Utility class for working with JDK Reflection and also CDI's
+ * {@link javax.enterprise.inject.spi.Annotated} metadata.
  *
  * @author Stuart Douglas
  * @author Pete Muir
  */
-public class Reflections {
+public class Reflections
+{
+    private Reflections()
+    {
+    }
 
     /**
-     * <p>Perform a runtime cast. Similar to {@link Class#cast(Object)}, but useful when you do not have a {@link Class}
-     * object for type you wish to cast to.</p>
+     * <p>
+     * Perform a runtime cast. Similar to {@link Class#cast(Object)}, but useful when you do not have a {@link Class}
+     * object for type you wish to cast to.
+     * </p>
      * <p/>
-     * <p>{@link Class#cast(Object)} should be used if possible</p>
+     * <p>
+     * {@link Class#cast(Object)} should be used if possible
+     * </p>
      *
-     * @param <T>       the type to cast to
-     * @param obj       the object to perform the cast on
-     * @return          the casted object
-     * @throws ClassCastException if the type T is not a subtype of the object
+     * @param <T>
+     *            the type to cast to
+     * @param obj
+     *            the object to perform the cast on
+     * @return the casted object
+     * @throws ClassCastException
+     *             if the type T is not a subtype of the object
      * @see Class#cast(Object)
      */
     @SuppressWarnings("unchecked")
-    public static <T> T cast(Object obj) {
+    public static <T> T cast(Object obj)
+    {
         return (T) obj;
     }
 
-
     /**
      * Determine if a method exists in a specified class hierarchy
-     * @param clazz     The class to search
-     * @param name      The name of the method
+     *
+     * @param clazz
+     *            The class to search
+     * @param name
+     *            The name of the method
      * @return true if a method is found, otherwise false
      */
-    public static boolean methodExists(Class<?> clazz, String name) {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
-            for (Method m : c.getDeclaredMethods()) {
-                if (m.getName().equals(name)) {
+    public static boolean methodExists(Class<?> clazz, String name)
+    {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass())
+        {
+            for (Method m : c.getDeclaredMethods())
+            {
+                if (m.getName().equals(name))
+                {
                     return true;
                 }
             }
@@ -59,13 +94,17 @@ public class Reflections {
     /**
      * Get all the declared methods on the class hierarchy. This <b>will</b> return overridden methods.
      *
-     * @param clazz     The class to search
+     * @param clazz
+     *            The class to search
      * @return the set of all declared methods or an empty set if there are none
      */
-    public static Set<Method> getAllDeclaredMethods(Class<?> clazz) {
+    public static Set<Method> getAllDeclaredMethods(Class<?> clazz)
+    {
         HashSet<Method> methods = new HashSet<Method>();
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
-            for (Method a : c.getDeclaredMethods()) {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass())
+        {
+            for (Method a : c.getDeclaredMethods())
+            {
                 methods.add(a);
             }
         }
@@ -84,22 +123,30 @@ public class Reflections {
      *            The arguments of the method to search for
      * @return The method found, or null if no method is found
      */
-    public static Method findDeclaredMethod(Class<?> clazz, String name, Class<?>... args) {
-        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass()) {
-            try {
+    public static Method findDeclaredMethod(Class<?> clazz, String name, Class<?>... args)
+    {
+        for (Class<?> c = clazz; c != null && c != Object.class; c = c.getSuperclass())
+        {
+            try
+            {
                 return c.getDeclaredMethod(name, args);
-            } catch (NoSuchMethodException e) {
+            }
+            catch (NoSuchMethodException e)
+            {
                 // No-op, continue the search
             }
         }
         return null;
     }
 
-    private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args) {
+    private static String buildInvokeMethodErrorMessage(Method method, Object obj, Object... args)
+    {
         StringBuilder message = new StringBuilder(String.format(
                 "Exception invoking method [%s] on object [%s], using arguments [", method.getName(), obj));
-        if (args != null) {
-            for (int i = 0; i < args.length; i++) {
+        if (args != null)
+        {
+            for (int i = 0; i < args.length; i++)
+            {
                 message.append((i > 0 ? "," : "") + args[i]);
             }
         }
@@ -117,10 +164,13 @@ public class Reflections {
      *            the accessible object
      * @return the accessible object after the accessible flag has been altered
      */
-    public static <A extends AccessibleObject> A setAccessible(final A member) {
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
+    public static <A extends AccessibleObject> A setAccessible(final A member)
+    {
+        AccessController.doPrivileged(new PrivilegedAction<Void>()
+        {
             @Override
-            public Void run() {
+            public Void run()
+            {
                 member.setAccessible(true);
                 return null;
             }
@@ -143,7 +193,8 @@ public class Reflections {
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static Object invokeMethod(Method method, Object instance, Object... args) {
+    public static Object invokeMethod(Method method, Object instance, Object... args)
+    {
         return invokeMethod(false, method, Object.class, instance, args);
     }
 
@@ -167,7 +218,8 @@ public class Reflections {
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static Object invokeMethod(boolean setAccessible, Method method, Object instance, Object... args) {
+    public static Object invokeMethod(boolean setAccessible, Method method, Object instance, Object... args)
+    {
         return invokeMethod(setAccessible, method, Object.class, instance, args);
     }
 
@@ -186,7 +238,8 @@ public class Reflections {
      * @see Reflections#invokeMethod(boolean, Method, Class, Object, Object...)
      * @see Method#invoke(Object, Object...)
      */
-    public static <T> T invokeMethod(Method method, Class<T> expectedReturnType, Object instance, Object... args) {
+    public static <T> T invokeMethod(Method method, Class<T> expectedReturnType, Object instance, Object... args)
+    {
         return invokeMethod(false, method, expectedReturnType, instance, args);
     }
 
@@ -234,24 +287,37 @@ public class Reflections {
      * @see Method#invoke(Object, Object...)
      */
     public static <T> T invokeMethod(boolean setAccessible, Method method, Class<T> expectedReturnType,
-            Object instance, Object... args) {
-        if (setAccessible && !method.isAccessible()) {
+            Object instance, Object... args)
+    {
+        if (setAccessible && !method.isAccessible())
+        {
             setAccessible(method);
         }
 
-        try {
+        try
+        {
             return expectedReturnType.cast(method.invoke(instance, args));
-        } catch (IllegalAccessException ex) {
+        }
+        catch (IllegalAccessException ex)
+        {
             throw new RuntimeException(buildInvokeMethodErrorMessage(method, instance, args), ex);
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex)
+        {
             throw new IllegalArgumentException(buildInvokeMethodErrorMessage(method, instance, args), ex);
-        } catch (InvocationTargetException ex) {
+        }
+        catch (InvocationTargetException ex)
+        {
             throw new RuntimeException(buildInvokeMethodErrorMessage(method, instance, args), ex.getCause());
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             NullPointerException ex2 = new NullPointerException(buildInvokeMethodErrorMessage(method, instance, args));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } catch (ExceptionInInitializerError e) {
+        }
+        catch (ExceptionInInitializerError e)
+        {
             ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildInvokeMethodErrorMessage(method,
                     instance, args));
             e2.initCause(e.getCause());
@@ -270,7 +336,8 @@ public class Reflections {
      * field.
      * </p>
      */
-    public static void setFieldValue(Field field, Object instance, Object value) {
+    public static void setFieldValue(Field field, Object instance, Object value)
+    {
         setFieldValue(false, field, instance, value);
     }
 
@@ -306,20 +373,29 @@ public class Reflections {
      *             if the initialization provoked by this method fails.
      * @see Field#set(Object, Object)
      */
-    public static void setFieldValue(boolean setAccessible, Field field, Object instance, Object value) {
-        if (setAccessible && !field.isAccessible()) {
+    public static void setFieldValue(boolean setAccessible, Field field, Object instance, Object value)
+    {
+        if (setAccessible && !field.isAccessible())
+        {
             setAccessible(field);
         }
 
-        try {
+        try
+        {
             field.set(instance, value);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e)
+        {
             throw new RuntimeException(buildSetFieldValueErrorMessage(field, instance, value), e);
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             NullPointerException ex2 = new NullPointerException(buildSetFieldValueErrorMessage(field, instance, value));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } catch (ExceptionInInitializerError e) {
+        }
+        catch (ExceptionInInitializerError e)
+        {
             ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildSetFieldValueErrorMessage(field,
                     instance, value));
             e2.initCause(e.getCause());
@@ -327,15 +403,18 @@ public class Reflections {
         }
     }
 
-    private static String buildSetFieldValueErrorMessage(Field field, Object obj, Object value) {
+    private static String buildSetFieldValueErrorMessage(Field field, Object obj, Object value)
+    {
         return String.format("Exception setting [%s] field on object [%s] to value [%s]", field.getName(), obj, value);
     }
 
-    private static String buildGetFieldValueErrorMessage(Field field, Object obj) {
+    private static String buildGetFieldValueErrorMessage(Field field, Object obj)
+    {
         return String.format("Exception reading [%s] field from object [%s].", field.getName(), obj);
     }
 
-    public static Object getFieldValue(Field field, Object instance) {
+    public static Object getFieldValue(Field field, Object instance)
+    {
         return getFieldValue(field, instance, Object.class);
     }
 
@@ -368,16 +447,24 @@ public class Reflections {
      * @throws ExceptionInInitializerError
      *             if the initialization provoked by this method fails.
      */
-    public static <T> T getFieldValue(Field field, Object instance, Class<T> expectedType) {
-        try {
+    public static <T> T getFieldValue(Field field, Object instance, Class<T> expectedType)
+    {
+        try
+        {
             return Reflections.cast(field.get(instance));
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e)
+        {
             throw new RuntimeException(buildGetFieldValueErrorMessage(field, instance), e);
-        } catch (NullPointerException ex) {
+        }
+        catch (NullPointerException ex)
+        {
             NullPointerException ex2 = new NullPointerException(buildGetFieldValueErrorMessage(field, instance));
             ex2.initCause(ex.getCause());
             throw ex2;
-        } catch (ExceptionInInitializerError e) {
+        }
+        catch (ExceptionInInitializerError e)
+        {
             ExceptionInInitializerError e2 = new ExceptionInInitializerError(buildGetFieldValueErrorMessage(field,
                     instance));
             e2.initCause(e.getCause());
@@ -392,7 +479,8 @@ public class Reflections {
      *            The class to check
      * @return true if the class implements serializable or is a primitive
      */
-    public static boolean isSerializable(Class<?> clazz) {
+    public static boolean isSerializable(Class<?> clazz)
+    {
         return clazz.isPrimitive() || Serializable.class.isAssignableFrom(clazz);
     }
 
@@ -405,19 +493,22 @@ public class Reflections {
      *            The getter method
      * @return The name of the property. Returns null if method wasn't JavaBean getter-styled
      */
-    public static String getPropertyName(Method method) {
+    public static String getPropertyName(Method method)
+    {
         String methodName = method.getName();
-        if (methodName.matches("^(get).*")) {
+        if (methodName.matches("^(get).*"))
+        {
             return Introspector.decapitalize(methodName.substring(3));
-        } else if (methodName.matches("^(is).*")) {
+        }
+        else if (methodName.matches("^(is).*"))
+        {
             return Introspector.decapitalize(methodName.substring(2));
-        } else {
+        }
+        else
+        {
             return null;
         }
 
-    }
-
-    private Reflections() {
     }
 
 }

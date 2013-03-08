@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.audit;
 
 import static org.junit.Assert.assertNotNull;
@@ -9,11 +27,12 @@ import org.apache.deltaspike.query.test.domain.AuditedEntity;
 import org.apache.deltaspike.query.test.domain.Simple;
 import org.junit.Test;
 
-
-public class TimestampsProviderTest {
+public class TimestampsProviderTest
+{
 
     @Test
-    public void should_set_dates_for_creation() {
+    public void should_set_dates_for_creation()
+    {
         // given
         AuditedEntity entity = new AuditedEntity();
 
@@ -28,7 +47,8 @@ public class TimestampsProviderTest {
     }
 
     @Test
-    public void should_set_dates_for_update() {
+    public void should_set_dates_for_update()
+    {
         // given
         AuditedEntity entity = new AuditedEntity();
 
@@ -43,7 +63,8 @@ public class TimestampsProviderTest {
     }
 
     @Test
-    public void should_not_fail_on_non_audited_entity() {
+    public void should_not_fail_on_non_audited_entity()
+    {
         // given
         Simple entity = new Simple();
 
@@ -56,7 +77,8 @@ public class TimestampsProviderTest {
     }
 
     @Test(expected = AuditPropertyException.class)
-    public void should_fail_on_invalid_entity() {
+    public void should_fail_on_invalid_entity()
+    {
         // given
         InvalidEntity entity = new InvalidEntity();
 
@@ -67,7 +89,8 @@ public class TimestampsProviderTest {
         fail();
     }
 
-    private static class InvalidEntity {
+    private static class InvalidEntity
+    {
 
         @CreatedOn
         private String nonTemporal;

@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.test.service;
 
 import java.util.List;
@@ -8,9 +26,11 @@ import org.apache.deltaspike.query.test.domain.Simple;
 import org.apache.deltaspike.query.test.domain.Simple_;
 
 public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long>
-        implements CriteriaSupport<Simple> {
+        implements CriteriaSupport<Simple>
+{
 
-    public List<Simple> queryByCriteria(String name, Boolean enabled, Integer from, Integer to) {
+    public List<Simple> queryByCriteria(String name, Boolean enabled, Integer from, Integer to)
+    {
         return criteria()
                 .eq(Simple_.name, name)
                 .eq(Simple_.enabled, enabled)
@@ -19,32 +39,35 @@ public abstract class SimpleCriteriaDao extends AbstractEntityDao<Simple, Long>
     }
 
     @SuppressWarnings("unchecked")
-    public Statistics queryWithSelect(String name) {
+    public Statistics queryWithSelect(String name)
+    {
         return criteria()
-                 .select(Statistics.class, avg(Simple_.counter), count(Simple_.counter))
-                 .eq(Simple_.name, name)
-                 .getSingleResult();
+                .select(Statistics.class, avg(Simple_.counter), count(Simple_.counter))
+                .eq(Simple_.name, name)
+                .getSingleResult();
     }
 
     @SuppressWarnings("unchecked")
-    public Object[] queryWithSelectAggregateReturnArray(String name) {
+    public Object[] queryWithSelectAggregateReturnArray(String name)
+    {
         return criteria()
-                 .select(min(Simple_.counter), max(Simple_.counter),
-                         currDate(), currTime(), currTStamp())
-                 .eq(Simple_.name, name)
-                 .createQuery()
-                 .getSingleResult();
+                .select(min(Simple_.counter), max(Simple_.counter),
+                        currDate(), currTime(), currTStamp())
+                .eq(Simple_.name, name)
+                .createQuery()
+                .getSingleResult();
     }
 
     @SuppressWarnings("unchecked")
-    public List<Object[]> queryWithSelectAttributes(String name) {
+    public List<Object[]> queryWithSelectAttributes(String name)
+    {
         return criteria()
-                 .select(attribute(Simple_.name),
-                         upper(Simple_.name), lower(Simple_.name),
-                         substring(Simple_.name, 2), substring(Simple_.name, 2, 2))
-                 .eq(Simple_.name, name)
-                 .createQuery()
-                 .getResultList();
+                .select(attribute(Simple_.name),
+                        upper(Simple_.name), lower(Simple_.name),
+                        substring(Simple_.name, 2), substring(Simple_.name, 2, 2))
+                .eq(Simple_.name, name)
+                .createQuery()
+                .getResultList();
     }
 
 }

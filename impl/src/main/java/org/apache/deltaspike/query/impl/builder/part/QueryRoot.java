@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.builder.part;
 
 import static org.apache.deltaspike.query.impl.util.QueryUtils.splitByKeyword;
@@ -12,12 +30,13 @@ import org.apache.deltaspike.query.impl.builder.QueryBuilder;
 import org.apache.deltaspike.query.impl.builder.QueryBuilderContext;
 import org.apache.deltaspike.query.impl.meta.DaoComponent;
 
-
 /**
  * Root of the query tree. Also the only exposed class in the package.
+ *
  * @author thomashug
  */
-public class QueryRoot extends QueryPart {
+public class QueryRoot extends QueryPart
+{
 
     public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object");
 
@@ -29,54 +48,65 @@ public class QueryRoot extends QueryPart {
 
     private String jpqlQuery;
 
-    protected QueryRoot(String entityName) {
+    protected QueryRoot(String entityName)
+    {
         this.entityName = entityName;
     }
 
-    public static QueryRoot create(String method, DaoComponent dao) {
+    public static QueryRoot create(String method, DaoComponent dao)
+    {
         QueryRoot root = new QueryRoot(dao.getEntityName());
         root.build(method, method, dao);
         root.createJpql();
         return root;
     }
 
-    public String getJpqlQuery() {
+    public String getJpqlQuery()
+    {
         return jpqlQuery;
     }
 
     @Override
-    protected QueryPart build(String queryPart, String method, DaoComponent dao) {
+    protected QueryPart build(String queryPart, String method, DaoComponent dao)
+    {
         String[] orderByParts = splitByKeyword(queryPart, "OrderBy");
-        if (hasQueryConditions(orderByParts)) {
+        if (hasQueryConditions(orderByParts))
+        {
             String[] orParts = splitByKeyword(removePrefix(orderByParts[0]), "Or");
             boolean first = true;
-            for (String or : orParts) {
+            for (String or : orParts)
+            {
                 OrQueryPart orPart = new OrQueryPart(first);
                 first = false;
                 children.add(orPart.build(or, method, dao));
             }
         }
-        if (orderByParts.length > 1) {
+        if (orderByParts.length > 1)
+        {
             OrderByQueryPart orderByPart = new OrderByQueryPart();
             children.add(orderByPart.build(orderByParts[1], method, dao));
         }
-        if (children.isEmpty()) {
+        if (children.isEmpty())
+        {
             throw new MethodExpressionException(dao.getDaoClass(), method);
         }
         return this;
     }
 
     @Override
-    protected QueryPart buildQuery(QueryBuilderContext ctx) {
+    protected QueryPart buildQuery(QueryBuilderContext ctx)
+    {
         ctx.append(QueryBuilder.selectQuery(entityName));
-        if (hasChildren(excludedForWhereCheck())) {
+        if (hasChildren(excludedForWhereCheck()))
+        {
             ctx.append(" where ");
         }
         buildQueryForChildren(ctx);
         return this;
     }
 
-    protected String createJpql() {
+    protected String createJpql()
+    {
         QueryBuilderContext ctx = new QueryBuilderContext();
         buildQuery(ctx);
         jpqlQuery = ctx.resultString();
@@ -84,18 +114,22 @@ public class QueryRoot extends QueryPart {
         return jpqlQuery;
     }
 
-    private Set<Class<? extends QueryPart>> excludedForWhereCheck() {
+    private Set<Class<? extends QueryPart>> excludedForWhereCheck()
+    {
         Set<Class<? extends QueryPart>> excluded = new HashSet<Class<? extends QueryPart>>();
         excluded.add(OrderByQueryPart.class);
         return excluded;
     }
 
-    private boolean hasQueryConditions(String[] orderByParts) {
+    private boolean hasQueryConditions(String[] orderByParts)
+    {
         return !QUERY_PREFIX.equals(orderByParts[0]);
     }
 
-    private String removePrefix(String queryPart) {
-        if (queryPart.startsWith(QUERY_PREFIX)) {
+    private String removePrefix(String queryPart)
+    {
+        if (queryPart.startsWith(QUERY_PREFIX))
+        {
             return queryPart.substring(QUERY_PREFIX.length());
         }
         return queryPart;

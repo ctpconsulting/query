@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.param;
 
 import java.lang.annotation.Annotation;
@@ -14,12 +32,13 @@ import org.apache.deltaspike.query.api.FirstResult;
 import org.apache.deltaspike.query.api.MaxResults;
 import org.apache.deltaspike.query.api.QueryParam;
 
-
 /**
  * Convenience class to manage method and query parameters.
+ *
  * @author thomashug
  */
-public final class Parameters {
+public final class Parameters
+{
 
     private static final Logger LOG = Logger.getLogger(Parameters.class.getName());
 
@@ -30,32 +49,42 @@ public final class Parameters {
     private final int max;
     private final int firstResult;
 
-    private Parameters(List<Parameter> parameters, int max, int firstResult) {
+    private Parameters(List<Parameter> parameters, int max, int firstResult)
+    {
         this.parameterList = parameters;
         this.max = max;
         this.firstResult = firstResult;
     }
 
-    public static Parameters createEmpty() {
+    public static Parameters createEmpty()
+    {
         List<Parameter> empty = Collections.emptyList();
         return new Parameters(empty, DEFAULT_MAX, DEFAULT_FIRST);
     }
 
-    public static Parameters create(Method method, Object[] parameters) {
+    public static Parameters create(Method method, Object[] parameters)
+    {
         int max = extractSizeRestriction(method);
         int first = DEFAULT_FIRST;
         List<Parameter> result = new ArrayList<Parameter>(parameters.length);
         int paramIndex = 1;
         Annotation[][] annotations = method.getParameterAnnotations();
-        for (int i = 0; i < parameters.length; i++) {
-            if (isParameter(method.getParameterAnnotations()[i])) {
+        for (int i = 0; i < parameters.length; i++)
+        {
+            if (isParameter(method.getParameterAnnotations()[i]))
+            {
                 QueryParam qpAnnotation = extractFrom(annotations[i], QueryParam.class);
-                if (qpAnnotation != null) {
+                if (qpAnnotation != null)
+                {
                     result.add(new NamedParameter(qpAnnotation.value(), parameters[i], i));
-                } else {
+                }
+                else
+                {
                     result.add(new IndexedParameter(paramIndex++, parameters[i], i));
                 }
-            } else {
+            }
+            else
+            {
                 max = extractInt(parameters[i], annotations[i], MaxResults.class, max);
                 first = extractInt(parameters[i], annotations[i], FirstResult.class, first);
             }
@@ -63,40 +92,51 @@ public final class Parameters {
         return new Parameters(result, max, first);
     }
 
-    public Query applyTo(Query query) {
-        for (Parameter param : parameterList) {
+    public Query applyTo(Query query)
+    {
+        for (Parameter param : parameterList)
+        {
             param.apply(query);
         }
         return query;
     }
 
-    public boolean hasSizeRestriction() {
+    public boolean hasSizeRestriction()
+    {
         return max > DEFAULT_MAX;
     }
 
-    public int getSizeRestriciton() {
+    public int getSizeRestriciton()
+    {
         return max;
     }
 
-    public boolean hasFirstResult() {
+    public boolean hasFirstResult()
+    {
         return firstResult > DEFAULT_FIRST;
     }
 
-    public int getFirstResult() {
+    public int getFirstResult()
+    {
         return firstResult;
     }
 
-    private static int extractSizeRestriction(Method method) {
-        if (method.isAnnotationPresent(org.apache.deltaspike.query.api.Query.class)) {
+    private static int extractSizeRestriction(Method method)
+    {
+        if (method.isAnnotationPresent(org.apache.deltaspike.query.api.Query.class))
+        {
             return method.getAnnotation(org.apache.deltaspike.query.api.Query.class).max();
         }
         return 0;
     }
 
     @SuppressWarnings("unchecked")
-    private static <A extends Annotation> A extractFrom(Annotation[] annotations, Class<A> target) {
-        for (Annotation annotation : annotations) {
-            if (annotation.annotationType().isAssignableFrom(target)) {
+    private static <A extends Annotation> A extractFrom(Annotation[] annotations, Class<A> target)
+    {
+        for (Annotation annotation : annotations)
+        {
+            if (annotation.annotationType().isAssignableFrom(target))
+            {
                 return (A) annotation;
             }
         }
@@ -104,25 +144,32 @@ public final class Parameters {
     }
 
     private static <A extends Annotation> int extractInt(Object parameter, Annotation[] annotations,
-            Class<A> target, int defaultVal) {
-        if (parameter != null) {
+            Class<A> target, int defaultVal)
+    {
+        if (parameter != null)
+        {
             A result = extractFrom(annotations, target);
-            if (result != null) {
-                if (parameter instanceof Integer) {
+            if (result != null)
+            {
+                if (parameter instanceof Integer)
+                {
                     return (Integer) parameter;
-                } else {
+                }
+                else
+                {
                     LOG.log(Level.WARNING, "Method parameter extraction: " +
-                    		"Param type must be int: {0}->is:{1}",
-                            new Object [] { target, parameter.getClass() });
+                            "Param type must be int: {0}->is:{1}",
+                            new Object[] { target, parameter.getClass() });
                 }
             }
         }
         return defaultVal;
     }
 
-    private static boolean isParameter(Annotation[] annotations) {
+    private static boolean isParameter(Annotation[] annotations)
+    {
         return extractFrom(annotations, MaxResults.class) == null &&
-               extractFrom(annotations, FirstResult.class) == null;
+                extractFrom(annotations, FirstResult.class) == null;
     }
 
 }

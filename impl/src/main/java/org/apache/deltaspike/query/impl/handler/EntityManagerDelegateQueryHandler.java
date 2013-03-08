@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.handler;
 
 import java.io.Serializable;
@@ -18,204 +36,242 @@ import javax.persistence.metamodel.Metamodel;
 import org.apache.deltaspike.query.api.EntityManagerDao;
 import org.apache.deltaspike.query.spi.DelegateQueryHandler;
 
-
 @Typed(DelegateQueryHandler.class)
 public class EntityManagerDelegateQueryHandler<E, PK extends Serializable> extends AbstractDelegateQueryHandler<E>
-        implements EntityManagerDao<E, PK> {
+        implements EntityManagerDao<E, PK>
+{
 
     @Override
-    public void clear() {
+    public void clear()
+    {
         delegate().clear();
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         delegate().close();
     }
 
     @Override
-    public boolean contains(Object entity) {
+    public boolean contains(Object entity)
+    {
         return delegate().contains(entity);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public TypedQuery<E> createNamedQuery(String query) {
+    public TypedQuery<E> createNamedQuery(String query)
+    {
         return (TypedQuery<E>) delegate().createNamedQuery(query, context.getEntityClass());
     }
 
     @Override
-    public Query createNativeQuery(String sql) {
+    public Query createNativeQuery(String sql)
+    {
         return delegate().createNamedQuery(sql);
     }
 
     @Override
-    public Query createNativeQuery(String sql, String resultSetMapping) {
+    public Query createNativeQuery(String sql, String resultSetMapping)
+    {
         return delegate().createNativeQuery(sql, resultSetMapping);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public TypedQuery<E> createQuery(String query) {
+    public TypedQuery<E> createQuery(String query)
+    {
         return (TypedQuery<E>) delegate().createQuery(query, context.getEntityClass());
     }
 
     @Override
-    public TypedQuery<E> createQuery(CriteriaQuery<E> query) {
+    public TypedQuery<E> createQuery(CriteriaQuery<E> query)
+    {
         return delegate().createQuery(query);
     }
 
     @Override
-    public void detach(Object entity) {
+    public void detach(Object entity)
+    {
         delegate().detach(entity);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public E find(PK primaryKey) {
+    public E find(PK primaryKey)
+    {
         return (E) delegate().find(context.getEntityClass(), primaryKey);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public E find(PK primaryKey, Map<String, Object> properties) {
+    public E find(PK primaryKey, Map<String, Object> properties)
+    {
         return (E) delegate().find(context.getEntityClass(), primaryKey, properties);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public E find(PK primaryKey, LockModeType lockMode) {
+    public E find(PK primaryKey, LockModeType lockMode)
+    {
         return (E) delegate().find(context.getEntityClass(), primaryKey, lockMode);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public E find(PK pk, LockModeType lockMode, Map<String, Object> properties) {
+    public E find(PK pk, LockModeType lockMode, Map<String, Object> properties)
+    {
         return (E) delegate().find(context.getEntityClass(), pk, lockMode, properties);
     }
 
     @Override
-    public void flush() {
+    public void flush()
+    {
         delegate().flush();
     }
 
     @Override
-    public CriteriaBuilder getCriteriaBuilder() {
+    public CriteriaBuilder getCriteriaBuilder()
+    {
         return delegate().getCriteriaBuilder();
     }
 
     @Override
-    public Object getDelegate() {
+    public Object getDelegate()
+    {
         return delegate().getDelegate();
     }
 
     @Override
-    public EntityManagerFactory getEntityManagerFactory() {
+    public EntityManagerFactory getEntityManagerFactory()
+    {
         return delegate().getEntityManagerFactory();
     }
 
     @Override
-    public FlushModeType getFlushMode() {
+    public FlushModeType getFlushMode()
+    {
         return delegate().getFlushMode();
     }
 
     @Override
-    public LockModeType getLockMode(Object entity) {
+    public LockModeType getLockMode(Object entity)
+    {
         return delegate().getLockMode(entity);
     }
 
     @Override
-    public Metamodel getMetamodel() {
+    public Metamodel getMetamodel()
+    {
         return delegate().getMetamodel();
     }
 
     @Override
-    public Map<String, Object> getProperties() {
+    public Map<String, Object> getProperties()
+    {
         return delegate().getProperties();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public E getReference(PK pk) {
+    public E getReference(PK pk)
+    {
         return (E) delegate().getReference(context.getEntityClass(), pk);
     }
 
     @Override
-    public EntityTransaction getTransaction() {
+    public EntityTransaction getTransaction()
+    {
         return delegate().getTransaction();
     }
 
     @Override
-    public boolean isOpen() {
+    public boolean isOpen()
+    {
         return delegate().isOpen();
     }
 
     @Override
-    public void joinTransaction() {
+    public void joinTransaction()
+    {
         delegate().joinTransaction();
     }
 
     @Override
-    public void lock(Object entity, LockModeType lockMode) {
+    public void lock(Object entity, LockModeType lockMode)
+    {
         delegate().lock(entity, lockMode);
     }
 
     @Override
-    public void lock(E entity, LockModeType lockMode, Map<String, Object> properties) {
+    public void lock(E entity, LockModeType lockMode, Map<String, Object> properties)
+    {
         delegate().lock(entity, lockMode, properties);
     }
 
     @Override
-    public E merge(E entity) {
+    public E merge(E entity)
+    {
         return delegate().merge(entity);
     }
 
     @Override
-    public void persist(E entity) {
+    public void persist(E entity)
+    {
         delegate().persist(entity);
     }
 
     @Override
-    public void refresh(Object entity) {
+    public void refresh(Object entity)
+    {
         delegate().refresh(entity);
     }
 
     @Override
-    public void refresh(E entity, Map<String, Object> properties) {
+    public void refresh(E entity, Map<String, Object> properties)
+    {
         delegate().refresh(entity, properties);
     }
 
     @Override
-    public void refresh(Object entity, LockModeType lockMode) {
+    public void refresh(Object entity, LockModeType lockMode)
+    {
         delegate().refresh(entity, lockMode);
     }
 
     @Override
-    public void refresh(E entity, LockModeType lockMode, Map<String, Object> properties) {
+    public void refresh(E entity, LockModeType lockMode, Map<String, Object> properties)
+    {
         delegate().refresh(entity, lockMode, properties);
     }
 
     @Override
-    public void remove(Object entity) {
+    public void remove(Object entity)
+    {
         delegate().remove(entity);
     }
 
     @Override
-    public void setFlushMode(FlushModeType flushMode) {
+    public void setFlushMode(FlushModeType flushMode)
+    {
         delegate().setFlushMode(flushMode);
     }
 
     @Override
-    public void setProperty(String name, Object value) {
+    public void setProperty(String name, Object value)
+    {
         delegate().setProperty(name, value);
     }
 
     @Override
-    public <T> T unwrap(Class<T> clazz) {
+    public <T> T unwrap(Class<T> clazz)
+    {
         return delegate().unwrap(clazz);
     }
 
-    private EntityManager delegate() {
+    private EntityManager delegate()
+    {
         return context.getEntityManager();
     }
 

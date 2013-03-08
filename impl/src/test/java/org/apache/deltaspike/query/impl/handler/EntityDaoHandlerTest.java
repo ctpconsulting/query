@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.handler;
 
 import static org.junit.Assert.assertEquals;
@@ -22,10 +40,12 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 
-public class EntityDaoHandlerTest extends TransactionalTestCase {
+public class EntityDaoHandlerTest extends TransactionalTestCase
+{
 
     @Deployment
-    public static Archive<?> deployment() {
+    public static Archive<?> deployment()
+    {
         return TestDeployments.initDeployment()
                 .addClasses(ExtendedDaoInterface.class)
                 .addPackage(Simple.class.getPackage());
@@ -39,7 +59,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     private EntityManager entityManager;
 
     @Test
-    public void should_save() throws Exception {
+    public void should_save() throws Exception
+    {
         // given
         Simple simple = new Simple("test");
 
@@ -51,7 +72,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_merge() throws Exception {
+    public void should_merge() throws Exception
+    {
         // given
         Simple simple = createSimple("testMerge");
         Long id = simple.getId();
@@ -67,13 +89,15 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_save_and_flush() throws Exception {
+    public void should_save_and_flush() throws Exception
+    {
         // given
         Simple simple = new Simple("test");
 
         // when
         simple = dao.saveAndFlush(simple);
-        Simple fetch = (Simple) entityManager.createNativeQuery("select * from simple_table where id = ?", Simple.class)
+        Simple fetch = (Simple) entityManager
+                .createNativeQuery("select * from simple_table where id = ?", Simple.class)
                 .setParameter(1, simple.getId())
                 .getSingleResult();
 
@@ -82,7 +106,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_refresh() throws Exception {
+    public void should_refresh() throws Exception
+    {
         // given
         final String name = "testRefresh";
         Simple simple = createSimple(name);
@@ -96,7 +121,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_find_by_pk() throws Exception {
+    public void should_find_by_pk() throws Exception
+    {
         // given
         Simple simple = createSimple("testFindByPk");
 
@@ -109,7 +135,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_find_by_example() throws Exception {
+    public void should_find_by_example() throws Exception
+    {
         // given
         Simple simple = createSimple("testFindByExample");
 
@@ -124,7 +151,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_find_by_example_with_start_and_max() throws Exception {
+    public void should_find_by_example_with_start_and_max() throws Exception
+    {
         // given
         Simple simple = createSimple("testFindByExample1", Integer.valueOf(10));
         createSimple("testFindByExample1", Integer.valueOf(10));
@@ -135,13 +163,14 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
         // then
         assertNotNull(find);
         assertFalse(find.isEmpty());
-        assertEquals(1,find.size());
+        assertEquals(1, find.size());
         assertEquals(simple.getName(), find.get(0).getName());
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_find_by_example_with_no_attributes() throws Exception {
+    public void should_find_by_example_with_no_attributes() throws Exception
+    {
         // given
         Simple simple = createSimple("testFindByExample");
         SingularAttribute<Simple, ?>[] attributes = new SingularAttribute[] {};
@@ -156,7 +185,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_find_by_all() {
+    public void should_find_by_all()
+    {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -169,7 +199,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_find_by_all_with_start_and_max() {
+    public void should_find_by_all_with_start_and_max()
+    {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -183,7 +214,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings({ "unchecked" })
-    public void should_find_by_like() {
+    public void should_find_by_like()
+    {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -198,7 +230,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_find_by_like_with_start_and_max() {
+    public void should_find_by_like_with_start_and_max()
+    {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -213,10 +246,11 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_find_by_like_non_string() {
+    public void should_find_by_like_non_string()
+    {
         // given
-        createSimple("testFindAll1",1);
-        createSimple("testFindAll2",2);
+        createSimple("testFindAll1", 1);
+        createSimple("testFindAll2", 2);
         Simple example = new Simple("test");
         example.setCounter(1);
 
@@ -228,7 +262,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_count_all() {
+    public void should_count_all()
+    {
         // given
         createSimple("testCountAll");
 
@@ -241,7 +276,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_count_with_attributes() {
+    public void should_count_with_attributes()
+    {
         // given
         Simple simple = createSimple("testFindAll1", Integer.valueOf(55));
         createSimple("testFindAll2", Integer.valueOf(55));
@@ -255,7 +291,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_count_with_no_attributes() {
+    public void should_count_with_no_attributes()
+    {
         // given
         Simple simple = createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -270,7 +307,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_count_by_like() {
+    public void should_count_by_like()
+    {
         // given
         createSimple("testFindAll1");
         createSimple("testFindAll2");
@@ -284,7 +322,8 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Test
-    public void should_remove() {
+    public void should_remove()
+    {
         // given
         Simple simple = createSimple("testRemove");
 
@@ -298,15 +337,18 @@ public class EntityDaoHandlerTest extends TransactionalTestCase {
     }
 
     @Override
-    protected EntityManager getEntityManager() {
+    protected EntityManager getEntityManager()
+    {
         return entityManager;
     }
 
-    private Simple createSimple(String name) {
+    private Simple createSimple(String name)
+    {
         return createSimple(name, null);
     }
 
-    private Simple createSimple(String name, Integer counter) {
+    private Simple createSimple(String name, Integer counter)
+    {
         Simple result = new Simple(name);
         result.setCounter(counter);
         entityManager.persist(result);

@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -5,29 +24,28 @@
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>query-module-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>query-module-project-impl</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <name>Apache DeltaSpike Query-Module Impl</name>
     <!-- url required for JAR Manifest -->
-    <url>${project.parent.url}</url>
 
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
 
     <properties>
-        <version.maven.compiler>2.3.1</version.maven.compiler>
-        <version.maven.jxr>2.2</version.maven.jxr>
-        <version.maven.surefire>2.8.1</version.maven.surefire>
-        <version.maven.checkstyle>2.9</version.maven.checkstyle>
-        <version.maven.pmd>2.7.1</version.maven.pmd>
-        <version.maven.findbugs>2.4.0</version.maven.findbugs>
-        <version.maven.cobertura>2.5.1</version.maven.cobertura>
-        <project.parent.url>${project.artifactId}</project.parent.url>
+        <deltaspike.osgi.export.pkg>
+            org.apache.deltaspike.query.impl.*
+        </deltaspike.osgi.export.pkg>
+        <deltaspike.osgi.import>
+            javax.enterprise.inject,
+            !org.apache.deltaspike.query.impl.*,
+            *
+        </deltaspike.osgi.import>
+        <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
     </properties>
 
     <build>
@@ -124,12 +142,6 @@
         <!-- Tests -->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
@@ -148,47 +160,10 @@
         </dependency>
 
     </dependencies>
-
-    <profiles>
     
+    <profiles>
         <profile>
-            <id>arq-glassfish-31-embedded</id>
-            <activation>
-              <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-glassfish</directory>
-                    </testResource>
-                </testResources>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-                    <version>1.0.0.CR3</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.main.extras</groupId>
-                    <artifactId>glassfish-embedded-all</artifactId>
-                    <version>3.1.2</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.hsqldb</groupId>
-                    <artifactId>hsqldb</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>arq-jbossas-7-managed</id>
+            <id>jbossas-build-managed-7</id>
             <build>
                 <testResources>
                     <testResource>
@@ -198,44 +173,10 @@
                         <directory>src/test/resources-jbossas7</directory>
                     </testResource>
                 </testResources>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <extensions>false</extensions>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals><goal>unpack</goal></goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.jboss.as</groupId>
-                                            <artifactId>jboss-as-dist</artifactId>
-                                            <version>7.1.1.Final</version>
-                                            <type>zip</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>target</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
             </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.as</groupId>
-                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
-                    <version>7.1.1.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
-
         <profile>
-            <id>arq-openejb-embedded</id>
+            <id>tomee-build-managed</id>
             <build>
                 <testResources>
                     <testResource>
@@ -245,140 +186,6 @@
                         <directory>src/test/resources-openejb</directory>
                     </testResource>
                 </testResources>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.openejb</groupId>
-                    <artifactId>arquillian-openejb-embedded-4</artifactId>
-                    <version>4.5.0</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openejb</groupId>
-                    <artifactId>openejb-core-hibernate</artifactId>
-                    <version>4.5.0</version>
-                    <type>pom</type>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <repositories>
-                <repository>
-                    <id>openejb</id>
-                    <url>https://repository.apache.org/content/repositories/snapshots/</url>
-                </repository>
-            </repositories>
-        </profile>
-        
-        <profile>
-            <id>arq-tomee-embedded</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-openejb</directory>
-                    </testResource>
-                </testResources>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.openejb</groupId>
-                    <artifactId>apache-tomee</artifactId>
-                    <classifier>plus</classifier>
-                    <type>zip</type>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.openejb</groupId>
-                    <artifactId>arquillian-tomee-embedded</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>code-analysis</id>
-            <build>
-                <plugins>
-                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>${version.maven.cobertura}</version>
-                        <configuration>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-site-plugin</artifactId>
-                        <version>${version.maven.site}</version>
-                        <configuration>
-                            <reportPlugins combine.children="append">
-                                <plugin>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-jxr-plugin</artifactId>
-                                    <version>${version.maven.jxr}</version>
-                                </plugin>
-                                <plugin>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-surefire-report-plugin</artifactId>
-                                    <version>${version.maven.surefire}</version>
-                                    <configuration>
-                                        <linkXRef>true</linkXRef>
-                                    </configuration>
-                                </plugin>
-                                <plugin>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-checkstyle-plugin</artifactId>
-                                    <version>${version.maven.checkstyle}</version>
-                                    <configuration>
-                                        <linkXRef>true</linkXRef>
-                                        <cacheFile>src/analysis/resources/checkstyle-cachefile</cacheFile>
-                                        <configLocation>src/analysis/resources/checkstyle-light.xml</configLocation>
-                                        <suppressionsLocation>src/analysis/resources/suppressions.xml</suppressionsLocation>
-                                    </configuration>
-                                </plugin>
-                                <plugin>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-pmd-plugin</artifactId>
-                                    <version>${version.maven.pmd}</version>
-                                    <configuration>
-                                        <linkXRef>true</linkXRef>
-                                        <sourceEncoding>utf-8</sourceEncoding>
-                                        <failOnViolation>true</failOnViolation>
-                                        <targetJdk>${jdk.target}</targetJdk>
-                                        <rulesets>
-                                            <ruleset>src/analysis/resources/pmd-ruleset.xml</ruleset>
-                                        </rulesets>
-                                        <excludes>
-                                            <exclude>**/*_.java</exclude>
-                                            <exclude>**/generated/*.java</exclude>
-                                        </excludes>
-                                    </configuration>
-                                </plugin>
-                                 <plugin>
-                                    <groupId>org.codehaus.mojo</groupId>
-                                    <artifactId>findbugs-maven-plugin</artifactId>
-                                    <version>${version.maven.findbugs}</version>
-                                    <configuration>
-                                        <findbugsXmlOutput>true</findbugsXmlOutput>
-                                        <excludeFilterFile>src/analysis/resources/findbugs-exclusion.xml</excludeFilterFile>
-                                    </configuration>
-                                </plugin>
-                            </reportPlugins>
-                        </configuration>
-                    </plugin>
-                </plugins>
             </build>
         </profile>
     </profiles>

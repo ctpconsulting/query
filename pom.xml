@@ -1,25 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <!-- parent>
+    <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
-    </parent -->
+    </parent>
 
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>query-module-project</artifactId>
     <version>0.4-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Apache DeltaSpike Query-Module</name>
-
-    <url>http://ctpconsulting.github.com/query/</url>
-
-    <scm>
-        <connection>scm:git:git://github.com:ctpconsulting/query.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/ctpconsulting/query.git</developerConnection>
-        <url>https://github.com/ctpconsulting/query</url>
-    </scm>
 
     <developers>
         <developer>
@@ -38,9 +49,7 @@
     </modules>
 
     <properties>
-        <emma.version>2.0.5312</emma.version>
         <arquillian.version>1.0.3.Final</arquillian.version>
-        <version.maven.site>3.0-beta-3</version.maven.site>
         <jdk.source>1.6</jdk.source>
         <jdk.target>1.6</jdk.target>
     </properties>
@@ -54,31 +63,9 @@
                 <configuration>
                     <source>${jdk.source}</source>
                     <target>${jdk.target}</target>
-                    <proc>none</proc>
                 </configuration>
             </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>${version.maven.site}</version>
-                <configuration>
-                    <reportPlugins combine.children="append">
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>2.4</version>
-                            <reportSets>
-                                <reportSet>
-                                    <reports>
-                                        <report>index</report>
-                                    </reports>
-                                </reportSet>
-                            </reportSets>
-                        </plugin>
-                    </reportPlugins>
-                </configuration>
-            </plugin>
+
         </plugins>
     </build>
     
@@ -115,14 +102,6 @@
                 <artifactId>deltaspike-core-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
-
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core</artifactId>
-                <version>1.1.5.Final</version>
-                <scope>provided</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
@@ -146,21 +125,6 @@
             </dependency>
 
             <!-- *************************** TEST *************************** -->
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>${arquillian.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.jboss.jbossas</groupId>
@@ -203,151 +167,16 @@
 
     <profiles>
         <profile>
-            <id>jboss-public-repository</id>
-            <activation>
-                <property>
-                    <name>jboss-public-repository</name>
-                    <value>!false</value>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
+            <id>tomee-build-managed</id>
         </profile>
         <profile>
-            <id>code-coverage</id>
-            <dependencies>
-                <dependency>
-                    <groupId>emma</groupId>
-                    <artifactId>emma</artifactId>
-                    <version>${emma.version}</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.sonatype.maven.plugin</groupId>
-                            <artifactId>emma4it-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>report</id>
-                                    <phase>post-integration-test</phase>
-                                    <goals>
-                                        <goal>report</goal>
-                                    </goals>
-                                    <configuration>
-                                        <sourceSets>
-                                            <sourceSet>
-                                                <directory>${project.parent.build.directory}/../impl/src/main/java</directory>
-                                            </sourceSet>
-                                        </sourceSets>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-antrun-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>retrieve-coverage-files</id>
-                                    <phase>post-integration-test</phase>
-                                    <goals>
-                                        <goal>run</goal>
-                                    </goals>
-                                    <configuration>
-                                        <tasks>
-                                            <copy file="${project.parent.build.directory}/../impl/target/coverage.em" todir="${basedir}" />
-                                        </tasks>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <artifactId>maven-clean-plugin</artifactId>
-                            <configuration>
-                                <filesets>
-                                    <fileset>
-                                        <directory>${basedir}/</directory>
-                                        <includes>
-                                            <include>**/*.ec</include>
-                                            <include>**/*.em</include>
-                                            <include>**/transaction.log</include>
-                                        </includes>
-                                        <followSymlinks>false</followSymlinks>
-                                    </fileset>
-                                </filesets>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
+            <id>jbossas-build-managed-7</id>
         </profile>
         <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <id>glassfish-remote-3.1</id>
         </profile>
         <profile>
-            <id>arq-glassfish-31-embedded</id>
-        </profile>
-        <profile>
-            <id>arq-jbossas-7-managed</id>
-        </profile>
-        <profile>
-            <id>arq-openejb-embedded</id>
-        </profile>
-        <profile>
-            <id>arq-tomee-embedded</id>
+            <id>OWB</id>
         </profile>
     </profiles>
 

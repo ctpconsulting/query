@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.impl.property;
 
 import java.beans.Introspector;
@@ -7,12 +25,13 @@ import java.lang.reflect.Type;
 
 /**
  * A bean property based on the value represented by a getter/setter method pair
- * 
+ *
  * @author Pete Muir
  * @author Shane Bryzak
  * @author Dan Allen
  */
-class MethodPropertyImpl<V> implements MethodProperty<V> {
+class MethodPropertyImpl<V> implements MethodProperty<V>
+{
     private static final String GETTER_METHOD_PREFIX = "get";
     private static final String SETTER_METHOD_PREFIX = "set";
     private static final String BOOLEAN_GETTER_METHOD_PREFIX = "is";
@@ -25,42 +44,59 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     private final String propertyName;
     private final Method setterMethod;
 
-    public MethodPropertyImpl(Method method) {
+    public MethodPropertyImpl(Method method)
+    {
         final String accessorMethodPrefix;
         final String propertyNameInAccessorMethod;
-        if (method.getName().startsWith(GETTER_METHOD_PREFIX)) {
-            if (method.getReturnType() == Void.TYPE) {
+        if (method.getName().startsWith(GETTER_METHOD_PREFIX))
+        {
+            if (method.getReturnType() == Void.TYPE)
+            {
                 throw new IllegalArgumentException(
                         "Invalid accessor method, must have return value if starts with 'get'. Method: " + method);
-            } else if (method.getParameterTypes().length > 0) {
+            }
+            else if (method.getParameterTypes().length > 0)
+            {
                 throw new IllegalArgumentException(
                         "Invalid accessor method, must have zero arguments if starts with 'get'. Method: " + method);
             }
             propertyNameInAccessorMethod = method.getName().substring(GETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = GETTER_METHOD_PREFIX;
-        } else if (method.getName().startsWith(SETTER_METHOD_PREFIX)) {
-            if (method.getReturnType() != Void.TYPE) {
+        }
+        else if (method.getName().startsWith(SETTER_METHOD_PREFIX))
+        {
+            if (method.getReturnType() != Void.TYPE)
+            {
                 throw new IllegalArgumentException(
                         "Invalid accessor method, must not have return value if starts with 'set'. Method: " + method);
-            } else if (method.getParameterTypes().length != 1) {
+            }
+            else if (method.getParameterTypes().length != 1)
+            {
                 throw new IllegalArgumentException(
                         "Invalid accessor method, must have one argument if starts with 'set'. Method: " + method);
             }
             propertyNameInAccessorMethod = method.getName().substring(SETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = SETTER_METHOD_PREFIX;
-        } else if (method.getName().startsWith(BOOLEAN_GETTER_METHOD_PREFIX)) {
-            if (method.getReturnType() != Boolean.TYPE || !method.getReturnType().isPrimitive()) {
+        }
+        else if (method.getName().startsWith(BOOLEAN_GETTER_METHOD_PREFIX))
+        {
+            if (method.getReturnType() != Boolean.TYPE || !method.getReturnType().isPrimitive())
+            {
                 throw new IllegalArgumentException(
-                        "Invalid accessor method, must return boolean primitive if starts with 'is'. Method: " + method);
+                        "Invalid accessor method, must return boolean primitive if starts " +
+                        "with 'is'. Method: " + method);
             }
             propertyNameInAccessorMethod = method.getName().substring(BOOLEAN_GETTER_METHOD_PREFIX_LENGTH);
             accessorMethodPrefix = BOOLEAN_GETTER_METHOD_PREFIX;
-        } else {
+        }
+        else
+        {
             throw new IllegalArgumentException("Invalid accessor method, must start with 'get', 'set' or 'is'. "
                     + "Method: " + method);
         }
         if (propertyNameInAccessorMethod.length() == 0
-                || !Character.isUpperCase(propertyNameInAccessorMethod.charAt(0))) {
+                || !Character.isUpperCase(propertyNameInAccessorMethod.charAt(0)))
+        {
             throw new IllegalArgumentException("Invalid accessor method, prefix '" + accessorMethodPrefix
                     + "' must be followed a non-empty property name, capitalized. Method: " + method);
         }
@@ -70,34 +106,41 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return propertyName;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Class<V> getJavaClass() {
+    public Class<V> getJavaClass()
+    {
         return (Class<V>) getterMethod.getReturnType();
     }
 
     @Override
-    public Type getBaseType() {
+    public Type getBaseType()
+    {
         return getterMethod.getGenericReturnType();
     }
 
     @Override
-    public Method getAnnotatedElement() {
+    public Method getAnnotatedElement()
+    {
         return getterMethod;
     }
 
     @Override
-    public Member getMember() {
+    public Member getMember()
+    {
         return getterMethod;
     }
 
     @Override
-    public V getValue(Object instance) {
-        if (getterMethod == null) {
+    public V getValue(Object instance)
+    {
+        if (getterMethod == null)
+        {
             throw new UnsupportedOperationException("Property " + this.setterMethod.getDeclaringClass() + "."
                     + propertyName + " cannot be read, as there is no getter method.");
         }
@@ -105,20 +148,26 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     }
 
     @Override
-    public void setValue(Object instance, V value) {
-        if (setterMethod == null) {
+    public void setValue(Object instance, V value)
+    {
+        if (setterMethod == null)
+        {
             throw new UnsupportedOperationException("Property " + this.getterMethod.getDeclaringClass() + "."
                     + propertyName + " is read only, as there is no setter method.");
         }
         Reflections.invokeMethod(setterMethod, instance, value);
     }
 
-    private static Method getSetterMethod(Class<?> clazz, String name) {
+    private static Method getSetterMethod(Class<?> clazz, String name)
+    {
         Method[] methods = clazz.getMethods();
-        for (Method method : methods) {
+        for (Method method : methods)
+        {
             String methodName = method.getName();
-            if (methodName.startsWith(SETTER_METHOD_PREFIX) && method.getParameterTypes().length == 1) {
-                if (Introspector.decapitalize(methodName.substring(SETTER_METHOD_PREFIX_LENGTH)).equals(name)) {
+            if (methodName.startsWith(SETTER_METHOD_PREFIX) && method.getParameterTypes().length == 1)
+            {
+                if (Introspector.decapitalize(methodName.substring(SETTER_METHOD_PREFIX_LENGTH)).equals(name))
+                {
                     return method;
                 }
             }
@@ -126,17 +175,25 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
         return null;
     }
 
-    private static Method getGetterMethod(Class<?> clazz, String name) {
-        for (Method method : clazz.getDeclaredMethods()) {
+    private static Method getGetterMethod(Class<?> clazz, String name)
+    {
+        for (Method method : clazz.getDeclaredMethods())
+        {
             String methodName = method.getName();
-            if (method.getParameterTypes().length == 0) {
-                if (methodName.startsWith(GETTER_METHOD_PREFIX)) {
-                    if (Introspector.decapitalize(methodName.substring(GETTER_METHOD_PREFIX_LENGTH)).equals(name)) {
+            if (method.getParameterTypes().length == 0)
+            {
+                if (methodName.startsWith(GETTER_METHOD_PREFIX))
+                {
+                    if (Introspector.decapitalize(methodName.substring(GETTER_METHOD_PREFIX_LENGTH)).equals(name))
+                    {
                         return method;
                     }
-                } else if (methodName.startsWith(BOOLEAN_GETTER_METHOD_PREFIX)) {
+                }
+                else if (methodName.startsWith(BOOLEAN_GETTER_METHOD_PREFIX))
+                {
                     if (Introspector.decapitalize(methodName.substring(BOOLEAN_GETTER_METHOD_PREFIX_LENGTH)).equals(
-                            name)) {
+                            name))
+                    {
                         return method;
                     }
                 }
@@ -146,29 +203,36 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     }
 
     @Override
-    public Class<?> getDeclaringClass() {
+    public Class<?> getDeclaringClass()
+    {
         return getterMethod.getDeclaringClass();
     }
 
     @Override
-    public boolean isReadOnly() {
+    public boolean isReadOnly()
+    {
         return setterMethod == null;
     }
 
     @Override
-    public void setAccessible() {
-        if (setterMethod != null) {
+    public void setAccessible()
+    {
+        if (setterMethod != null)
+        {
             Reflections.setAccessible(setterMethod);
         }
-        if (getterMethod != null) {
+        if (getterMethod != null)
+        {
             Reflections.setAccessible(getterMethod);
         }
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder builder = new StringBuilder();
-        if (isReadOnly()) {
+        if (isReadOnly())
+        {
             builder.append("read-only ").append(setterMethod.toString()).append("; ");
         }
         builder.append(getterMethod.toString());
@@ -176,7 +240,8 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int hash = 1;
         hash = hash * 31 + (setterMethod == null ? 0 : setterMethod.hashCode());
         hash = hash * 31 + getterMethod.hashCode();
@@ -184,15 +249,22 @@ class MethodPropertyImpl<V> implements MethodProperty<V> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MethodPropertyImpl<?>) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof MethodPropertyImpl<?>)
+        {
             MethodPropertyImpl<?> that = (MethodPropertyImpl<?>) obj;
-            if (this.setterMethod == null) {
+            if (this.setterMethod == null)
+            {
                 return that.setterMethod == null && this.getterMethod.equals(that.getterMethod);
-            } else {
+            }
+            else
+            {
                 return this.setterMethod.equals(that.setterMethod) && this.getterMethod.equals(that.getterMethod);
             }
-        } else {
+        }
+        else
+        {
             return false;
         }
     }

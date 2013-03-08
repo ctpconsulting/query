@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.deltaspike.query.test.util;
 
 import java.net.URL;
@@ -46,45 +64,48 @@ import org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
-
-public abstract class TestDeployments {
+public abstract class TestDeployments
+{
 
     public static Filter<ArchivePath> TEST_FILTER = new ExcludeRegExpPaths(".*Test.*class");
 
-    public static MavenDependencyResolver resolver() {
+    public static MavenDependencyResolver resolver()
+    {
         return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
     }
 
-    public static WebArchive initDeployment() {
+    public static WebArchive initDeployment()
+    {
         return initDeployment(".*test.*");
     }
 
     /**
-     * Create a basic deployment containing API classes, the Extension class and
-     * test persistence / beans descriptor.
+     * Create a basic deployment containing API classes, the Extension class and test persistence / beans descriptor.
      *
      * @return Basic web archive.
      */
-    public static WebArchive initDeployment(String testFilter) {
+    public static WebArchive initDeployment(String testFilter)
+    {
         Logging.reconfigure();
         WebArchive archive = ShrinkWrap
-            .create(WebArchive.class, "test.war")
-            .addAsLibrary(createApiArchive())
-            .addClasses(QueryExtension.class)
-            .addClasses(TransactionalTestCase.class)
-            .addPackages(true, TEST_FILTER, createImplPackages())
-            .addPackages(true, AuditedEntity.class.getPackage())
-            .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
-            .addAsWebInfResource(classpathResource("test-persistence.xml", "META-INF/persistence.xml"),
-                    ArchivePaths.create("classes/META-INF/persistence.xml"))
-            .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
-                    ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
-            .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+                .create(WebArchive.class, "test.war")
+                .addAsLibrary(createApiArchive())
+                .addClasses(QueryExtension.class)
+                .addClasses(TransactionalTestCase.class)
+                .addPackages(true, TEST_FILTER, createImplPackages())
+                .addPackages(true, AuditedEntity.class.getPackage())
+                .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
+                .addAsWebInfResource(classpathResource("test-persistence.xml", "META-INF/persistence.xml"),
+                        ArchivePaths.create("classes/META-INF/persistence.xml"))
+                .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
+                        ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
+                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
 
         return addDependencies(archive);
     }
 
-    public static Package[] createImplPackages() {
+    public static Package[] createImplPackages()
+    {
         return new Package[] {
                 AuditEntityListener.class.getPackage(),
                 QueryBuilder.class.getPackage(),
@@ -97,7 +118,8 @@ public abstract class TestDeployments {
         };
     }
 
-    public static Archive<?> createApiArchive() {
+    public static Archive<?> createApiArchive()
+    {
         return ShrinkWrap.create(JavaArchive.class, "archive.jar")
                 .addClasses(AbstractEntityDao.class, Dao.class, EntityDao.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
@@ -108,14 +130,16 @@ public abstract class TestDeployments {
                 .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class);
     }
 
-    public static WebArchive addDependencies(WebArchive archive) {
+    public static WebArchive addDependencies(WebArchive archive)
+    {
         return archive.addAsLibraries(resolver()
                 .artifact("org.apache.deltaspike.core:deltaspike-core-api")
                 .artifact("org.apache.deltaspike.core:deltaspike-core-impl")
                 .resolveAsFiles());
     }
 
-    public static String classpathResource(String resource, String fallback) {
+    public static String classpathResource(String resource, String fallback)
+    {
         URL url = TestDeployments.class.getClassLoader().getResource(resource);
         return url != null ? resource : fallback;
     }
