@@ -22,7 +22,7 @@
     <!-- Limit categories -->
     <!-- ================ -->
 
-    <category name="org.apache.deltaspike.query">
+    <category name="org.apache.deltaspike.data">
         <priority value="DEBUG" />
     </category>
 

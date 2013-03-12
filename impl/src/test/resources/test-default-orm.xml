@@ -21,7 +21,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
 
-    <package>org.apache.deltaspike.query.test.domain.mapped</package>
+    <package>org.apache.deltaspike.data.test.domain.mapped</package>
     <entity class="MappedOne" name="Mapped_One">
         <attributes>
             <id name="id">

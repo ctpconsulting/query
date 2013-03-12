@@ -22,15 +22,14 @@
 
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
-        <artifactId>query-module-project</artifactId>
+        <artifactId>data-module-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>query-module-project-impl</artifactId>
+    <artifactId>data-module-project-impl</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Apache DeltaSpike Query-Module Impl</name>
-    <!-- url required for JAR Manifest -->
+    <name>Apache DeltaSpike Data-Module Impl</name>
 
     <prerequisites>
         <maven>3.0</maven>
@@ -38,11 +37,11 @@
 
     <properties>
         <deltaspike.osgi.export.pkg>
-            org.apache.deltaspike.query.impl.*
+            org.apache.deltaspike.data.impl.*
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
             javax.enterprise.inject,
-            !org.apache.deltaspike.query.impl.*,
+            !org.apache.deltaspike.data.impl.*,
             *
         </deltaspike.osgi.import>
         <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
@@ -125,7 +124,7 @@
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
-            <artifactId>query-module-project-api</artifactId>
+            <artifactId>data-module-project-api</artifactId>
         </dependency>
 
         <dependency>

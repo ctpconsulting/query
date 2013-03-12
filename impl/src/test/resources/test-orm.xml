@@ -24,7 +24,7 @@
     <persistence-unit-metadata>
         <persistence-unit-defaults>
             <entity-listeners>
-                <entity-listener class="org.apache.deltaspike.query.impl.audit.AuditEntityListener" />
+                <entity-listener class="org.apache.deltaspike.data.impl.audit.AuditEntityListener" />
             </entity-listeners>
         </persistence-unit-defaults>
     </persistence-unit-metadata>

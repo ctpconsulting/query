@@ -21,7 +21,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
 
-    <package>org.apache.deltaspike.query.test.domain.mapped</package>
+    <package>org.apache.deltaspike.data.test.domain.mapped</package>
     <mapped-superclass class="MappedSuperclass"/>
     <mapped-superclass class="MappedId">
         <attributes>
@@ -30,8 +30,8 @@
             </id>
         </attributes>
     </mapped-superclass>
-    <entity class="org.apache.deltaspike.query.test.domain.mapped.MappedTwo">
-        <id-class class="org.apache.deltaspike.query.test.domain.TeeId"/>
+    <entity class="org.apache.deltaspike.data.test.domain.mapped.MappedTwo">
+        <id-class class="org.apache.deltaspike.data.test.domain.TeeId"/>
         <attributes>
             <id name="teeSetId"/>
             <id name="holeId"/>

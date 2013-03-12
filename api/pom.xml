@@ -22,14 +22,14 @@
     
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
-        <artifactId>query-module-project</artifactId>
+        <artifactId>data-module-project</artifactId>
         <version>0.4-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>query-module-project-api</artifactId>
+    <artifactId>data-module-project-api</artifactId>
     <packaging>bundle</packaging>
 
-    <name>Apache DeltaSpike Query-Module API</name>
+    <name>Apache DeltaSpike Data-Module API</name>
 
     <prerequisites>
         <maven>3.0</maven>
@@ -37,10 +37,10 @@
     
     <properties>
         <deltaspike.osgi.export.pkg>
-            org.apache.deltaspike.query.*
+            org.apache.deltaspike.data.*
         </deltaspike.osgi.export.pkg>
         <deltaspike.osgi.import>
-            !org.apache.deltaspike.query.*,
+            !org.apache.deltaspike.data.*,
             *
         </deltaspike.osgi.import>
         <cdi.osgi.beans-managed>META-INF/beans.xml</cdi.osgi.beans-managed>
