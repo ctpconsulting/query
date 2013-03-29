@@ -62,8 +62,8 @@ abstract class DescriptorReader {
     }
     
     String extractBaseUrl(URL fileUrl, String resource) {
-        String file = fileUrl.getFile();
-        return fileUrl.getProtocol() + "://" + file.substring(0, file.length() - resource.length());
+        String file = fileUrl.toString();
+        return file.substring(0, file.length() - resource.length());
     }
 
     ClassLoader classLoader() {
