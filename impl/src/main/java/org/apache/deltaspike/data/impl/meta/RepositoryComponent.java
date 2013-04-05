@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.WithEntityManager;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 
@@ -132,6 +133,11 @@ public class RepositoryComponent
     public Annotation[] getEntityManagerQualifiers()
     {
         return Arrays.copyOf(qualifiers, qualifiers.length);
+    }
+
+    public String getMethodPrefix()
+    {
+        return repoClass.getAnnotation(Repository.class).methodPrefix();
     }
 
     private void initialize()

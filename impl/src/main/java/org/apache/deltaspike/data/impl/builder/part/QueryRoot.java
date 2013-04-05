@@ -38,24 +38,24 @@ import org.apache.deltaspike.data.impl.meta.RepositoryComponent;
 public class QueryRoot extends QueryPart
 {
 
-    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object");
-
-    public static final String QUERY_PREFIX = "findBy";
+    public static final QueryRoot UNKNOWN_ROOT = new QueryRoot("null-object", "");
 
     private static final Logger log = Logger.getLogger(QueryRoot.class.getName());
 
     private final String entityName;
+    private final String queryPrefix;
 
     private String jpqlQuery;
 
-    protected QueryRoot(String entityName)
+    protected QueryRoot(String entityName, String queryPrefix)
     {
         this.entityName = entityName;
+        this.queryPrefix = queryPrefix;
     }
 
     public static QueryRoot create(String method, RepositoryComponent repo)
     {
-        QueryRoot root = new QueryRoot(repo.getEntityName());
+        QueryRoot root = new QueryRoot(repo.getEntityName(), repo.getMethodPrefix());
         root.build(method, method, repo);
         root.createJpql();
         return root;
@@ -123,14 +123,14 @@ public class QueryRoot extends QueryPart
 
     private boolean hasQueryConditions(String[] orderByParts)
     {
-        return !QUERY_PREFIX.equals(orderByParts[0]);
+        return !queryPrefix.equals(orderByParts[0]);
     }
 
     private String removePrefix(String queryPart)
     {
-        if (queryPart.startsWith(QUERY_PREFIX))
+        if (queryPart.startsWith(queryPrefix))
         {
-            return queryPart.substring(QUERY_PREFIX.length());
+            return queryPart.substring(queryPrefix.length());
         }
         return queryPart;
     }
