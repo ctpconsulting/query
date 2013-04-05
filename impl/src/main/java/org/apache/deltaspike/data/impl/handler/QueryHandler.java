@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,7 +127,7 @@ public class QueryHandler implements Serializable, InvocationHandler
     private boolean isInterfaceProxy(Class<?> proxyClass)
     {
         Class<?>[] interfaces = proxyClass.getInterfaces();
-        return Object.class.equals(proxyClass.getSuperclass()) &&
+        return Proxy.class.equals(proxyClass.getSuperclass()) &&
                 interfaces != null && interfaces.length > 0;
     }
 

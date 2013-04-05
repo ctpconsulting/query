@@ -20,8 +20,8 @@ package org.apache.deltaspike.data.test.service;
 
 import java.util.List;
 
-import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.WithEntityManager;
 import org.apache.deltaspike.data.test.domain.Simple;
 

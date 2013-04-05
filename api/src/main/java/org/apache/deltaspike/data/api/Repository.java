@@ -24,7 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.deltaspike.core.api.invocationhandler.annotation.InvocationHandlerBinding;
+import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 
 /**
  * The Repository annotation needs to be present in order to have the
@@ -35,8 +35,9 @@ import org.apache.deltaspike.core.api.invocationhandler.annotation.InvocationHan
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-@InvocationHandlerBinding
+@PartialBeanBinding
 public @interface Repository
 {
-    Class<?> forEntity() default NonEntity.class;
+    Class<?> forEntity() default Object.class;
+    String methodPrefix() default "findBy";
 }

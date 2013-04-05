@@ -185,7 +185,7 @@ public class EntityRepositoryHandlerTest extends TransactionalTestCase
     }
 
     @Test
-    public void should_find_by_all()
+    public void should_find_all()
     {
         // given
         createSimple("testFindAll1");

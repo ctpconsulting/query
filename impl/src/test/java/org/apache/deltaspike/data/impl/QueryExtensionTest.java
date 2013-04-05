@@ -24,8 +24,8 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.apache.deltaspike.data.test.domain.Simple;
-import org.apache.deltaspike.data.test.service.RepositoryInterface;
 import org.apache.deltaspike.data.test.service.ExtendedRepositoryInterface;
+import org.apache.deltaspike.data.test.service.RepositoryInterface;
 import org.apache.deltaspike.data.test.service.SimpleRepository;
 import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 public class QueryExtensionTest
 {
 
-    @Deployment(order = 2)
+    @Deployment
     public static Archive<?> deployment()
     {
         return TestDeployments.initDeployment()

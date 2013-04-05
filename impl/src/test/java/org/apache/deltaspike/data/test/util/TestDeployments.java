@@ -18,19 +18,16 @@
  */
 package org.apache.deltaspike.data.test.util;
 
-import java.net.URL;
-
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
-import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.EntityManagerRepository;
+import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.FirstResult;
 import org.apache.deltaspike.data.api.MaxResults;
 import org.apache.deltaspike.data.api.Modifying;
-import org.apache.deltaspike.data.api.NonEntity;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.QueryResult;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.WithEntityManager;
 import org.apache.deltaspike.data.api.audit.CreatedOn;
 import org.apache.deltaspike.data.api.audit.CurrentUser;
@@ -95,7 +92,7 @@ public abstract class TestDeployments
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, AuditedEntity.class.getPackage())
                 .addPackages(true, new ExcludeRegExpPaths(testFilter), TransactionalTestCase.class.getPackage())
-                .addAsWebInfResource(classpathResource("test-persistence.xml", "META-INF/persistence.xml"),
+                .addAsWebInfResource("test-persistence.xml",
                         ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("META-INF/services/javax.enterprise.inject.spi.Extension",
                         ArchivePaths.create("classes/META-INF/services/javax.enterprise.inject.spi.Extension"))
@@ -123,7 +120,7 @@ public abstract class TestDeployments
         return ShrinkWrap.create(JavaArchive.class, "archive.jar")
                 .addClasses(AbstractEntityRepository.class, Repository.class, EntityRepository.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
-                        NonEntity.class, Query.class, QueryParam.class, QueryResult.class,
+                        Query.class, QueryParam.class, QueryResult.class,
                         WithEntityManager.class, EntityManagerRepository.class)
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
@@ -135,13 +132,9 @@ public abstract class TestDeployments
         return archive.addAsLibraries(resolver()
                 .artifact("org.apache.deltaspike.core:deltaspike-core-api")
                 .artifact("org.apache.deltaspike.core:deltaspike-core-impl")
+                .artifact("org.apache.deltaspike.modules:deltaspike-partial-bean-module-api")
+                .artifact("org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl")
                 .resolveAsFiles());
-    }
-
-    public static String classpathResource(String resource, String fallback)
-    {
-        URL url = TestDeployments.class.getClassLoader().getResource(resource);
-        return url != null ? resource : fallback;
     }
 
 }

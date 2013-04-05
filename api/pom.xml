@@ -71,6 +71,11 @@
             <artifactId>deltaspike-core-api</artifactId>
             <scope>compile</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-partial-bean-module-api</artifactId>
+        </dependency>
 
     </dependencies>
 

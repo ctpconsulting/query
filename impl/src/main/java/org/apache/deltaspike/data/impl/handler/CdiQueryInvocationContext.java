@@ -48,10 +48,10 @@ public class CdiQueryInvocationContext implements QueryInvocationContext
             EntityManager entityManager)
     {
         this.entityManager = entityManager;
-        this.params = Parameters.create(method, args);
+        this.args = args == null ? new Object[] {} : args;
+        this.params = Parameters.create(method, this.args);
         this.proxy = proxy;
         this.method = method;
-        this.args = args;
         this.repoMethod = repoMethod;
         this.entityClass = repoMethod.getRepository().getEntityClass();
         this.queryPostProcessors = new LinkedList<QueryStringPostProcessor>();
