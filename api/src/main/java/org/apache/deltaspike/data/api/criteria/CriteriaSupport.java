@@ -25,6 +25,11 @@ import java.sql.Timestamp;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.metamodel.SingularAttribute;
 
+/**
+ * Interface to be added to a repository for criteria support.
+ * @author thomashug
+ * @param <E>   Entity type.
+ */
 public interface CriteriaSupport<E>
 {
 

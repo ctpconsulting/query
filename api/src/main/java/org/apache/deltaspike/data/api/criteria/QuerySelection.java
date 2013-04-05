@@ -23,9 +23,24 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Selection;
 
+/**
+ * Used for selection queries with the simplified Criteria API.
+ * @author thomashug
+ *
+ * @param <P>   Entity type.
+ * @param <X>   Result type.
+ */
 public interface QuerySelection<P, X>
 {
 
+    /**
+     * Convert the instance to a criteria selection.
+     * @param query         The current criteria query.
+     * @param builder       The query builder used to instantiate the selection.
+     * @param path          Current path.
+     * @return              Criteria API selection instance corresponding to the
+     *                      QuerySelection implementation.
+     */
     <R> Selection<X> toSelection(CriteriaQuery<R> query, CriteriaBuilder builder, Path<? extends P> path);
 
 }
