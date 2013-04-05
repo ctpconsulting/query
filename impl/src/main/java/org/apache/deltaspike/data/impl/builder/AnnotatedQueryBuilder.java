@@ -70,9 +70,9 @@ public class AnnotatedQueryBuilder extends QueryBuilder
                 result = params.applyTo(entityManager.createQuery(jpqlQuery));
             }
         }
-        else if (isNotEmpty(query.sql()))
+        else if (query.isNative())
         {
-            String jpqlQuery = context.applyQueryStringPostProcessors(query.sql());
+            String jpqlQuery = context.applyQueryStringPostProcessors(query.value());
             result = params.applyTo(entityManager.createNativeQuery(jpqlQuery));
         }
         else

@@ -97,7 +97,7 @@ public class RepositoryMethod
 
     private boolean isValid(Query query)
     {
-        return isNotEmpty(query.value()) || isNotEmpty(query.named()) || isNotEmpty(query.sql());
+        return isNotEmpty(query.value()) || isNotEmpty(query.named());
     }
 
     private boolean isMethodExpression()

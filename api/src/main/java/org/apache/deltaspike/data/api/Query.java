@@ -55,7 +55,7 @@ public @interface Query
     /**
      * Defines a native SQL query.
      */
-    String sql() default "";
+    boolean isNative() default false;
 
     /**
      * Limits the number of results the query returns.
