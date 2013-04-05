@@ -42,7 +42,9 @@ public class QueryExtensionTest
     public static Archive<?> deployment()
     {
         return TestDeployments.initDeployment()
-                .addPackage(RepositoryInterface.class.getPackage())
+                .addClasses(RepositoryInterface.class,
+                            ExtendedRepositoryInterface.class,
+                            SimpleRepository.class)
                 .addPackages(true, Simple.class.getPackage());
     }
 

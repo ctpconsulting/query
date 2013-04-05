@@ -19,7 +19,6 @@
 package org.apache.deltaspike.data.impl.meta;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,9 +29,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+import org.apache.deltaspike.data.api.EntityManagerConfig;
+import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.Repository;
-import org.apache.deltaspike.data.api.WithEntityManager;
 import org.apache.deltaspike.data.impl.util.EntityUtils;
 
 /**
@@ -53,7 +52,7 @@ public class RepositoryComponent
 
     private final Class<?> repoClass;
     private final RepositoryEntity entityClass;
-    private Annotation[] qualifiers;
+    private final Class<? extends EntityManagerResolver> entityManagerResolver;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
@@ -65,6 +64,7 @@ public class RepositoryComponent
         }
         this.repoClass = repoClass;
         this.entityClass = entityClass;
+        this.entityManagerResolver = extractEmResolver(repoClass);
         initialize();
     }
 
@@ -125,19 +125,19 @@ public class RepositoryComponent
         return repoClass;
     }
 
-    /**
-     * Returns qualifiers for selecting an entity manager for the Repository component.
-     *
-     * @return A list of annotations, empty when using the default entity manager.
-     */
-    public Annotation[] getEntityManagerQualifiers()
-    {
-        return Arrays.copyOf(qualifiers, qualifiers.length);
-    }
-
     public String getMethodPrefix()
     {
         return repoClass.getAnnotation(Repository.class).methodPrefix();
+    }
+
+    public boolean hasEntityManagerResolver()
+    {
+        return getEntityManagerResolverClass() != null;
+    }
+
+    public Class<? extends EntityManagerResolver> getEntityManagerResolverClass()
+    {
+        return entityManagerResolver;
     }
 
     private void initialize()
@@ -151,20 +151,6 @@ public class RepositoryComponent
                 RepositoryMethod repoMethod = new RepositoryMethod(repoClassMethod, this);
                 methods.put(repoClassMethod, repoMethod);
             }
-        }
-        if (repoClass.isAnnotationPresent(WithEntityManager.class))
-        {
-            Class<? extends Annotation>[] annotations = repoClass.getAnnotation(WithEntityManager.class).value();
-            qualifiers = new Annotation[annotations.length];
-            for (int i = 0; i < annotations.length; i++)
-            {
-                Class<? extends Annotation> clazz = annotations[i];
-                qualifiers[i] = AnnotationInstanceProvider.of(clazz);
-            }
-        }
-        else
-        {
-            qualifiers = new Annotation[] {};
         }
     }
 
@@ -184,6 +170,19 @@ public class RepositoryComponent
         }
         log.log(Level.FINER, "collectClasses(): Found {0} for {1}", new Object[] { result, repoClass });
         return result;
+    }
+
+    private Class<? extends EntityManagerResolver> extractEmResolver(Class<?> clazz)
+    {
+        if (clazz.isAnnotationPresent(EntityManagerConfig.class))
+        {
+            EntityManagerConfig config = clazz.getAnnotation(EntityManagerConfig.class);
+            if (!EntityManagerResolver.class.equals(config.entityManagerResolver()))
+            {
+                return config.entityManagerResolver();
+            }
+        }
+        return null;
     }
 
 }

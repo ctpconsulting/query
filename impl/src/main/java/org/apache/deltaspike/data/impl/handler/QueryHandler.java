@@ -19,7 +19,6 @@
 package org.apache.deltaspike.data.impl.handler;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -30,10 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
@@ -58,10 +54,6 @@ public class QueryHandler implements Serializable, InvocationHandler
     private static final Logger log = Logger.getLogger(QueryHandler.class.getName());
 
     @Inject
-    @Any
-    private Instance<EntityManager> entityManager;
-
-    @Inject
     private QueryBuilderFactory queryBuilder;
 
     @Inject
@@ -70,6 +62,9 @@ public class QueryHandler implements Serializable, InvocationHandler
 
     @Inject
     private CdiQueryContextHolder context;
+
+    @Inject
+    private EntityManagerLookup entityManagerLookup;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
@@ -104,7 +99,7 @@ public class QueryHandler implements Serializable, InvocationHandler
             Object[] args, RepositoryComponent repo, RepositoryMethod repoMethod)
     {
         CdiQueryInvocationContext queryContext = new CdiQueryInvocationContext(proxy, method, args, repoMethod,
-                resolveEntityManager(repo));
+                entityManagerLookup.lookupFor(repo));
         context.set(queryContext);
         return queryContext;
     }
@@ -129,33 +124,6 @@ public class QueryHandler implements Serializable, InvocationHandler
         Class<?>[] interfaces = proxyClass.getInterfaces();
         return Proxy.class.equals(proxyClass.getSuperclass()) &&
                 interfaces != null && interfaces.length > 0;
-    }
-
-    private EntityManager resolveEntityManager(RepositoryComponent repo)
-    {
-        Annotation[] qualifiers = extractFromTarget(repo.getRepositoryClass());
-        if (qualifiers == null || qualifiers.length == 0)
-        {
-            qualifiers = repo.getEntityManagerQualifiers();
-        }
-        if (qualifiers == null || qualifiers.length == 0)
-        {
-            return entityManager.get();
-        }
-        return entityManager.select(qualifiers).get();
-    }
-
-    private Annotation[] extractFromTarget(Class<?> target)
-    {
-        try
-        {
-            Method method = target.getDeclaredMethod("getEntityManager");
-            return method.getAnnotations();
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
     }
 
 }

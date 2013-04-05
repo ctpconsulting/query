@@ -29,6 +29,7 @@ import org.apache.deltaspike.data.test.domain.Simple;
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithEntityManager;
 import org.apache.deltaspike.data.test.service.SimpleRepositoryWithOverriddenEntityManager;
 import org.apache.deltaspike.data.test.service.Simplistic;
+import org.apache.deltaspike.data.test.service.SimplisticEntityManagerResolver;
 import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -47,7 +48,7 @@ public class EntityManagerTest
                 .addClasses(SimpleRepositoryWithEntityManager.class,
                         SimpleRepositoryWithOverriddenEntityManager.class,
                         EntityManagerTestProducer.class,
-                        Simplistic.class);
+                        Simplistic.class, SimplisticEntityManagerResolver.class);
     }
 
     @Inject

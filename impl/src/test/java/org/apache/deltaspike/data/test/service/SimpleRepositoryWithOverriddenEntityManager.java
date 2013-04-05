@@ -20,17 +20,13 @@ package org.apache.deltaspike.data.test.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
+import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.test.domain.Simple;
 
+@EntityManagerConfig(entityManagerResolver = SimplisticEntityManagerResolver.class)
 public abstract class SimpleRepositoryWithOverriddenEntityManager extends AbstractEntityRepository<Simple, Long>
 {
-
-    @Override
-    @Simplistic
-    protected abstract EntityManager entityManager();
 
     public abstract List<Simple> findByName(String name);
 
