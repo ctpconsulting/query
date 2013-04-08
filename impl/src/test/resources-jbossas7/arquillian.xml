@@ -27,9 +27,9 @@
 
     <container qualifier="jbossas-build-managed-7" default="true">
         <configuration>
-            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m</property>
+            <property name="javaVmArguments">-Xms64m -Xmx1024m -XX:MaxPermSize=512m -Djboss.socket.binding.port-offset=10000</property>
+            <property name="managementPort">19999</property>
             <property name="jbossHome">target/jboss-as-7.1.1.Final</property>
-            <property name="serverConfig">../../../../src/test/resources-jbossas7/standalone-as7.xml</property>
         </configuration>
     </container>
 
