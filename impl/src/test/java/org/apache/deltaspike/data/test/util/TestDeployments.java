@@ -20,7 +20,6 @@ package org.apache.deltaspike.data.test.util;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
-import org.apache.deltaspike.data.api.EntityManagerRepository;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.EntityRepository;
 import org.apache.deltaspike.data.api.FirstResult;
@@ -122,7 +121,7 @@ public abstract class TestDeployments
                 .addClasses(AbstractEntityRepository.class, Repository.class, EntityRepository.class,
                         FirstResult.class, MaxResults.class, Modifying.class,
                         Query.class, QueryParam.class, QueryResult.class,
-                        EntityManagerRepository.class, EntityManagerConfig.class, EntityManagerResolver.class)
+                        EntityManagerConfig.class, EntityManagerResolver.class)
                 .addClasses(Criteria.class, QuerySelection.class, CriteriaSupport.class)
                 .addClasses(CreatedOn.class, CurrentUser.class, ModifiedBy.class, ModifiedOn.class)
                 .addClasses(DelegateQueryHandler.class, QueryInvocationContext.class);
