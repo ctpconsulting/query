@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.FlushModeType;
+
 import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.EntityManagerResolver;
 import org.apache.deltaspike.data.api.Repository;
@@ -53,6 +55,7 @@ public class RepositoryComponent
     private final Class<?> repoClass;
     private final RepositoryEntity entityClass;
     private final Class<? extends EntityManagerResolver> entityManagerResolver;
+    private final FlushModeType entityManagerFlushMode;
 
     private final Map<Method, RepositoryMethod> methods = new HashMap<Method, RepositoryMethod>();
 
@@ -64,7 +67,8 @@ public class RepositoryComponent
         }
         this.repoClass = repoClass;
         this.entityClass = entityClass;
-        this.entityManagerResolver = extractEmResolver(repoClass);
+        this.entityManagerResolver = extractEntityManagerResolver(repoClass);
+        this.entityManagerFlushMode = extractEntityManagerFlushMode(repoClass);
         initialize();
     }
 
@@ -140,6 +144,11 @@ public class RepositoryComponent
         return entityManagerResolver;
     }
 
+    public FlushModeType getEntityManagerFlushMode()
+    {
+        return entityManagerFlushMode;
+    }
+
     private void initialize()
     {
         Collection<Class<?>> allImplemented = collectClasses();
@@ -172,15 +181,31 @@ public class RepositoryComponent
         return result;
     }
 
-    private Class<? extends EntityManagerResolver> extractEmResolver(Class<?> clazz)
+    private Class<? extends EntityManagerResolver> extractEntityManagerResolver(Class<?> clazz)
+    {
+        EntityManagerConfig config = extractEntityManagerConfig(clazz);
+        if (config != null && !EntityManagerResolver.class.equals(config.entityManagerResolver()))
+        {
+            return config.entityManagerResolver();
+        }
+        return null;
+    }
+
+    private FlushModeType extractEntityManagerFlushMode(Class<?> clazz)
+    {
+        EntityManagerConfig config = extractEntityManagerConfig(clazz);
+        if (config != null)
+        {
+            return config.flushMode();
+        }
+        return null;
+    }
+
+    private EntityManagerConfig extractEntityManagerConfig(Class<?> clazz)
     {
         if (clazz.isAnnotationPresent(EntityManagerConfig.class))
         {
-            EntityManagerConfig config = clazz.getAnnotation(EntityManagerConfig.class);
-            if (!EntityManagerResolver.class.equals(config.entityManagerResolver()))
-            {
-                return config.entityManagerResolver();
-            }
+            return clazz.getAnnotation(EntityManagerConfig.class);
         }
         return null;
     }

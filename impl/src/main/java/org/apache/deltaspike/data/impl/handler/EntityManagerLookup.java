@@ -42,7 +42,11 @@ public class EntityManagerLookup
         if (repository.hasEntityManagerResolver())
         {
             EntityManagerResolver resolver = lookupResolver(repository.getEntityManagerResolverClass());
-            return resolver.resolveEntityManager();
+            EntityManager result = resolver.resolveEntityManager();
+            if (repository.getEntityManagerFlushMode() != null)
+            {
+                result.setFlushMode(repository.getEntityManagerFlushMode());
+            }
         }
         return entityManager.get();
     }

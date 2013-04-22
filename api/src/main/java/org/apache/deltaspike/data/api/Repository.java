@@ -38,6 +38,17 @@ import org.apache.deltaspike.partialbean.api.PartialBeanBinding;
 @PartialBeanBinding
 public @interface Repository
 {
+    /**
+     * Relates the repository to a specific Entity. Can be left to
+     * default when the Entity is determined by one of the base
+     * repository classes.
+     */
     Class<?> forEntity() default Object.class;
+
+    /**
+     * The method prefix for method expressions. Can be adapted to
+     * domain specific conventions.
+     */
     String methodPrefix() default "findBy";
+
 }
