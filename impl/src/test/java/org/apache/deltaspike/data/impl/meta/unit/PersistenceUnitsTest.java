@@ -27,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.deltaspike.data.impl.QueryExtension;
+import org.apache.deltaspike.data.impl.RepositoryExtension;
 import org.apache.deltaspike.data.impl.meta.RepositoryEntity;
 import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
 import org.apache.deltaspike.data.test.TransactionalTestCase;
@@ -61,7 +61,7 @@ public class PersistenceUnitsTest
                 .addAsLibrary(createApiArchive())
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, Parent.class.getPackage())
-                .addClasses(QueryExtension.class, TransactionalTestCase.class, MappedOneRepository.class)
+                .addClasses(RepositoryExtension.class, TransactionalTestCase.class, MappedOneRepository.class)
                 .addAsWebInfResource("test-mapped-persistence.xml",
                         ArchivePaths.create("classes/META-INF/persistence.xml"))
                 .addAsWebInfResource("test-default-orm.xml", ArchivePaths.create("classes/META-INF/orm.xml"))

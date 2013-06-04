@@ -36,7 +36,7 @@ import org.apache.deltaspike.data.api.audit.ModifiedOn;
 import org.apache.deltaspike.data.api.criteria.Criteria;
 import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
 import org.apache.deltaspike.data.api.criteria.QuerySelection;
-import org.apache.deltaspike.data.impl.QueryExtension;
+import org.apache.deltaspike.data.impl.RepositoryExtension;
 import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.criteria.QueryCriteria;
@@ -58,18 +58,12 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 public abstract class TestDeployments
 {
 
     public static Filter<ArchivePath> TEST_FILTER = new ExcludeRegExpPaths(".*Test.*class");
-
-    public static MavenDependencyResolver resolver()
-    {
-        return DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
-    }
 
     public static WebArchive initDeployment()
     {
@@ -87,7 +81,7 @@ public abstract class TestDeployments
         WebArchive archive = ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibrary(createApiArchive())
-                .addClasses(QueryExtension.class)
+                .addClasses(RepositoryExtension.class)
                 .addClasses(TransactionalTestCase.class)
                 .addPackages(true, TEST_FILTER, createImplPackages())
                 .addPackages(true, AuditedEntity.class.getPackage())
@@ -129,12 +123,14 @@ public abstract class TestDeployments
 
     public static WebArchive addDependencies(WebArchive archive)
     {
-        return archive.addAsLibraries(resolver()
-                .artifact("org.apache.deltaspike.core:deltaspike-core-api")
-                .artifact("org.apache.deltaspike.core:deltaspike-core-impl")
-                .artifact("org.apache.deltaspike.modules:deltaspike-partial-bean-module-api")
-                .artifact("org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl")
-                .resolveAsFiles());
+        return archive.addAsLibraries(
+                Maven.resolver().loadPomFromFile("pom.xml").resolve(
+                        "org.apache.deltaspike.core:deltaspike-core-api",
+                        "org.apache.deltaspike.core:deltaspike-core-impl",
+                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-api",
+                        "org.apache.deltaspike.modules:deltaspike-partial-bean-module-impl")
+                        .withTransitivity()
+                        .asFile());
     }
 
 }

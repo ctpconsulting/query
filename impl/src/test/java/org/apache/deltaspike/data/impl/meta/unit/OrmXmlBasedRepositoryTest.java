@@ -27,8 +27,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.deltaspike.data.test.TransactionalTestCase;
 import org.apache.deltaspike.data.test.domain.mapped.MappedOne;
-import org.apache.deltaspike.data.test.domain.mapped.MappedThree;
-import org.apache.deltaspike.data.test.domain.mapped.MappedTwo;
 import org.apache.deltaspike.data.test.service.MappedOneRepository;
 import org.apache.deltaspike.data.test.util.TestDeployments;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -49,7 +47,7 @@ public class OrmXmlBasedRepositoryTest extends TransactionalTestCase
                 .addClasses(MappedOneRepository.class)
                 .addAsLibraries(
                         ShrinkWrap.create(JavaArchive.class, "domain.jar")
-                                .addClasses(MappedOne.class, MappedTwo.class, MappedThree.class)
+                                .addPackage(MappedOne.class.getPackage())
                                 .addAsResource("test-custom-orm.xml", ArchivePaths.create("META-INF/custom-orm.xml"))
                 )
                 .addAsWebInfResource("test-mapped-persistence.xml",

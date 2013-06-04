@@ -39,10 +39,10 @@ import org.apache.deltaspike.data.impl.meta.unit.PersistenceUnits;
  *
  * @author thomashug
  */
-public class QueryExtension implements Extension
+public class RepositoryExtension implements Extension
 {
 
-    private static final Logger log = Logger.getLogger(QueryExtension.class.getName());
+    private static final Logger log = Logger.getLogger(RepositoryExtension.class.getName());
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery before)
     {

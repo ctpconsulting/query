@@ -37,9 +37,6 @@ public abstract class TransactionalTestCase
     @Before
     public void startTransaction() throws Exception
     {
-        // temp fix - OpenJPA seems not to properly initialize the static
-        // metamodel otherwise.
-        getEntityManager().getMetamodel();
         ut.begin();
     }
 
