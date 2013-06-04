@@ -1,0 +1,207 @@
+= DeltaSpike Data
+
+== Introduction
+
+The repository pattern used to be one of the core J2EE patterns and could be found in 
+most enterprise applications reading and writing data to persistent stores. 
+While the Java Persistence API (JPA) as part of Java EE 5+ has replaced many aspects of the
+repository pattern, it is still a good approach to centralize complex query logic related to 
+specific entities.
+
+The DeltaSpike Data module is intended to help you simplifying your repository layer.
+While you will have complex queries in a repository requiring your full attention,
+there will also be many simple ones often requiring boilerplate code and clutter.
+This is where the DeltaSpike data module will help you keeping your repositry lean so you 
+can focus on the though things.
+
+The code sample below will give you a quick overview on the common usage scenarios of the data module:
+
+[source,java]
+----
+@Repository
+public interface PersonRepository extends EntityRepository<Person, Long> {
+
+    List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
+
+    @Query("select p from Person p where p.ssn = ?1")
+    Person findBySSN(String ssn);
+
+    @Query(named=Person.BY_FULL_NAME)
+    Person findByFullName(String firstName, String lastName);
+
+}
+----
+
+As you see in the sample, there are several usage scenarios outlined here:
+
+* Declare a method which executes a query by simply translating its name and parameters into a query.
+* Declare a method which automatically executes a given JPQL query string with parameters.
+* Declare a method which automatically executes a named query with parameters. 
+
+The implementation of the method is done automatically by the CDI extension. 
+A client can declare a dependency to the interface only. The details on how to use those 
+features are outlines in the following chapters.
+
+== Installation
+
+=== Prerequisites
+
+In order to use the DeltaSpike data module, you have to run your application in a Java EE container 
+supporting at least the Java EE 6 Web Profile. Other configurations like running it inside Tomcat or 
+even a Java SE application are possible but currently not supported.
+
+=== Maven Dependency Configuration
+
+If you are using Maven as your build tool, you can add the following dependencies to your +pom.xml+
+file to include the DeltaSpike data module:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>data-module-project-api</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>compile</scope>
+</dependency>
+<dependency>
+    <groupId>org.apache.deltaspike.modules</groupId>
+    <artifactId>data-module-project-impl</artifactId>
+    <version>${deltaspike.version}</version>
+    <scope>runtime</scope>
+</dependency>
+----
+
+[TIP]
+===============================
+Substitute the expression +${deltaspike.version}+ with the most recent or appropriate version
+of DeltaSpike. Alternatively, you can create a Maven user-defined property to satisfy this 
+substitution so you can centrally manage the version. 
+===============================
+
+Including the API at compile time and only include the implementation at runtime protects you from
+inadvertantly depending on an implementation class.
+
+=== Setup your application
+
+DeltaSpike data requires an +EntityManager+ exposed via a CDI producer - which is common practice
+in Java EE 6 applications.
+
+[source,java]
+----
+public class DataSourceProducer {
+
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
+    @Produces
+    public EntityManager create(){
+        return emf.createEntityManager();
+    }
+
+    public void close(@Disposes EntityManager em) {
+        em.close();
+    }
+
+}
+----
+
+This allows the +EntityManager+ to be injected over CDI instead of only being used with a
++@PersistenceContext+ annotation. Using multiple +EntityManager+s is explored in more detail
+in a following section.
+
+You're now ready to use repositories in your application!
+
+== Core Concepts
+
+=== Repositories
+
+With the DeltaSpike data module, it is possible to make a repository out of basically any
+abstract class or interface (using a concrete class will work too, but you won't be able to use
+most of the CDI extension features). All that is required is to mark the type as such with a
+simple annotation:
+
+[source,java]
+----
+@Repository(Person.class)
+public abstract class PersonDao {
+    ...
+}
+
+@Repository(Person.class)
+public interface PersonDao {
+    ...
+}    
+----
+
+The +@Repository+ annotation tells the extension that this is a repository for the Person entity.
+Any method defined on the repository will be processed by the framework. The annotation does not
+require to set the entity class (we'll see later why) but if there are just plain classes or
+interfaces this is the only way to tell the framework what entity the repository relates to. 
+In order to simplify this, DeltaSpike data provides several base types.
+
+=== The +EntityRepository+ interface
+
+Although mainly intended to hold complex query logic, working with both a repository and an entity manager
+in the service layer might unnecessarily clutter code. In order to avoid this for the most common cases,
+DeltaSpike data provides base types which can be used to replace the entity manager.
+
+The top base type is the +EntityRepository+ interface, providing common methods used with an entity manager.
+The following code shows the most important methods of the interface:
+
+[source,java]
+----
+public interface EntityRepository<E, PK extends Serializable>
+{
+
+    E save(E entity);
+
+    void remove(E entity);
+
+    void refresh(E entity);
+
+    void flush();
+
+    E findBy(PK primaryKey);
+
+    List<E> findAll();
+
+    List<E> findBy(E example, SingularAttribute<E, ?>... attributes);
+
+    List<E> findByLike(E example, SingularAttribute<E, ?>... attributes);
+
+    Long count();
+
+    Long count(E example, SingularAttribute<E, ?>... attributes);
+
+    Long countLike(E example, SingularAttribute<E, ?>... attributes);
+
+} 
+----
+
+The concrete repository can then extend this basic interface. For our Person repository,
+this might look like the following:
+
+[source,java]
+----
+@Repository
+public interface PersonRepository extends EntityRepository<Person, Long> {
+
+    Person findBySsn(String ssn);
+
+} 
+----
+
+[TIP]
+===============================
+Annotations on interfaces do not inherit. If the +EntityRepository+ interface is extended by another
+interface adding some more common methods, it is not possible to simply add the annotation there.
+It needs to go on each concrete repository. The same is not true if a base class is introduced,
+as we see in the next chapter. 
+===============================
+
+=== The +AbstractEntityRepository+ class
+
+This class is an implementation of the +EntityRepository+ interface and provides additional functionality
+when custom query logic needs also to be implemented in the repository (note that your repository
+do not support injection). The class also provides additional support with regards to the JPA 2 criteria API.
+
