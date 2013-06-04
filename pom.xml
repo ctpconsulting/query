@@ -23,12 +23,10 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>modules-project</artifactId>
-        <version>0.4-incubating-SNAPSHOT</version>
+        <version>0.4-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>data-module-project</artifactId>
-    <version>0.4-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Apache DeltaSpike Data-Module</name>
 
@@ -51,6 +49,7 @@
     <properties>
         <jdk.source>1.6</jdk.source>
         <jdk.target>1.6</jdk.target>
+        <shrinkwrap.version>2.0.0-beta-3</shrinkwrap.version>
     </properties>
 
     <build>
@@ -133,6 +132,20 @@
                 <artifactId>jboss-ejb-api_3.1_spec</artifactId>
                 <version>1.0.2.Final</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                <version>${shrinkwrap.version}</version>
             </dependency>
 
         </dependencies>

@@ -17,13 +17,14 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>data-module-project</artifactId>
-        <version>0.4-incubating-SNAPSHOT</version>
+        <version>0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>data-module-project-impl</artifactId>
@@ -131,19 +132,19 @@
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
         </dependency>
-    
+
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-partial-bean-module-api</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-partial-bean-module-impl</artifactId>
@@ -157,13 +158,13 @@
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jboss.arquillian.protocol</groupId>
             <artifactId>arquillian-protocol-servlet</artifactId>
             <scope>test</scope>
         </dependency>
-    
+
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
@@ -171,7 +172,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>jbossas-build-managed-7</id>
@@ -187,6 +188,19 @@
             </build>
         </profile>
         <profile>
+            <id>glassfish-remote-3.1</id>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-glassfish</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
             <id>tomee-build-managed</id>
             <build>
                 <testResources>
@@ -197,7 +211,44 @@
                         <directory>src/test/resources-openejb</directory>
                     </testResource>
                 </testResources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.bsc.maven</groupId>
+                        <artifactId>maven-processor-plugin</artifactId>
+                        <version>2.0.7</version>
+                        <executions>
+                            <execution>
+                                <id>process-test</id>
+                                <goals>
+                                    <goal>process-test</goal>
+                                </goals>
+                                <phase>generate-test-sources</phase>
+                            </execution>
+                        </executions>
+                        <configuration combine.self="override">
+                            <processors>
+                                <processor>org.apache.openjpa.persistence.meta.AnnotationProcessor6</processor>
+                            </processors>
+                            <compilerArguments>-Aopenjpa.metamodel=true -Aopenjpa.log=TRACE</compilerArguments>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.openjpa</groupId>
+                                <artifactId>openjpa-persistence</artifactId>
+                                <version>2.2.2</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
             </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openjpa</groupId>
+                    <artifactId>openjpa-persistence</artifactId>
+                    <version>2.2.0</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
