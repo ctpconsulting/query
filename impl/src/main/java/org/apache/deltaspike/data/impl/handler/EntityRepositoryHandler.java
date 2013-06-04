@@ -75,7 +75,15 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     public E saveAndFlush(E entity)
     {
         E result = save(entity);
-        entityManager().flush();
+        flush();
+        return result;
+    }
+
+    @Override
+    public E saveAndFlushAndRefresh(E entity)
+    {
+        E result = saveAndFlush(entity);
+        entityManager().refresh(result);
         return result;
     }
 
@@ -158,6 +166,13 @@ public class EntityRepositoryHandler<E, PK extends Serializable>
     public void remove(E entity)
     {
         entityManager().remove(entity);
+    }
+
+    @Override
+    public void removeAndFlush(E entity)
+    {
+        entityManager().remove(entity);
+        flush();
     }
 
     @Override

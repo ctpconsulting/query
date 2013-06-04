@@ -48,10 +48,25 @@ public interface EntityRepository<E, PK extends Serializable>
     E saveAndFlush(E entity);
 
     /**
+     * {@link #save(Object)}s the given entity and flushes the persistence context afterwards,
+     * followed by a refresh (e.g. to load DB trigger modifications).
+     * @param entity            Entity to save.
+     * @return                  Returns the modified entity.
+     */
+    E saveAndFlushAndRefresh(E entity);
+
+    /**
      * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}.
      * @param entity            Entity to remove.
      */
     void remove(E entity);
+
+    /**
+     * Convenience access to {@link javax.persistence.EntityManager#remove(Object)}
+     * with a following flush.
+     * @param entity            Entity to remove.
+     */
+    void removeAndFlush(E entity);
 
     /**
      * Convenience access to {@link javax.persistence.EntityManager#refresh(Object)}.
