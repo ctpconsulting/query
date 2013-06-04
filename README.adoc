@@ -1,6 +1,6 @@
-= DeltaSpike Data
+== DeltaSpike Data
 
-== Introduction
+=== Introduction
 
 The repository pattern used to be one of the core J2EE patterns and could be found in 
 most enterprise applications reading and writing data to persistent stores. 
@@ -42,15 +42,15 @@ The implementation of the method is done automatically by the CDI extension.
 A client can declare a dependency to the interface only. The details on how to use those 
 features are outlines in the following chapters.
 
-== Installation
+=== Installation
 
-=== Prerequisites
+==== Prerequisites
 
 In order to use the DeltaSpike data module, you have to run your application in a Java EE container 
 supporting at least the Java EE 6 Web Profile. Other configurations like running it inside Tomcat or 
 even a Java SE application are possible but currently not supported.
 
-=== Maven Dependency Configuration
+==== Maven Dependency Configuration
 
 If you are using Maven as your build tool, you can add the following dependencies to your +pom.xml+
 file to include the DeltaSpike data module:
@@ -81,7 +81,7 @@ substitution so you can centrally manage the version.
 Including the API at compile time and only include the implementation at runtime protects you from
 inadvertantly depending on an implementation class.
 
-=== Setup your application
+==== Setup your application
 
 DeltaSpike data requires an +EntityManager+ exposed via a CDI producer - which is common practice
 in Java EE 6 applications.
@@ -111,9 +111,9 @@ in a following section.
 
 You're now ready to use repositories in your application!
 
-== Core Concepts
+=== Core Concepts
 
-=== Repositories
+==== Repositories
 
 With the DeltaSpike data module, it is possible to make a repository out of basically any
 abstract class or interface (using a concrete class will work too, but you won't be able to use
@@ -123,12 +123,12 @@ simple annotation:
 [source,java]
 ----
 @Repository(Person.class)
-public abstract class PersonDao {
+public abstract class PersonRepository {
     ...
 }
 
 @Repository(Person.class)
-public interface PersonDao {
+public interface PersonRepository {
     ...
 }    
 ----
@@ -139,7 +139,7 @@ require to set the entity class (we'll see later why) but if there are just plai
 interfaces this is the only way to tell the framework what entity the repository relates to. 
 In order to simplify this, DeltaSpike data provides several base types.
 
-=== The +EntityRepository+ interface
+==== The +EntityRepository+ interface
 
 Although mainly intended to hold complex query logic, working with both a repository and an entity manager
 in the service layer might unnecessarily clutter code. In order to avoid this for the most common cases,
@@ -199,7 +199,7 @@ It needs to go on each concrete repository. The same is not true if a base class
 as we see in the next chapter. 
 ===============================
 
-=== The +AbstractEntityRepository+ class
+==== The +AbstractEntityRepository+ class
 
 This class is an implementation of the +EntityRepository+ interface and provides additional functionality
 when custom query logic needs also to be implemented in the repository (note that your repository
