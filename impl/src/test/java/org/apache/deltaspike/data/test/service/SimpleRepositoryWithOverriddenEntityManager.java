@@ -22,9 +22,11 @@ import java.util.List;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.EntityManagerConfig;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.Simple;
 
 @EntityManagerConfig(entityManagerResolver = SimplisticEntityManagerResolver.class)
+@Repository
 public abstract class SimpleRepositoryWithOverriddenEntityManager extends AbstractEntityRepository<Simple, Long>
 {
 

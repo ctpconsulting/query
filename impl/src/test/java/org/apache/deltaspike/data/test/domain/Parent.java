@@ -31,8 +31,8 @@ public class Parent extends NamedEntity
     @javax.persistence.OneToOne(cascade = CascadeType.ALL)
     private OneToOne one;
 
-    @javax.persistence.OneToMany(cascade = CascadeType.ALL)
-    private final List<OneToMany> many = new LinkedList<OneToMany>();
+    @javax.persistence.OneToMany(cascade = CascadeType.ALL, targetEntity = OneToMany.class)
+    private List<OneToMany> many = new LinkedList<OneToMany>();
 
     private Long value = Long.valueOf(0);
 
@@ -70,6 +70,11 @@ public class Parent extends NamedEntity
     public List<OneToMany> getMany()
     {
         return many;
+    }
+
+    public void setMany(List<OneToMany> many)
+    {
+        this.many = many;
     }
 
     public Long getValue()

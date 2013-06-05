@@ -38,6 +38,8 @@ public abstract class TransactionalTestCase
     public void startTransaction() throws Exception
     {
         ut.begin();
+        // Required by OpenJPA
+        getEntityManager().getMetamodel();
     }
 
     @After

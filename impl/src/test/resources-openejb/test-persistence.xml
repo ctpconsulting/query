@@ -25,6 +25,7 @@
             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
             <property name="openjpa.Log" value="DefaultLevel=WARN, SQL=TRACE"/>
             <property name="openjpa.jdbc.DBDictionary" value="hsql(SimulateLocking=true)"/>
+            <property name="openejb.jpa.init-entitymanager" value="true" /> 
         </properties>
     </persistence-unit>
 </persistence>

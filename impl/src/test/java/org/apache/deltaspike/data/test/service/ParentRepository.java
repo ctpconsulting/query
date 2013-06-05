@@ -23,6 +23,7 @@ import java.util.List;
 import javax.persistence.criteria.JoinType;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.api.criteria.CriteriaSupport;
 import org.apache.deltaspike.data.test.domain.OneToMany;
 import org.apache.deltaspike.data.test.domain.OneToMany_;
@@ -31,6 +32,7 @@ import org.apache.deltaspike.data.test.domain.OneToOne_;
 import org.apache.deltaspike.data.test.domain.Parent;
 import org.apache.deltaspike.data.test.domain.Parent_;
 
+@Repository
 public abstract class ParentRepository extends AbstractEntityRepository<Parent, Long>
         implements CriteriaSupport<Parent>
 {

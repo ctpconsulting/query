@@ -19,8 +19,10 @@
 package org.apache.deltaspike.data.test.service;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
+import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.test.domain.mapped.MappedOne;
 
+@Repository
 public abstract class MappedOneRepository extends AbstractEntityRepository<MappedOne, Long>
 {
 
