@@ -110,7 +110,7 @@ public class DataSourceProducer
 ----
 
 This allows the +EntityManager+ to be injected over CDI instead of only being used with a
-+@PersistenceContext+ annotation. Using multiple +EntityManager+s is explored in more detail
++@PersistenceContext+ annotation. Using multiple +EntityManager+ is explored in more detail
 in a following section.
 
 You're now ready to use repositories in your application!
@@ -137,7 +137,7 @@ public interface PersonRepository {
 }    
 ----
 
-The +@Repository+ annotation tells the extension that this is a repository for the Person entity.
+The +@Repository+ annotation tells the extension that this is a repository for the +Person+ entity.
 Any method defined on the repository will be processed by the framework. The annotation does not
 require to set the entity class (we'll see later why) but if there are just plain classes or
 interfaces this is the only way to tell the framework what entity the repository relates to. 
@@ -145,11 +145,11 @@ In order to simplify this, DeltaSpike data provides several base types.
 
 ===== The +EntityRepository+ interface
 
-Although mainly intended to hold complex query logic, working with both a repository and an entity manager
+Although mainly intended to hold complex query logic, working with both a repository and an +EntityManager+
 in the service layer might unnecessarily clutter code. In order to avoid this for the most common cases,
 DeltaSpike data provides base types which can be used to replace the entity manager.
 
-The top base type is the +EntityRepository+ interface, providing common methods used with an entity manager.
+The top base type is the +EntityRepository+ interface, providing common methods used with an +EntityManager+.
 The following code shows the most important methods of the interface:
 
 [source,java]
@@ -302,9 +302,9 @@ the query implementation out of it (in EBNF-like form):
 Or in more concrete words:
 
 * The query method must either return an entity or a list of entities
-* It must start with the findBy keyword
+* It must start with the +findBy+ keyword
 * Followed by a property of the Repository entity and an optional comparator (we'll define this later). The property will be used in the query together with the comparator. Note that the number of arguments passed to the method depend on the comparator.
-* You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This is either an And or Or
+* You can add more blocks of property-comparator which have to be concatenated by a boolean operator. This is either an +And+ or +Or+
 
 Other assumptions taken by the expression evaluator:
 
@@ -326,6 +326,9 @@ Following comparators are currently supported to be used in method expressions:
 |IsNull              |0              |Property must be null.
 |IsNotNull           |0              |Property must be non-null.
 |=======
+
+Note that DeltaSpike will validate those expressions during startup, so you will notice early in case you have a typo
+in those expressions.
 
 ==== Query Ordering
 
@@ -534,23 +537,40 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 ----
 
-Once you have obtained a +QueryResult+, you can apply further options and restrictions to the query:
+Once you have obtained a +QueryResult+, you can apply further options to the query:
 
 [source,java]
 ----
 List<Person> result = personRepository.findAllByAge(18, 65)
     .sortAsc(Person_.lastName)
-    .sortDesc(Person_.age).
-    .firstResult(10)
-    .maxResults(10)
-    .getResultList();
-
-}    
+    .sortDesc(Person_.age)
+    .lockMode(LockModeType.WRITE)
+    .hint("org.hibernate.timeout", Integer.valueOf(10))
+    .getResultList(); 
 ----
 
 CAUTION: Note that sorting is only applicable to method expressions or non-named queries. For named queries it might be possible, but is currently only supported for Hibernate, EclipseLink and OpenJPA.
 
 Note that the +QueryResult+ return type can also be used with method expressions.
+
+==== Pagination
+
+We introduced the +QueryResult+ type in the last chapter, which can also be used for pagination:
+
+[source,java]
+----
+// Query API style
+QueryResult<Person> paged = personRepository.findByAge(age)
+    .maxResults(10)
+    .firstResult(50);
+
+// or paging style
+QueryResult<Person> paged = personRepository.findByAge(age)
+    .withPageSize(10) // equivalent to maxResults
+    .toPage(5);
+
+int totalPages = paged.countPages();
+----
 
 ==== Bulk Operations
 
