@@ -746,7 +746,7 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
     public List<Person> findByCompanyName(String companyName)
     {
         return criteria()
-                    .join(Person_.company
+                    .join(Person_.company,
                         where(Company.class)
                             .eq(Company_.name, companyName)
                     )
@@ -977,6 +977,6 @@ public class UserProvider
 }
 ----        
 
-TIP: If you expose another entity here, make sure this entity is attached to a persistent context. Also, be aware that the CDI container will proxy a scoped bean, which might confuse the persistence provider when peristing / updating the target entity.
+TIP: The JPA Spec does not recommend to modify entity relations from within a lifecycle callback. If you expose another entity here, make sure that your persistence provider supports this. Also you should ensure that the entity is attached to a persistent context. Also, be aware that the CDI container will proxy a scoped bean, which might confuse the persistence provider when peristing / updating the target entity.
 
 
