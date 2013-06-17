@@ -46,7 +46,7 @@
 
     <properties>
         <seam.version>3.1.0.Final</seam.version>
-        <solder.version>${seam.version}</solder.version>
+        <solder.version>3.2.0.Final</solder.version>
         <querydsl.version>2.8.0</querydsl.version>
         <emma.version>2.0.5312</emma.version>
         <arquillian.version>1.0.3.Final</arquillian.version>
@@ -127,6 +127,16 @@
             <dependency>
                 <groupId>org.jboss.solder</groupId>
                 <artifactId>solder-logging</artifactId>
+                <version>${solder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.solder</groupId>
+                <artifactId>solder-api</artifactId>
+                <version>${solder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.solder</groupId>
+                <artifactId>solder-impl</artifactId>
                 <version>${solder.version}</version>
             </dependency>
 

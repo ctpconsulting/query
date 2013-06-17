@@ -26,7 +26,7 @@ import com.ctp.cdi.query.meta.Initialized;
 
 /**
  * Entry point for query processing.
- * 
+ *
  * @author thomashug
  */
 public class QueryHandler implements Serializable {
@@ -34,21 +34,21 @@ public class QueryHandler implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Logger log = Logger.getLogger(getClass());
-    
+
     @Inject @Any
     private Instance<EntityManager> entityManager;
-    
+
     @Inject
     private QueryBuilderFactory queryBuilder;
-    
+
     @Inject @Initialized
     private DaoComponents components;
-    
+
     @Inject
     private Event<CdiQueryInvocationContext> contextCreated;
-    
+
     @AroundInvoke
-    public Object handle(InvocationContext context) {
+    public Object handle(InvocationContext context) throws Exception {
         CdiQueryInvocationContext queryContext = null;
         try {
             Class<?> daoClass = extractFromProxy(context);
@@ -71,7 +71,7 @@ public class QueryHandler implements Serializable {
         contextCreated.fire(queryContext);
         return queryContext;
     }
-    
+
     protected Class<?> extractFromProxy(InvocationContext ctx) {
         Class<?> proxyClass = ctx.getTarget().getClass();
         if (ProxyFactory.isProxyClass(proxyClass)) {
@@ -83,13 +83,13 @@ public class QueryHandler implements Serializable {
         }
         return proxyClass;
     }
-    
+
     private boolean isInterfaceProxy(Class<?> proxyClass) {
         Class<?>[] interfaces = proxyClass.getInterfaces();
-        return Object.class.equals(proxyClass.getSuperclass()) && 
+        return Object.class.equals(proxyClass.getSuperclass()) &&
                 interfaces != null && interfaces.length > 0;
     }
-    
+
     private Class<?> extractFromInterface(Class<?> proxyClass) {
         for (Class<?> interFace : proxyClass.getInterfaces()) {
             if (!ProxyObject.class.equals(interFace)) {
@@ -98,11 +98,11 @@ public class QueryHandler implements Serializable {
         }
         return null;
     }
-    
+
     private EntityManager resolveEntityManager(DaoComponent dao) {
         Annotation[] qualifiers = extractFromTarget(dao.getDaoClass());
         if (qualifiers == null || qualifiers.length == 0) {
-            qualifiers = dao.getEntityManagerQualifiers(); 
+            qualifiers = dao.getEntityManagerQualifiers();
         }
         if (qualifiers == null || qualifiers.length == 0) {
             return entityManager.get();
