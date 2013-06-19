@@ -11,7 +11,7 @@ specific entities.
 The DeltaSpike Data module is intended to help you simplifying your repository layer.
 While you will have complex queries in a repository requiring your full attention,
 there will also be many simple ones often requiring boilerplate code and clutter.
-This is where the DeltaSpike data module will help you keeping your repositry lean so you 
+This is where the DeltaSpike data module will help you keeping your repository lean so you 
 can focus on the though things.
 
 The code sample below will give you a quick overview on the common usage scenarios of the data module:
@@ -47,9 +47,10 @@ features are outlines in the following chapters.
 
 ==== Prerequisites
 
-In order to use the DeltaSpike data module, you have to run your application in a Java EE container 
+The simplest way using the DeltaSpike data module is to run your application in a Java EE container
 supporting at least the Java EE 6 Web Profile. Other configurations like running it inside Tomcat or 
-even a Java SE application are possible but currently not supported.
+even a Java SE application should be possible - you need to include a JPA provider as well as a CDI container
+to your application manually.
 
 ==== Maven Dependency Configuration
 
@@ -291,7 +292,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
 Looking at the method name, this can easily be read as query all Persons which have a name like
 the given name parameter, their age is between a min and a max age and having a specific gender.
-The CDI Query module can translate method names following a given format and directly generate
+The DeltaSpike module can translate method names following a given format and directly generate
 the query implementation out of it (in EBNF-like form):
 
 [source]
@@ -363,7 +364,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 
 ==== Query Options
 
-CDI Query supports query options on method expressions. If you want to page a query,
+DeltaSpike supports query options on method expressions. If you want to page a query,
 you can change the first result as well as the maximum number of results returned:
 
 [source,java]
@@ -445,7 +446,7 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 }
 ----
 
-Same as before, the parameter binding correspons to the argument index in the method. If the named 
+Same as before, the parameter binding corresponds to the argument index in the method. If the named
 query requires named parameters to be used, this can be done by annotating the arguments with the 
 +@QueryParam+ annotation.
 
@@ -521,8 +522,8 @@ Note that these options can also be applied to method expressions.
 ==== Query Options
 
 All the query options you have seen so far are more or less static. But sometimes you might want
-to apply certain query options dynamically. For example, sorting criterias could come from a user
-selection so they cannot be know before. DeltaSpike allows to apply query options at runtime by 
+to apply certain query options dynamically. For example, sorting criteria could come from a user
+selection so they cannot be known beforehand. DeltaSpike allows you to apply query options at runtime by
 using the +QueryResult+ result type:
 
 [source,java]
@@ -585,8 +586,8 @@ public interface PersonRepository extends EntityRepository<Person, Long>
 {
 
     @Modifying
-    @Query("update Person as p set p.classifyer = ?1 where p.classifyer = ?2")
-    int updateClassifyer(Classifier current, Classifier next);
+    @Query("update Person as p set p.classifier = ?1 where p.classifier = ?2")
+    int updateClassifier(Classifier current, Classifier next);
 
 }
 ----
@@ -598,7 +599,7 @@ by the bulk operation.
 
 ==== Query Delegates
 
-While repositories defines several base interfaces, there might still be one or another convenience
+While repositories defines several base interfaces, there might still be the odd convenience
 method that is missing. This is actually intentional - things should not get overloaded for each and
 every use case. That's why in DeltaSpike you can define your own reusable methods.
 
@@ -639,7 +640,7 @@ an empty marker interface):
 
 [source,java]
 ----
-public class DelegateRepositoryExtension<E> implements QueryDslSupport, DelegateQueryHandler
+public class QueryDslRepositoryExtension<E> implements QueryDslSupport, DelegateQueryHandler
 {
 
     @Inject
@@ -666,12 +667,12 @@ order in which the implementation is selected.
 Beside automatic query generation, the DeltaSpike data module also provides a DSL-like API to create JPA 2 Criteria queries.
 It takes advantage of the JPA 2 meta model, which helps creating type safe queries.
 
-TIP: The JPA meta model can easily be generated with an annotation processor. Hibernate or Eclipse link provide such a processor, which can be integrated into your compile and build cycle.
+TIP: The JPA meta model can easily be generated with an annotation processor. Hibernate or EclipseLink provide such a processor, which can be integrated into your compile and build cycle.
 
 Note that this criteria API is not intended to replace the standard criteria API - it's rather a utility
 API that should make life easier on the most common cases for a custom query. The JPA criteria API's 
 strongest point is certainly its type safety - which comes at the cost of readability. We're trying to 
-provide a middle way here. A less powerful API, but still typesafe and readable.
+provide a middle way here. A less powerful API, but still type safe and readable.
 
 ==== API Usage
 
@@ -687,11 +688,11 @@ public abstract class PersonRepository implements CriteriaSupport<Person>
     public List<Person> findAdultFamilyMembers(String name, Integer minAge)
     {
         return criteria()
-                    .like(Person_.name, "%" + name + "%")
-                    .gtOrEq(Person_.age, minAge)
-                    .eq(Person_.validated, Boolean.TRUE)
-                    .orderDesc(Person_.age)
-                    .getResultList();
+                .like(Person_.name, "%" + name + "%")
+                .gtOrEq(Person_.age, minAge)
+                .eq(Person_.validated, Boolean.TRUE)
+                .orderDesc(Person_.age)
+                .getResultList();
     }
 
 }
@@ -734,8 +735,8 @@ This creates a JPA TypedQuery object for the repository entity. If required, fur
 ==== Joins
 
 For simple cases, restricting on the repository entity only works out fine, but once the data model
-gets more complicate, the query will have to consider relations to other entities. The module's criteria
-API supports therefore joins as shown in the sample below:
+gets more complicated, the query will have to consider relations to other entities. The module's criteria
+API therefore supports joins as shown in the sample below:
 
 [source,java]
 ----
@@ -746,12 +747,12 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
     public List<Person> findByCompanyName(String companyName)
     {
         return criteria()
-                    .join(Person_.company,
-                        where(Company.class)
-                            .eq(Company_.name, companyName)
-                    )
-                    .eq(Person_.validated, Boolean.TRUE)
-                    .getResultList();
+                .join(Person_.company,
+                    where(Company.class)
+                        .eq(Company_.name, companyName)
+                )
+                .eq(Person_.validated, Boolean.TRUE)
+                .getResultList();
     }
 
 }
@@ -767,10 +768,10 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
     public Person findBySSN(String ssn)
     {
         return criteria()
-                    .fetch(Person_.familyMembers)
-                    .eq(Person_.ssn, ssn)
-                    .distinct()
-                    .getSingleResult();
+                .fetch(Person_.familyMembers)
+                .eq(Person_.ssn, ssn)
+                .distinct()
+                .getSingleResult();
     }
 
 }
@@ -789,15 +790,15 @@ public abstract class PersonRepository extends AbstractEntityRepository<Person, 
     public List<Person> findAdults()
     {
         return criteria()
-                    .or(
-                        criteria().
-                            .gtOrEq(Person_.age, 18)
-                            .eq(Person_.origin, Country.SWITZERLAND),
-                        criteria().
-                            .gtOrEq(Person_.age, 21)
-                            .eq(Person_.origin, Country.USA)
-                    )
-                    .getResultList();
+                .or(
+                    criteria().
+                        .gtOrEq(Person_.age, 18)
+                        .eq(Person_.origin, Country.SWITZERLAND),
+                    criteria().
+                        .gtOrEq(Person_.age, 21)
+                        .eq(Person_.origin, Country.USA)
+                )
+                .getResultList();
     }
 
 }
@@ -868,7 +869,7 @@ DeltaSpike uses an entity listener to update auditing data before entities get c
 The entity listener must be activated before it can be used. This can either be done globally for
 all entities of a persistent unit or per entity.
 
-Activation per persistence unit:
+Activation per persistence unit in +orm.xml+:
 
 [source,xml]
 ----
@@ -921,9 +922,9 @@ public class AuditedEntity
 
     @Temporal(TemporalType.TIMESTAMP)
     @ModifiedOn
-
     private Date updated;
-    ... 
+
+    ...
 
 }
 ----
@@ -956,7 +957,7 @@ public class AuditedEntity
 }
 ----
 
-Now there's a little help needed. The entity listener needs to be able to resolve the current user - 
+Now a little help is needed. The entity listener needs to be able to resolve the current user -
 there must be a bean available of the matching type for the annotation property, exposed over a special CDI qualifier:
 
 [source,java]
@@ -977,6 +978,5 @@ public class UserProvider
 }
 ----        
 
-TIP: The JPA Spec does not recommend to modify entity relations from within a lifecycle callback. If you expose another entity here, make sure that your persistence provider supports this. Also you should ensure that the entity is attached to a persistent context. Also, be aware that the CDI container will proxy a scoped bean, which might confuse the persistence provider when peristing / updating the target entity.
-
+TIP: The JPA Spec does not recommend to modify entity relations from within a lifecycle callback. If you expose another entity here, make sure that your persistence provider supports this. Also you should ensure that the entity is attached to a persistent context. Also, be aware that the CDI container will proxy a scoped bean, which might confuse the persistence provider when persisting / updating the target entity.
 
