@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.deltaspike.modules</groupId>
         <artifactId>data-module-project</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>data-module-project-api</artifactId>
